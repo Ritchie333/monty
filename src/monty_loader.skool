@@ -1,0 +1,28 @@
+; Loader
+;
+;. 
+;The BASIC is:
+;.
+;10 CLEAR 24575 : PAPER 3 : INK 3 : BORDER 3 : CLS : POKE 23659, 0 : LOAD "" CODE : RANDOMIZE USR 60000 
+c$EA60 DI            ; Turn off interrupts
+ $EA61 LD A,$83      ; Start of decryption key
+ $EA63 LD R,A        ; Put this in the refresh register
+ $EA65 LD ($081C),A  ; No effect, this is a ROM address
+ $EA68 LD HL,$EA73   ; Start of block to be decrypted
+ $EA6B LD B,$FF      ; Length of block
+*$EA6D LD A,R        ; Get next decryption key
+ $EA6F XOR (HL)      ; Use it to invert the relevant bits of the next byte
+ $EA70 LD (HL),A     ; Store the next value
+ $EA71 INC HL        ; Next value
+ $EA72 DJNZ $EAE5    ; Loop (displacement will change once run)
+; Once the loop has run, the code then reads
+ $EA72 DJNZ $EA6D    ; Loop until finished
+ $EA74 LD A,($5C6B)  ; Get the DF-SZ system variable (was set to 0 in the BASIC to stop breaking into the program)
+ $EA77 OR A          ; Is it still zero
+ $EA78 JP NZ,$0000   ; Reset the machine if not - somebody's been trying to hack this
+ $EA7B LD A,$71      ; Flag byte
+ $EA7D SCF           ; Set carry flag for loading
+ $EA7E LD IX,$4000   ; Start
+ $EA82 LD DE,$C000   ; Length
+ $EA85 CALL $0556    ; Call LD-BYTES
+; The stack pointer value at 5FE6 contains EA88. However, during loading, this is changed to the main post-loading entry point at #N$D290.

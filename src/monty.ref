@@ -1,0 +1,206 @@
+[Game]
+Game=Wanted : Monty Mole
+Copyright=Copyright Peter Harrap / Gremlin Graphics 1984. This dissassembly by Ritchie Swann 2018-2023.
+
+[OtherCode:Loading system]
+Source=monty_loader.skool
+
+[Index]
+MemoryMaps
+Graphics
+DataTables
+Reference
+
+[Index:Graphics:Graphics]
+Monty
+Moving
+Static
+
+[Page:Monty]
+SectionPrefix=Monty
+
+[Page:Moving]
+SectionPrefix=Moving
+
+[Page:Static]
+SectionPrefix=Static
+
+[Monty:Up]
+#HTML( #R$849C<br/><img src="./images/udgs/Monty_up.png"/> )
+
+[Monty:Up (alt)]
+#HTML( #R$851C<br/><img src="./images/udgs/Monty_up_2.png"/> )
+
+[Monty:Left]
+#HTML( #R$849C<br/><img src="./images/udgs/Monty_left.png"/> )
+
+[Monty:Right]
+#HTML( #R$849C<br/><img src="./images/udgs/Monty_right.png"/> )
+
+[Monty:Dead]
+#HTML( #R$FFE0<br/><img src="./images/udgs/Monty_dead.png"/> )
+
+[Monty:Angel]
+#HTML( #R$FF60<br/><img src="./images/udgs/Angel.png"/> )
+
+[Moving:Bucket]
+#HTML( #R$6000<br/><img src="./images/udgs/Bucket.png"/> )
+
+[Moving:Miner]
+#HTML( #R$6080<br/><img src="./images/udgs/Miner.png"/> )
+
+[Moving:Dog]
+#HTML( #R$6180<br/><img src="./images/udgs/Dog.png"/> )
+
+[Moving:Squirrel right]
+#HTML( #R$6200<br/><img src="./images/udgs/Squirrel_R.png"/> )
+
+[Moving:Squirrel left]
+#HTML( #R$6280<br/><img src="./images/udgs/Squirrel_L.png"/> )
+
+[Moving:Nut]
+#HTML( #R$6300<br/><img src="./images/udgs/Nut.png"/> )
+
+[Moving:Police helmet alien thingy]
+#HTML( #R$6380<br/><img src="./images/udgs/Helmet.png"/> )
+
+[Moving:Candle]
+#HTML( #R$6400<br/><img src="./images/udgs/Candle.png"/> )
+
+[Moving:Bat]
+#HTML( #R$6480<br/><img src="./images/udgs/Candle.png"/> )
+
+[Moving:No smoking sign]
+#HTML( #R$6500<br/><img src="./images/udgs/No_smoking.png"/> )
+
+[Moving:Arthur L]
+#HTML( #R$6580<br/><img src="./images/udgs/Arthur_L.png"/> )
+
+[Moving:Arthur R]
+#HTML( #R$6600<br/><img src="./images/udgs/Arthur_R.png"/> )
+
+[Moving:Aerosol L]
+#HTML( #R$6680<br/><img src="./images/udgs/Aerosol_L.png"/> )
+
+[Moving:Aerosol R]
+#HTML( #R$6700<br/><img src="./images/udgs/Aerosol_R.png"/> )
+
+[Moving:Lightbulb]
+#HTML( #R$6780<br/><img src="./images/udgs/Lightbulb.png"/> )
+
+[Moving:Jawed critter L]
+#HTML( #R$6800<br/><img src="./images/udgs/Critter_L.png"/> )
+
+[Moving:Jawed critter R]
+#HTML( #R$6880<br/><img src="./images/udgs/Critter_R.png"/> )
+
+[Moving:Star]
+#HTML( #R$6900<br/><img src="./images/udgs/Star.png"/> )
+
+[Moving:Grumpy face]
+#HTML( #R$6980<br/><img src="./images/udgs/Grumpy_face.png"/> )
+
+[Moving:Miner's helmet]
+#HTML( #R$6A00<br/><img src="./images/udgs/Miner_helmet.png"/> )
+
+[Moving:Worried face]
+#HTML( #R$6A80<br/><img src="./images/udgs/Worried_face.png"/> )
+
+[Moving:Snake]
+#HTML( #R$6B00<br/><img src="./images/udgs/Snake.png"/> )
+
+[Moving:Ghost L]
+#HTML( #R$6B80<br/><img src="./images/udgs/Ghost_L.png"/> )
+
+[Moving:Ghost R]
+#HTML( #R$6C00<br/><img src="./images/udgs/Ghost_R.png"/> )
+
+[Moving:Genie L]
+#HTML( #R$6C80<br/><img src="./images/udgs/Genie_L.png"/> )
+
+[Moving:Genie R]
+#HTML( #R$6D00<br/><img src="./images/udgs/Genie_R.png"/> )
+
+[Moving:Peasant]
+#HTML( #R$6D80<br/><img src="./images/udgs/Peasant.png"/> )
+
+[Moving:Bee]
+#HTML( #R$6E00<br/><img src="./images/udgs/Bee.png"/> )
+
+[Moving:Rock]
+#HTML( #R$6E80<br/><img src="./images/udgs/Rock.png"/> )
+
+[Moving:Brick]
+#HTML( #R$6F00<br/><img src="./images/udgs/Brick.png"/> )
+
+[Moving:Minecart]
+#HTML( #R$6F80<br/><img src="./images/udgs/Minecart.png"/> )
+
+[Moving:Tipping minecart]
+#HTML( #R$7000<br/><img src="./images/udgs/Minecart_tipping.png"/> )
+
+[Moving:Flying fish]
+#HTML( #R$7080<br/><img src="./images/udgs/Fish.png"/> )
+
+[Moving:Shark]
+#HTML( #R$7200<br/><img src="./images/udgs/Shark.png"/> )
+
+[Moving:Devil]
+#HTML( #R$7600<br/><img src="./images/udgs/Devil.png"/> )
+
+[Moving:Tap]
+#HTML( #R$7680<br/><img src="./images/udgs/Tap.png"/> )
+
+[Moving:Pull chain]
+#HTML( #R$7700<br/><img src="./images/udgs/Pull_chain.png"/> )
+
+[Moving:Smoke]
+#HTML( #R$ED4E<br/><img src="./images/udgs/Smoke.png"/> )
+
+[Static:Hammer]
+#HTML( #R$7A00<br/><img src="./images/udgs/Hammer.png"/> )
+
+[Static:Drill]
+#HTML( #R$7A20<br/><img src="./images/udgs/Drill.png"/> )
+
+[Static:Pick]
+#HTML( #R$7A40<br/><img src="./images/udgs/Pick.png"/> )
+
+[Static:Scroll]
+#HTML( #R$7A60<br/><img src="./images/udgs/Scroll.png"/> )
+
+[Static:Axe]
+#HTML( #R$7A80<br/><img src="./images/udgs/Axe.png"/> )
+
+[Static:Detenator]
+#HTML( #R$7AA0<br/><img src="./images/udgs/Detenator.png"/> )
+
+[Static:Dynamite]
+#HTML( #R$7AC0<br/><img src="./images/udgs/Dynamite.png"/> )
+
+[Static:Stick]
+#HTML( #R$7AE0<br/><img src="./images/udgs/Stick.png"/> )
+
+[Static:Club]
+#HTML( #R$7B00<br/><img src="./images/udgs/Club.png"/> )
+
+[Static:Shovel]
+#HTML( #R$7B20<br/><img src="./images/udgs/Shovel.png"/> )
+
+[Static:Bucket]
+#HTML( #R$7B40<br/><img src="./images/udgs/Static_bucket.png"/> )
+
+[Static:Spade]
+#HTML( #R$7B60<br/><img src="./images/udgs/Spade.png"/> )
+
+[Static:Scissors]
+#HTML( #R$7B80<br/><img src="./images/udgs/Scissors.png"/> )
+
+[Static:Key]
+#HTML( #R$7BA0<br/><img src="./images/udgs/Key.png"/> )
+
+[Static:Shower head]
+#HTML( #R$7BC0<br/><img src="./images/udgs/Shower_head.png"/> )
+
+[Static:Plant]
+#HTML( #R$7BE0<br/><img src="./images/udgs/Plant.png"/> )
