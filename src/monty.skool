@@ -1455,72 +1455,72 @@ b$7C00 DEFB $00,$00,$00,$00,$00,$00,$00,$00
 ; Display input options and wait to start
 ;
 ; Used by the routine at #R$F7D6.
-c$8000 DI            ;
- $8001 CALL $8092    ;
- $8004 LD IX,$8127   ;
- $8008 LD A,$01      ;
- $800A CALL $FF00    ;
- $800D EI            ;
-*$800E LD BC,$EFFE   ;
- $8011 IN A,(C)      ;
- $8013 BIT 0,A       ;
- $8015 RET Z         ;
- $8016 CALL $8069    ;
- $8019 LD BC,$F7FE   ;
- $801C IN A,(C)      ;
- $801E AND $1F       ;
- $8020 XOR $1F       ;
- $8022 JR Z,$800E    ;
- $8024 BIT 0,A       ;
- $8026 JR Z,$803B    ;
- $8028 LD A,(IX+$03) ;
+c$8000 DI            ; Disable interrupts.
+ $8001 CALL $8092    ; Display options.
+ $8004 LD IX,$8127   ; #N8127 - default option.
+ $8008 LD A,$01      ; { Set default option to 1.
+ $800A CALL $FF00    ; }
+ $800D EI            ; Re-enable interrupts.
+*$800E LD BC,$EFFE   ; { Check top right of keyboard.
+ $8011 IN A,(C)      ; }
+ $8013 BIT 0,A       ; Was '0' pressed?
+ $8015 RET Z         ; Return if so to start the game.
+ $8016 CALL $8069    ; Toggle the display flashing.
+ $8019 LD BC,$F7FE   ; Check top left of keyboard.
+ $801C IN A,(C)      ; { If any keys were pressed,
+ $801E AND $1F       ; they will end up with positive
+ $8020 XOR $1F       ; bits after this. }
+ $8022 JR Z,$800E    ; Jump back if no keys pressed.
+ $8024 BIT 0,A       ; Was "1" pressed?
+ $8026 JR Z,$803B    ; Jump if not.
+ $8028 LD A,(IX+$03) ; { Unflash the current selection.
  $802B LD C,$47      ;
- $802D CALL $80FF    ;
- $8030 LD A,$01      ;
- $8032 LD ($82A3),A  ;
- $8035 LD IX,$8127   ;
- $8039 JR $800E      ;
-*$803B BIT 1,A       ;
- $803D JR Z,$8052    ;
- $803F LD A,(IX+$03) ;
+ $802D CALL $80FF    ; }
+ $8030 LD A,$01      ; { Set option 1.
+ $8032 LD ($82A3),A  ; }
+ $8035 LD IX,$8127   ; { Point to first option
+ $8039 JR $800E      ; and loop back? }
+*$803B BIT 1,A       ; Was "2" pressed?
+ $803D JR Z,$8052    ; Jump if not.
+ $803F LD A,(IX+$03) ; { Unflash the current selection.
  $8042 LD C,$47      ;
- $8044 CALL $80FF    ;
- $8047 LD A,$02      ;
- $8049 LD ($82A3),A  ;
- $804C LD IX,$812C   ;
- $8050 JR $800E      ;
-*$8052 BIT 2,A       ;
- $8054 JR Z,$800E    ;
- $8056 LD A,(IX+$03) ;
+ $8044 CALL $80FF    ; }
+ $8047 LD A,$02      ; { Set option 2.
+ $8049 LD ($82A3),A  ; }
+ $804C LD IX,$812C   ; { Point to second option
+ $8050 JR $800E      ; and loop back. }
+*$8052 BIT 2,A       ; Was "3" pressed?
+ $8054 JR Z,$800E    ; Jump back if not.
+ $8056 LD A,(IX+$03) ; { Unflash the current selection.
  $8059 LD C,$47      ;
- $805B CALL $80FF    ;
- $805E LD A,$03      ;
- $8060 LD ($82A3),A  ;
- $8063 LD IX,$8131   ;
- $8067 JR $800E      ;
+ $805B CALL $80FF    ; }
+ $805E LD A,$03      ; { Set option 3.
+ $8060 LD ($82A3),A  ; }
+ $8063 LD IX,$8131   ; { Point to third option
+ $8067 JR $800E      ; and loop back. }
 
 ; Toggle the display on every interrupt so the selected option is flashing
 ;
 ; Used by the routine at #R$8000.
-c$8069 HALT          ;
- $806A LD A,($82A4)  ;
+c$8069 HALT          ; Wait for interrupts.
+ $806A LD A,($82A4)  ; { Loop the cycle counter through 0 - #N$F.
  $806D INC A         ;
  $806E AND $0F       ;
- $8070 LD ($82A4),A  ;
- $8073 RET NZ        ;
- $8074 LD A,($82A5)  ;
+ $8070 LD ($82A4),A  ; }
+ $8073 RET NZ        ; Return if it is not time to change.
+ $8074 LD A,($82A5)  ; { Toggle the state flag between 0 and 1.
  $8077 LD B,A        ;
  $8078 LD A,$01      ;
  $807A SUB B         ;
- $807B LD ($82A5),A  ;
- $807E OR A          ;
- $807F JR Z,$808A    ;
- $8081 LD A,(IX+$03) ;
+ $807B LD ($82A5),A  ; }
+ $807E OR A          ; { If the state is 1, print a blank character.
+ $807F JR Z,$808A    ; }
+ $8081 LD A,(IX+$03) ; { Otherwise, display the string.
  $8084 LD C,$47      ;
- $8086 CALL $80FF    ;
+ $8086 CALL $80FF    ; }
  $8089 RET           ;
 
-; Print a blank character on screen
+; Blank a character on screen
 ;
 ; Used by the routine at #R$8069.
 c$808A LD A,$00      ;
@@ -1689,7 +1689,8 @@ b$813B DEFB $00,$00,$00,$00,$00,$00,$00,$00 ; #N$00 #UDG(#PC)
 ; "OPTIONS"
 ; "1:  KEYBOARD"
 ; "2:  KEMPSTON"
-; "3:  PLAY GAME"
+; "3:  SINCLAIR"
+; "0:  PLAY GAME"
 b$826B DEFB $0F,$10,$14,$09,$0F,$0E,$93
  $8272 DEFB $1C,$25,$00,$00,$0B,$05,$19,$02,$0F,$01,$12,$84
  $827E DEFB $1D,$25,$00,$00,$0B,$05,$0D,$10,$13,$14,$0F,$8E
@@ -1788,8 +1789,55 @@ c$82A6 LD HL,$832E   ;
 ; Bit 7 set when jumping
 b$832E DEFB $04
 
-; Unused routine
-i$832F
+; Routine at 832F
+c$832F LD A,($848F)  ;
+ $8332 OR A          ;
+ $8333 JP NZ,$83B5   ;
+ $8336 LD A,($832E)  ;
+ $8339 BIT 7,A       ;
+ $833B JR Z,$8342    ;
+ $833D RES 7,A       ;
+ $833F LD ($848F),A  ;
+*$8342 LD A,($832E)  ;
+ $8345 AND $07       ;
+ $8347 CP $04        ;
+ $8349 RET Z         ;
+ $834A LD B,A        ;
+ $834B LD A,($849B)  ;
+ $834E CP B          ;
+ $834F JR NZ,$83AD   ;
+ $8351 CP $02        ;
+ $8353 JR NZ,$837B   ;
+ $8355 LD A,($8490)  ;
+ $8358 DEC A         ;
+ $8359 CP $3F        ;
+ $835B JP Z,$870E    ;
+ $835E CP $B8        ;
+ $8360 JP Z,$86BC    ;
+ $8363 LD ($8490),A  ;
+ ; This entry point is used by the routine at #R$83AD.
+*$8366 LD A,($848E)  ;
+ $8369 INC A         ;
+*$836A AND $07       ;
+ $836C LD ($848E),A  ;
+ $836F SRL A         ;
+ $8371 LD DE,$849C   ;
+ $8374 CALL $8395    ;
+ $8377 LD ($848C),HL ;
+ $837A RET           ;
+*$837B CP $03        ;
+ $837D RET NZ        ;
+ $837E LD A,($8490)  ;
+ $8381 INC A         ;
+ $8382 CP $D8        ;
+ $8384 JR NZ,$8387   ;
+ $8386 DEC A         ;
+*$8387 CP $B8        ;
+ $8389 JP Z,$86BC    ;
+ $838C LD ($8490),A  ;
+ $838F LD A,($848E)  ;
+ $8392 DEC A         ;
+ $8393 JR $836A      ;
 
 ; Select the graphic for Monty and return the address in HL
 ;
@@ -1985,18 +2033,45 @@ b$869C DEFB $01,$02,$02,$02,$02,$01,$01,$02
  $86AC DEFB $00,$00,$00,$FF,$FF,$FF,$FF,$FF
  $86B4 DEFB $FF,$FF,$FF,$FE,$FF,$FE,$FE,$FE
 
-; Unused
-u$86BC DEFB $3A,$91,$84,$D6,$08,$32,$91,$84
- $86C4 DEFB $21,$68,$C8,$22,$E0,$EC,$3A,$90
- $86CC DEFB $84,$32,$DE,$EC,$3A,$91,$84,$C6
- $86D4 DEFB $08,$32,$DF,$EC,$CD,$E0,$EB,$06
- $86DC DEFB $04,$C5,$06,$04,$21,$80,$63,$C5
- $86E4 DEFB $22,$E0,$EC,$3A,$90,$84,$32,$DE
- $86EC DEFB $EC,$3A,$91,$84,$32,$DF,$EC,$CD
- $86F4 DEFB $E0,$EB,$11,$4E,$87,$1B,$7A,$B3
- $86FC DEFB $20,$FB,$11,$20,$00,$19,$C1,$10
- $8704 DEFB $DE,$C1,$10,$D5,$3E,$01,$32,$50
- $870C DEFB $87,$C9
+; Routine at 86BC
+;
+; Used by the routine at #R$832F.
+c$86BC LD A,($8491)  ;
+ $86BF SUB $08       ;
+ $86C1 LD ($8491),A  ;
+ $86C4 LD HL,$C868   ;
+ $86C7 LD ($ECE0),HL ;
+ $86CA LD A,($8490)  ;
+ $86CD LD ($ECDE),A  ;
+ $86D0 LD A,($8491)  ;
+ $86D3 ADD A,$08     ;
+ $86D5 LD ($ECDF),A  ;
+ $86D8 CALL $EBE0    ;
+ $86DB LD B,$04      ;
+*$86DD PUSH BC       ;
+ $86DE LD B,$04      ;
+ $86E0 LD HL,$6380   ;
+*$86E3 PUSH BC       ;
+ $86E4 LD ($ECE0),HL ;
+ $86E7 LD A,($8490)  ;
+ $86EA LD ($ECDE),A  ;
+ $86ED LD A,($8491)  ;
+ $86F0 LD ($ECDF),A  ;
+ $86F3 CALL $EBE0    ;
+ $86F6 LD DE,$874E   ;
+*$86F9 DEC DE        ;
+ $86FA LD A,D        ;
+ $86FB OR E          ;
+ $86FC JR NZ,$86F9   ;
+ $86FE LD DE,$0020   ;
+ $8701 ADD HL,DE     ;
+ $8702 POP BC        ;
+ $8703 DJNZ $86E3    ;
+ $8705 POP BC        ;
+ $8706 DJNZ $86DD    ;
+ $8708 LD A,$01      ;
+ $870A LD ($8750),A  ;
+ $870D RET           ;
 
 ; Unused
 u$870E DEFB $3A,$50,$C8,$B7,$CA,$66,$83,$AF

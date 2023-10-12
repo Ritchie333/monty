@@ -205,7 +205,7 @@ c $82A6 Check for player input
 b $832E Last input data
 D $832E 0 - up, 1 - down, 2 - left, 3 - right
 D $832E Bit 7 set when jumping
-i $832F Unused routine
+c $832F Unused routine
 c $8395 Select the graphic for Monty and return the address in HL
 c $83AD Make a copy of the last movement data and act on it
 u $83B5
@@ -225,7 +225,7 @@ b $861C Monty right
 D $861C #UDG$861C,7,,2#UDG$861D,7,,2 #UDG$863C,7,,2#UDG$863D,7,,2 #UDG$865C,7,,2#UDG$865D,7,,2 #UDG$867C,7,,2#UDG$867D,7,,2
 D $861C #UDG$862C,7,,2#UDG$862D,7,,2 #UDG$864C,7,,2#UDG$864D,7,,2 #UDG$866C,7,,2#UDG$866D,7,,2 #UDG$868C,7,,2#UDG$868D,7,,2
 b $869C
-u $86BC
+c $86BC
 u $870E
 u $871D
 i $872F Unused routine
