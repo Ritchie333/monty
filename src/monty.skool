@@ -1531,80 +1531,78 @@ c$808A LD A,$00      ;
 ; Print an option on the intro screen
 ;
 ; Used by the routine at #R$8000.
-;
-; IX Pointer to string data
-; B Number of lines
-c$8092 LD IX,$8122   ; {Print a string
- $8096 LD IY,$826B   ;
- $809A LD B,$05      ;
-*$809C PUSH BC       ;
+c$8092 LD IX,$8122   ; #R$8122 = options data
+ $8096 LD IY,$826B   ; #R$826B = strings to print
+ $809A LD B,$05      ; Five lines
+*$809C PUSH BC       ; Remember number of lines.
 ; This entry point is used by the routines at #R$91E8 and #R$949E.
-*$809D LD H,$00      ;
- $809F LD L,(IX+$01) ;
- $80A2 ADD HL,HL     ;
- $80A3 LD DE,$EA60   ;
- $80A6 ADD HL,DE     ;
- $80A7 LD D,$00      ;
- $80A9 LD E,(IX+$00) ;
- $80AC LD A,(HL)     ;
- $80AD INC HL        ;
+*$809D LD H,$00      ; { Put the Y position in HL.
+ $809F LD L,(IX+$01) ; }
+ $80A2 ADD HL,HL     ; Double it to point at a whole word.
+ $80A3 LD DE,$EA60   ; { Add the base pointer to screen addresses (#R$EA60).
+ $80A6 ADD HL,DE     ; so HL now points to the right row on screen. }
+ $80A7 LD D,$00      ; { Put the X position in DE.
+ $80A9 LD E,(IX+$00) ; }
+ $80AC LD A,(HL)     ; { Extract the screen address for this row
+ $80AD INC HL        ; and put it in HL.
  $80AE LD H,(HL)     ;
- $80AF LD L,A        ;
- $80B0 ADD HL,DE     ;
-*$80B1 LD A,(IY+$00) ;
- $80B4 RES 7,A       ;
- $80B6 CALL $80D1    ;
- $80B9 LD A,(IY+$00) ;
- $80BC INC IY        ;
- $80BE INC HL        ;
- $80BF BIT 7,A       ;
- $80C1 JR Z,$80B1    ;
- $80C3 INC IX        ;
+ $80AF LD L,A        ; }
+ $80B0 ADD HL,DE     ; Add the column, so HL points to the correct place on screen.
+*$80B1 LD A,(IY+$00) ; Get the character to print.
+ $80B4 RES 7,A       ; Bit 7 is used as a string terminator, not used here.
+ $80B6 CALL $80D1    ; Print the character.
+ $80B9 LD A,(IY+$00) ; Get the character again.
+ $80BC INC IY        ; Move to the next character.
+ $80BE INC HL        ; Move to the next screen position.
+ $80BF BIT 7,A       ; { If bit 7 is not set,
+ $80C1 JR Z,$80B1    ; loop back to print the next character. }
+ $80C3 INC IX        ; { Move to the next location data.
  $80C5 INC IX        ;
  $80C7 INC IX        ;
  $80C9 INC IX        ;
- $80CB INC IX        ;
- $80CD POP BC        ;
- $80CE DJNZ $809C    ;
+ $80CB INC IX        ; }
+ $80CD POP BC        ; Restore the number of lines.
+ $80CE DJNZ $809C    ; { Loop back round if there is more to do, otherwise exit.
  $80D0 RET           ; }
 
 ; Print a character on screen
 ;
 ; Used by the routine at #R$8092.
 ;
-; HL Pointer to character
-c$80D1 PUSH HL       ;
- $80D2 LD DE,$813B   ;
- $80D5 LD L,A        ;
- $80D6 LD H,$00      ;
- $80D8 ADD HL,HL     ;
+; A ID of the character to print.
+; HL Location on screen. 
+c$80D1 PUSH HL       ; Remember the screen location.
+ $80D2 LD DE,$813B   ; #R$813B = character set
+ $80D5 LD L,A        ; { Multiply the ID by 8
+ $80D6 LD H,$00      ; to get the right offset
+ $80D8 ADD HL,HL     ; and store this in DE.
  $80D9 ADD HL,HL     ;
  $80DA ADD HL,HL     ;
  $80DB ADD HL,DE     ;
- $80DC EX DE,HL      ;
- $80DD POP HL        ;
- $80DE PUSH HL       ;
- $80DF LD B,$05      ;
-*$80E1 LD A,(DE)     ;
- $80E2 LD (HL),A     ;
- $80E3 INC DE        ;
- $80E4 INC H         ;
- $80E5 DJNZ $80E1    ;
- $80E7 POP HL        ;
- $80E8 PUSH HL       ;
- $80E9 LD BC,$FD20   ;
- $80EC ADD HL,BC     ;
- $80ED LD B,$03      ;
-*$80EF LD A,(DE)     ;
- $80F0 LD (HL),A     ;
- $80F1 INC DE        ;
- $80F2 INC H         ;
- $80F3 DJNZ $80EF    ;
- $80F5 LD C,$47      ;
- $80F7 LD A,(IX+$03) ;
- $80FA CALL $80FF    ;
- $80FD POP HL        ;
- $80FE RET           ;
+ $80DC EX DE,HL      ; }
+ $80DD POP HL        ; Restore screen location.
+ $80DE PUSH HL       ; Remember screen location (again).
+ $80DF LD B,$05      ; Five lines.
+*$80E1 LD A,(DE)     ; Get the current line.
+ $80E2 LD (HL),A     ; Copy it to screen.
+ $80E3 INC DE        ; Next line in data.
+ $80E4 INC H         ; Next line on screen.
+ $80E5 DJNZ $80E1    ; Repeat for the right number of lines.
+ $80E7 POP HL        ; Restore screen location.
+ $80E8 PUSH HL       ; Remember screen location again.
+ $80E9 LD BC,$FD20   ; {Subtract #N$2E0 to move up a third.
+ $80EC ADD HL,BC     ; }
+ $80ED LD B,$03      ; Three remaining lines.
+*$80EF LD A,(DE)     ; Get the current line.
+ $80F0 LD (HL),A     ; Copy it to screen.
+ $80F1 INC DE        ; Next line in data.
+ $80F2 INC H         ; Next line on screen.
+ $80F3 DJNZ $80EF    ; Repeat for the right number of lines.
+ $80F5 LD C,$47      ; Lower attribute is always #N$47
+ $80F7 LD A,(IX+$03) ; Get the upper attribute.
+ $80FA CALL $80FF    ; Display the attributes.
+ $80FD POP HL        ; { Clean up the stack and return.
+ $80FE RET           ; }
 
 ; Put a text character's attributes on screen
 ;
@@ -1646,54 +1644,57 @@ b$8122 DEFB $0C,$AC,$07,$42,$02
 
 ; Character set
 ;
-; #UDGARRAY39($813B-$8263-8-8)(charset)
-b$813B DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $8143 DEFB $7C,$FE,$C6,$C6,$FE,$FE,$C6,$C6
- $814B DEFB $FC,$FE,$C6,$FC,$FE,$C6,$FE,$FC
- $8153 DEFB $7C,$FE,$C6,$C0,$C0,$C6,$FE,$7C
- $815B DEFB $F8,$FC,$CE,$C6,$C6,$CE,$FC,$F8
- $8163 DEFB $FE,$FE,$C0,$FC,$FC,$C0,$FE,$FE
- $816B DEFB $FE,$FE,$C0,$FC,$FC,$C0,$C0,$C0
- $8173 DEFB $7C,$FE,$C6,$C0,$DE,$C6,$FE,$7C
- $817B DEFB $C6,$C6,$C6,$FE,$FE,$C6,$C6,$C6
- $8183 DEFB $FE,$FE,$18,$18,$18,$18,$FE,$FE
- $818B DEFB $06,$06,$06,$06,$C6,$C6,$FE,$7C
- $8193 DEFB $CE,$DC,$F8,$F0,$F8,$DC,$CE,$C6
- $819B DEFB $C0,$C0,$C0,$C0,$C0,$C0,$FE,$FE
- $81A3 DEFB $C6,$EE,$FE,$FE,$C6,$C6,$C6,$C6
- $81AB DEFB $C6,$E6,$F6,$FE,$DE,$CE,$C6,$C6
- $81B3 DEFB $7C,$FE,$EE,$C6,$C6,$EE,$FE,$7C
- $81BB DEFB $FC,$FE,$C6,$C6,$FE,$FC,$C0,$C0
- $81C3 DEFB $18,$18,$08,$10,$00,$00,$00,$00
- $81CB DEFB $FC,$FE,$C6,$C6,$FC,$FC,$CE,$C6
- $81D3 DEFB $3C,$7C,$60,$7C,$3E,$06,$3E,$3C
- $81DB DEFB $FE,$FE,$30,$30,$30,$30,$30,$30
- $81E3 DEFB $C6,$C6,$C6,$C6,$C6,$C6,$FE,$7C
- $81EB DEFB $C6,$C6,$C6,$C6,$C6,$EE,$7C,$38
- $81F3 DEFB $C6,$C6,$C6,$C6,$D6,$FE,$FE,$6C
- $81FB DEFB $C6,$EE,$6C,$7C,$38,$7C,$EE,$C6
- $8203 DEFB $84,$CC,$FC,$78,$30,$30,$30,$30
- $820B DEFB $FE,$FE,$1C,$18,$30,$70,$FE,$FE
- $8213 DEFB $7C,$FE,$CE,$DE,$F6,$E6,$FE,$7C
- $821B DEFB $08,$18,$38,$38,$18,$18,$7E,$7E
- $8223 DEFB $7C,$FE,$C6,$3E,$FC,$C0,$FE,$FE
- $822B DEFB $7C,$FE,$C6,$0C,$0E,$C6,$FE,$7C
- $8233 DEFB $0C,$1C,$3C,$6C,$CC,$FE,$FE,$0C
- $823B DEFB $FE,$FE,$C0,$FC,$FE,$06,$FE,$FC
- $8243 DEFB $7C,$FC,$C0,$FC,$FE,$C6,$FE,$7C
- $824B DEFB $FE,$FE,$06,$0C,$18,$30,$30,$30
- $8253 DEFB $7C,$FE,$C6,$7C,$FE,$C6,$FE,$7C
- $825B DEFB $7C,$FE,$C6,$FE,$7E,$06,$3E,$3C
+; #UDGARRAY39($813B-$826A-8-8)(charset)
+b$813B DEFB $00,$00,$00,$00,$00,$00,$00,$00 ; #N$00 #UDG(#PC)
+ $8143 DEFB $7C,$FE,$C6,$C6,$FE,$FE,$C6,$C6 ; #N$01 #UDG(#PC)
+ $814B DEFB $FC,$FE,$C6,$FC,$FE,$C6,$FE,$FC ; #N$02 #UDG(#PC)
+ $8153 DEFB $7C,$FE,$C6,$C0,$C0,$C6,$FE,$7C ; #N$03 #UDG(#PC)
+ $815B DEFB $F8,$FC,$CE,$C6,$C6,$CE,$FC,$F8 ; #N$04 #UDG(#PC)
+ $8163 DEFB $FE,$FE,$C0,$FC,$FC,$C0,$FE,$FE ; #N$05 #UDG(#PC)
+ $816B DEFB $FE,$FE,$C0,$FC,$FC,$C0,$C0,$C0 ; #N$06 #UDG(#PC)
+ $8173 DEFB $7C,$FE,$C6,$C0,$DE,$C6,$FE,$7C ; #N$07 #UDG(#PC)
+ $817B DEFB $C6,$C6,$C6,$FE,$FE,$C6,$C6,$C6 ; #N$08 #UDG(#PC)
+ $8183 DEFB $FE,$FE,$18,$18,$18,$18,$FE,$FE ; #N$09 #UDG(#PC)
+ $818B DEFB $06,$06,$06,$06,$C6,$C6,$FE,$7C ; #N$0A #UDG(#PC)
+ $8193 DEFB $CE,$DC,$F8,$F0,$F8,$DC,$CE,$C6 ; #N$0B #UDG(#PC)
+ $819B DEFB $C0,$C0,$C0,$C0,$C0,$C0,$FE,$FE ; #N$0C #UDG(#PC)
+ $81A3 DEFB $C6,$EE,$FE,$FE,$C6,$C6,$C6,$C6 ; #N$0D #UDG(#PC)
+ $81AB DEFB $C6,$E6,$F6,$FE,$DE,$CE,$C6,$C6 ; #N$0E #UDG(#PC)
+ $81B3 DEFB $7C,$FE,$EE,$C6,$C6,$EE,$FE,$7C ; #N$0F #UDG(#PC)
+ $81BB DEFB $FC,$FE,$C6,$C6,$FE,$FC,$C0,$C0 ; #N$10 #UDG(#PC)
+ $81C3 DEFB $18,$18,$08,$10,$00,$00,$00,$00 ; #N$11 #UDG(#PC)
+ $81CB DEFB $FC,$FE,$C6,$C6,$FC,$FC,$CE,$C6 ; #N$12 #UDG(#PC)
+ $81D3 DEFB $3C,$7C,$60,$7C,$3E,$06,$3E,$3C ; #N$13 #UDG(#PC)
+ $81DB DEFB $FE,$FE,$30,$30,$30,$30,$30,$30 ; #N$14 #UDG(#PC)
+ $81E3 DEFB $C6,$C6,$C6,$C6,$C6,$C6,$FE,$7C ; #N$15 #UDG(#PC)
+ $81EB DEFB $C6,$C6,$C6,$C6,$C6,$EE,$7C,$38 ; #N$16 #UDG(#PC)
+ $81F3 DEFB $C6,$C6,$C6,$C6,$D6,$FE,$FE,$6C ; #N$17 #UDG(#PC)
+ $81FB DEFB $C6,$EE,$6C,$7C,$38,$7C,$EE,$C6 ; #N$18 #UDG(#PC)
+ $8203 DEFB $84,$CC,$FC,$78,$30,$30,$30,$30 ; #N$19 #UDG(#PC)
+ $820B DEFB $FE,$FE,$1C,$18,$30,$70,$FE,$FE ; #N$1A #UDG(#PC)
+ $8213 DEFB $7C,$FE,$CE,$DE,$F6,$E6,$FE,$7C ; #N$1B #UDG(#PC)
+ $821B DEFB $08,$18,$38,$38,$18,$18,$7E,$7E ; #N$1C #UDG(#PC)
+ $8223 DEFB $7C,$FE,$C6,$3E,$FC,$C0,$FE,$FE ; #N$1D #UDG(#PC)
+ $822B DEFB $7C,$FE,$C6,$0C,$0E,$C6,$FE,$7C ; #N$1E #UDG(#PC)
+ $8233 DEFB $0C,$1C,$3C,$6C,$CC,$FE,$FE,$0C ; #N$1F #UDG(#PC)
+ $823B DEFB $FE,$FE,$C0,$FC,$FE,$06,$FE,$FC ; #N$20 #UDG(#PC)
+ $8243 DEFB $7C,$FC,$C0,$FC,$FE,$C6,$FE,$7C ; #N$21 #UDG(#PC)
+ $824B DEFB $FE,$FE,$06,$0C,$18,$30,$30,$30 ; #N$22 #UDG(#PC)
+ $8253 DEFB $7C,$FE,$C6,$7C,$FE,$C6,$FE,$7C ; #N$23 #UDG(#PC)
+ $825B DEFB $7C,$FE,$C6,$FE,$7E,$06,$3E,$3C ; #N$24 #UDG(#PC)
+ $8263 DEFB $00,$00,$00,$30,$30,$00,$30,$30 ; #N$25 #UDG(#PC)
 
-; Data block at #N$8263
-b$8263 DEFB $00,$00,$00,$30,$30,$00,$30,$30
- $826B DEFB $0F,$10,$14,$09,$0F,$0E,$93,$1C
- $8273 DEFB $25,$00,$00,$0B,$05,$19,$02,$0F
- $827B DEFB $01,$12,$84,$1D,$25,$00,$00,$0B
- $8283 DEFB $05,$0D,$10,$13,$14,$0F,$8E,$1E
- $828B DEFB $25,$00,$00,$13,$09,$0E,$03,$0C
- $8293 DEFB $01,$09,$92,$1B,$25,$00,$00,$10
- $829B DEFB $0C,$01,$19,$00,$07,$01,$0D,$85
+; Intro string text
+;
+; "OPTIONS"
+; "1:  KEYBOARD"
+; "2:  KEMPSTON"
+; "3:  PLAY GAME"
+b$826B DEFB $0F,$10,$14,$09,$0F,$0E,$93
+ $8272 DEFB $1C,$25,$00,$00,$0B,$05,$19,$02,$0F,$01,$12,$84
+ $827E DEFB $1D,$25,$00,$00,$0B,$05,$0D,$10,$13,$14,$0F,$8E
+ $828A DEFB $1E,$25,$00,$00,$13,$09,$0E,$03,$0C,$01,$09,$92
+ $8296 DEFB $1B,$25,$00,$00,$10,$0C,$01,$19,$00,$07,$01,$0D,$85
 
 ; Game input : 0 - keyboard, 1 - Kempston, 2 - Sinclair
 g$82A3 DEFB $01

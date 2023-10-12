@@ -178,9 +178,9 @@ c $8000 Display input options and wait to start
 c $8069 Toggle the display on every interrupt so the selected option is flashing
 c $808A Print a blank character on screen
 c $8092 Print an option on the intro screen
-C $8092 Print a string
-R $8092 IX Pointer to string data
-R $8092 B Number of lines
+c $809D Print a string
+R $809D IX Pointer to string data
+R $809D B Number of lines
 c $80D1 Print a character on screen
 R $80D1 HL Pointer to character
 c $80FF Put a text character's attributes on screen
