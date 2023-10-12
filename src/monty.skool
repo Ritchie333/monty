@@ -2226,38 +2226,139 @@ c$874E LD ($0000),A  ;
 *$887D CP $01        ;
  $887F JP NZ,$8964   ;
 
-; Data block at 8882
-b$8882 DEFB $CD,$9B,$FD,$DD,$7E,$0A,$B9,$30
- $888A DEFB $3C,$3A,$7B,$5C,$DD,$46,$0C,$B8
- $8892 DEFB $30,$0A,$90,$ED,$44,$47,$DD,$36
- $889A DEFB $0B,$02,$18,$06,$90,$47,$DD,$36
- $88A2 DEFB $0B,$03,$3A,$7C,$5C,$DD,$4E,$0D
- $88AA DEFB $B9,$30,$0A,$91,$ED,$44,$4F,$DD
- $88B2 DEFB $36,$0F,$01,$18,$06,$91,$4F,$DD
- $88BA DEFB $36,$0F,$00,$79,$B8,$38,$06,$DD
- $88C2 DEFB $7E,$0F,$DD,$77,$0B,$DD,$6E,$0C
- $88CA DEFB $DD,$66,$0D,$DD,$7E,$0B,$CD,$F4
- $88D2 DEFB $88,$CA,$62,$87,$DD,$7E
+; Routine at 8882
+c$8882 CALL $FD9B      ;
+ $8885 LD A,(IX+$0A)   ;
+ $8888 CP C            ;
+ $8889 JR NC,$88C7     ;
+ $888B LD A,($5C7B)    ;
+ $888E LD B,(IX+$0C)   ;
+ $8891 CP B            ;
+ $8892 JR NC,$889E     ;
+ $8894 SUB B           ;
+ $8895 NEG             ;
+ $8897 LD B,A          ;
+ $8898 LD (IX+$0B),$02 ;
+ $889C JR $88A4        ;
+*$889E SUB B           ;
+ $889F LD B,A          ;
+ $88A0 LD (IX+$0B),$03 ;
+*$88A4 LD A,($5C7C)    ;
+ $88A7 LD C,(IX+$0D)   ;
+ $88AA CP C            ;
+ $88AB JR NC,$88B7     ;
+ $88AD SUB C           ;
+ $88AE NEG             ;
+ $88B0 LD C,A          ;
+ $88B1 LD (IX+$0F),$01 ;
+ $88B5 JR $88BD        ;
+*$88B7 SUB C           ;
+ $88B8 LD C,A          ;
+ $88B9 LD (IX+$0F),$00 ;
+*$88BD LD A,C          ;
+ $88BE CP B            ;
+ $88BF JR C,$88C7      ;
+ $88C1 LD A,(IX+$0F)   ;
+ $88C4 LD (IX+$0B),A   ;
+*$88C7 LD L,(IX+$0C)   ;
+ $88CA LD H,(IX+$0D)   ;
+ $88CD LD A,(IX+$0B)   ;
+ $88D0 CALL $88F4      ;
+ $88D3 JP Z,$8762      ;
+ $88D6 LD A,(IX+$0B)   ;
+ $88D9 OR A            ;
+ $88DA JR NZ,$88E3     ;
+ $88DC INC A           ;
+*$88DD LD (IX+$0B),A   ;
+ $88E0 JP $8762        ;
+*$88E3 CP $01          ;
+ $88E5 JR NZ,$88EA     ;
+ $88E7 DEC A           ;
+ $88E8 JR $88DD        ;
+*$88EA CP $02          ;
+ $88EC JR NZ,$88F1     ;
+ $88EE INC A           ;
+ $88EF JR $88DD        ;
+*$88F1 DEC A           ;
+ $88F2 JR $88DD        ;
+
+; Routine at 88F4
+;
+; Used by the routine at #R$874E.
+c$88F4 CP $02          ;
+ $88F6 JR C,$892E      ;
+ $88F8 JR NZ,$8926     ;
+ $88FA LD B,$10        ;
+ $88FC DEC HL          ;
+*$88FD LD ($8960),HL   ;
+ $8900 LD A,L          ;
+ $8901 LD L,H          ;
+ $8902 LD H,$00        ;
+ $8904 ADD HL,HL       ;
+ $8905 LD DE,$EA60     ;
+ $8908 ADD HL,DE       ;
+ $8909 LD D,$00        ;
+ $890B SRL A           ;
+ $890D SRL A           ;
+ $890F SRL A           ;
+ $8911 LD E,A          ;
+ $8912 LD A,(HL)       ;
+ $8913 INC HL          ;
+ $8914 LD H,(HL)       ;
+ $8915 LD L,A          ;
+ $8916 ADD HL,DE       ;
+ $8917 LD DE,$9260     ;
+ $891A ADD HL,DE       ;
+ $891B LD A,(HL)       ;
+ $891C OR A            ;
+ $891D RET NZ          ;
+ $891E LD HL,($8960)   ;
+ $8921 DEC H           ;
+ $8922 DJNZ $88FD      ;
+ $8924 OR A            ;
+ $8925 RET             ;
+*$8926 LD B,$10        ;
+ $8928 LD DE,$0010     ;
+ $892B ADD HL,DE       ;
+ $892C JR $88FD        ;
+*$892E OR A            ;
+ $892F JR Z,$8959      ;
+ $8931 LD A,L          ;
+ $8932 LD L,H          ;
+ $8933 LD H,$00        ;
+ $8935 LD DE,$0010     ;
+ $8938 OR A            ;
+ $8939 SBC HL,DE       ;
+*$893B ADD HL,HL       ;
+ $893C LD DE,$EA60     ;
+ $893F ADD HL,DE       ;
+ $8940 LD D,$00        ;
+ $8942 LD E,A          ;
+ $8943 LD A,(HL)       ;
+ $8944 INC HL          ;
+ $8945 LD H,(HL)       ;
+ $8946 LD L,A          ;
+ $8947 SRL E           ;
+ $8949 SRL E           ;
+ $894B SRL E           ;
+ $894D ADD HL,DE       ;
+ $894E LD DE,$9260     ;
+ $8951 ADD HL,DE       ;
+ $8952 LD A,(HL)       ;
+ $8953 OR A            ;
+ $8954 RET NZ          ;
+ $8955 INC HL          ;
+ $8956 LD A,(HL)       ;
+ $8957 OR A            ;
+ $8958 RET             ;
+*$8959 LD A,L          ;
+ $895A LD L,H          ;
+ $895B LD H,$00        ;
+ $895D INC L           ;
+ $895E JR $893B        ;
 
 ; Unused
-u$88D8 DEFB $0B,$B7,$20,$07,$3C,$DD,$77,$0B
- $88E0 DEFB $C3,$62,$87,$FE,$01,$20,$03,$3D
- $88E8 DEFB $18,$F3,$FE,$02,$20,$03,$3C,$18
- $88F0 DEFB $EC,$3D,$18,$E9,$FE,$02,$38,$36
- $88F8 DEFB $20,$2C,$06,$10,$2B,$22,$60,$89
- $8900 DEFB $7D,$6C,$26,$00,$29,$11,$60,$EA
- $8908 DEFB $19,$16,$00,$CB,$3F,$CB,$3F,$CB
- $8910 DEFB $3F,$5F,$7E,$23,$66,$6F,$19,$11
- $8918 DEFB $60,$92,$19,$7E,$B7,$C0,$2A,$60
- $8920 DEFB $89,$25,$10,$D9,$B7,$C9,$06,$10
- $8928 DEFB $11,$10,$00,$19,$18,$CF,$B7,$28
- $8930 DEFB $28,$7D,$6C,$26,$00,$11,$10,$00
- $8938 DEFB $B7,$ED,$52,$29,$11,$60,$EA,$19
- $8940 DEFB $16,$00,$5F,$7E,$23,$66,$6F,$CB
- $8948 DEFB $3B,$CB,$3B,$CB,$3B,$19,$11,$60
- $8950 DEFB $92,$19,$7E,$B7,$C0,$23,$7E,$B7
- $8958 DEFB $C9,$7D,$6C,$26,$00,$2C,$18,$DB
- $8960 DEFB $00,$00,$00,$00
+u$8960 DEFS $04
 
 ; Update next position for nasties
 ;

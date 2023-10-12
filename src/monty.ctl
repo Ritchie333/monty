@@ -230,8 +230,7 @@ u $870E
 u $871D
 i $872F Unused routine
 c $874E Move all the nasties on the screen
-b $8882
-u $88D8
+c $88F4
 c $8964 Update next position for nasties
 c $89D4 Update Monty's position
 c $8A0A Move Monty along the ladder
