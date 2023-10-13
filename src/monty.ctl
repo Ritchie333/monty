@@ -229,7 +229,8 @@ c $86BC
 c $870E
 c $871D
 c $872F Unused routine
-c $874E Move all the nasties on the screen
+u $874E
+c $8751 Move all the nasties on the screen
 c $88F4
 c $8964 Update next position for nasties
 c $89D4 Update Monty's position
@@ -322,48 +323,515 @@ D $979B #UDG$979B,7,,2#UDG$979C,7,,2 #UDG$97BB,7,,2#UDG$97BC,7,,2 #UDG$97DB,7,,2
 D $979B #UDG$97AB,7,,2#UDG$97AC,7,,2 #UDG$97CB,7,,2#UDG$97CC,7,,2 #UDG$97EB,7,,2#UDG$97EC,7,,2 #UDG$980B,7,,2#UDG$980C,7,,2
 u $981B Unused
 C $981B
+
 b $9A2A Room 00
 D $9A2A The current room is copied into C42A
+B $9A2A,$F0,3 Static characters
+B $9B1A Overhead for jumping
+B $9B20 Next room UP
+B $9B21 Next room DOWN
+B $9B22 Next room LEFT
+B $9B23 Next room RIGHT
+B $9B24 Collectable item x co-ordinate
+B $9B25 Collectable item y co-ordinate
+B $9B26 Collectable item graphic index
+B $9B27 Crusher x co-ordinate
+B $9B28 Crusher y co-ordinate
+B $9B29
+B $9B2A Crusher time
+B $9B2B Crusher flag
+B $9B2C
+B $9B2D,$0A
+B $9B37 Coal UDG
+B $9B3F Coal positions
+B $9B48
+B $9B4E Static character graphic IDs
+B $9B96,$8C,$14 Nasty data
+B $9C22
+
 b $9C2A Room 01
 D $9C2A The current room is copied into C42A
+B $9C2A,$F0,3 Static characters
+B $9D1A Overhead for jumping
+B $9D20 Next room UP
+B $9D21 Next room DOWN
+B $9D22 Next room LEFT
+B $9D23 Next room RIGHT
+B $9D24 Collectable item x co-ordinate
+B $9D25 Collectable item y co-ordinate
+B $9D26 Collectable item graphic index
+B $9D27 Crusher x co-ordinate
+B $9D28 Crusher y co-ordinate
+B $9D29
+B $9D2A Crusher time
+B $9D2B Crusher flag
+B $9D2C
+B $9D2D,$0A
+B $9D37 Coal UDG
+B $9D3F Coal positions
+B $9D48
+B $9D4E Static character graphic IDs
+B $9D96,$8C,$14 Nasty data
+B $9E22
+
 b $9E2A Room 02
 D $9E2A The current room is copied into C42A
+B $9E2A,$F0,3 Static characters
+B $9F1A Overhead for jumping
+B $9F20 Next room UP
+B $9F21 Next room DOWN
+B $9F22 Next room LEFT
+B $9F23 Next room RIGHT
+B $9F24 Collectable item x co-ordinate
+B $9F25 Collectable item y co-ordinate
+B $9F26 Collectable item graphic index
+B $9F27 Crusher x co-ordinate
+B $9F28 Crusher y co-ordinate
+B $9F29
+B $9F2A Crusher time
+B $9F2B Crusher flag
+B $9F2C
+B $9F2D,$0A
+B $9F37 Coal UDG
+B $9F3F Coal positions
+B $9F48
+B $9F4E Static character graphic IDs
+B $9F96,$8C,$14 Nasty data
+B $A022
+
 b $A02A Room 03
 D $A02A The current room is copied into C42A
+B $A02A,$F0,3 Static characters
+B $A11A Overhead for jumping
+B $A120 Next room UP
+B $A121 Next room DOWN
+B $A122 Next room LEFT
+B $A123 Next room RIGHT
+B $A124 Collectable item x co-ordinate
+B $A125 Collectable item y co-ordinate
+B $A126 Collectable item graphic index
+B $A127 Crusher x co-ordinate
+B $A128 Crusher y co-ordinate
+B $A129
+B $A12A Crusher time
+B $A12B Crusher flag
+B $A12C
+B $A12D,$0A
+B $A137 Coal UDG
+B $A13F Coal positions
+B $A148
+B $A14E Static character graphic IDs
+B $A196,$8C,$14 Nasty data
+B $A222
+
 b $A22A Room 04
 D $A22A The current room is copied into C42A
+B $A31A Overhead for jumping
+B $A320 Next room UP
+B $A321 Next room DOWN
+B $A322 Next room LEFT
+B $A323 Next room RIGHT
+B $A324 Collectable item x co-ordinate
+B $A325 Collectable item y co-ordinate
+B $A326 Collectable item graphic index
+B $A327 Crusher x co-ordinate
+B $A328 Crusher y co-ordinate
+B $A329
+B $A32A Crusher time
+B $A32B Crusher flag
+B $A32C
+B $A32D,$0A
+B $A337 Coal UDG
+B $A33F Coal positions
+B $A348
+B $A34E Static character graphic IDs
+B $A396,$8C,$14 Nasty data
+B $A422
+
 b $A42A Room 05
 D $A42A The current room is copied into C42A
+B $A51A Overhead for jumping
+B $A520 Next room UP
+B $A521 Next room DOWN
+B $A522 Next room LEFT
+B $A523 Next room RIGHT
+B $A524 Collectable item x co-ordinate
+B $A525 Collectable item y co-ordinate
+B $A526 Collectable item graphic index
+B $A527 Crusher x co-ordinate
+B $A528 Crusher y co-ordinate
+B $A529
+B $A52A Crusher time
+B $A52B Crusher flag
+B $A52C
+B $A52D,$0A
+B $A537 Coal UDG
+B $A53F Coal positions
+B $A548
+B $A54E Static character graphic IDs
+B $A596,$8C,$14 Nasty data
+B $A622
+
 b $A62A Room 06
 D $A62A The current room is copied into C42A
+B $A71A Overhead for jumping
+B $A720 Next room UP
+B $A721 Next room DOWN
+B $A722 Next room LEFT
+B $A723 Next room RIGHT
+B $A724 Collectable item x co-ordinate
+B $A725 Collectable item y co-ordinate
+B $A726 Collectable item graphic index
+B $A727 Crusher x co-ordinate
+B $A728 Crusher y co-ordinate
+B $A729
+B $A72A Crusher time
+B $A72B Crusher flag
+B $A72C
+B $A72D,$0A
+B $A737 Coal UDG
+B $A73F Coal positions
+B $A748
+B $A74E Static character graphic IDs
+B $A796,$8C,$14 Nasty data
+B $A822
+
 b $A82A Room 07
 D $A82A The current room is copied into C42A
+B $A91A Overhead for jumping
+B $A920 Next room UP
+B $A921 Next room DOWN
+B $A922 Next room LEFT
+B $A923 Next room RIGHT
+B $A924 Collectable item x co-ordinate
+B $A925 Collectable item y co-ordinate
+B $A926 Collectable item graphic index
+B $A927 Crusher x co-ordinate
+B $A928 Crusher y co-ordinate
+B $A929
+B $A92A Crusher time
+B $A92B Crusher flag
+B $A92C
+B $A92D,$0A
+B $A937 Coal UDG
+B $A93F Coal positions
+B $A948
+B $A94E Static character graphic IDs
+B $A996,$8C,$14 Nasty data
+B $AA22
+
 b $AA2A Room 08
 D $AA2A The current room is copied into C42A
+B $AB1A Overhead for jumping
+B $AB20 Next room UP
+B $AB21 Next room DOWN
+B $AB22 Next room LEFT
+B $AB23 Next room RIGHT
+B $AB24 Collectable item x co-ordinate
+B $AB25 Collectable item y co-ordinate
+B $AB26 Collectable item graphic index
+B $AB27 Crusher x co-ordinate
+B $AB28 Crusher y co-ordinate
+B $AB29
+B $AB2A Crusher time
+B $AB2B Crusher flag
+B $AB2C
+B $AB2D,$0A
+B $AB37 Coal UDG
+B $AB3F Coal positions
+B $AB48
+B $AB4E Static character graphic IDs
+B $AB96,$8C,$14 Nasty data
+B $AC22
+
 b $AC2A Room 09
 D $AC2A The current room is copied into C42A
+B $AD1A Overhead for jumping
+B $AD20 Next room UP
+B $AD21 Next room DOWN
+B $AD22 Next room LEFT
+B $AD23 Next room RIGHT
+B $AD24 Collectable item x co-ordinate
+B $AD25 Collectable item y co-ordinate
+B $AD26 Collectable item graphic index
+B $AD27 Crusher x co-ordinate
+B $AD28 Crusher y co-ordinate
+B $AD29
+B $AD2A Crusher time
+B $AD2B Crusher flag
+B $AD2C
+B $AD2D,$0A
+B $AD37 Coal UDG
+B $AD3F Coal positions
+B $AD48
+B $AD4E Static character graphic IDs
+B $AD96,$8C,$14 Nasty data
+B $AE22
+
 b $AE2A Room 0A
 D $AE2A The current room is copied into C42A
+B $AF1A Overhead for jumping
+B $AF20 Next room UP
+B $AF21 Next room DOWN
+B $AF22 Next room LEFT
+B $AF23 Next room RIGHT
+B $AF24 Collectable item x co-ordinate
+B $AF25 Collectable item y co-ordinate
+B $AF26 Collectable item graphic index
+B $AF27 Crusher x co-ordinate
+B $AF28 Crusher y co-ordinate
+B $AF29
+B $AF2A Crusher time
+B $AF2B Crusher flag
+B $AF2C
+B $AF2D,$0A
+B $AF37 Coal UDG
+B $AF3F Coal positions
+B $AF48
+B $AF4E Static character graphic IDs
+B $AF96,$8C,$14 Nasty data
+B $B022
+
 b $B02A Room 0B
 D $B02A The current room is copied into C42A
+B $B11A Overhead for jumping
+B $B120 Next room UP
+B $B121 Next room DOWN
+B $B122 Next room LEFT
+B $B123 Next room RIGHT
+B $B124 Collectable item x co-ordinate
+B $B125 Collectable item y co-ordinate
+B $B126 Collectable item graphic index
+B $B127 Crusher x co-ordinate
+B $B128 Crusher y co-ordinate
+B $B129
+B $B12A Crusher time
+B $B12B Crusher flag
+B $B12C
+B $B12D,$0A
+B $B137 Coal UDG
+B $B13F Coal positions
+B $B148
+B $B14E Static character graphic IDs
+B $B196,$8C,$14 Nasty data
+B $B222
+
 b $B22A Room 0C
 D $B22A The current room is copied into C42A
+B $B31A Overhead for jumping
+B $B320 Next room UP
+B $B321 Next room DOWN
+B $B322 Next room LEFT
+B $B323 Next room RIGHT
+B $B324 Collectable item x co-ordinate
+B $B325 Collectable item y co-ordinate
+B $B326 Collectable item graphic index
+B $B327 Crusher x co-ordinate
+B $B328 Crusher y co-ordinate
+B $B329
+B $B32A Crusher time
+B $B32B Crusher flag
+B $B32C
+B $B32D,$0A
+B $B337 Coal UDG
+B $B33F Coal positions
+B $B348
+B $B34E Static character graphic IDs
+B $B396,$8C,$14 Nasty data
+B $B422
+
 b $B42A Room 0D
 D $B42A The current room is copied into C42A
+B $B51A Overhead for jumping
+B $B520 Next room UP
+B $B521 Next room DOWN
+B $B522 Next room LEFT
+B $B523 Next room RIGHT
+B $B524 Collectable item x co-ordinate
+B $B525 Collectable item y co-ordinate
+B $B526 Collectable item graphic index
+B $B527 Crusher x co-ordinate
+B $B528 Crusher y co-ordinate
+B $B529
+B $B52A Crusher time
+B $B52B Crusher flag
+B $B52C
+B $B52D,$0A
+B $B537 Coal UDG
+B $B53F Coal positions
+B $B548
+B $B54E Static character graphic IDs
+B $B596,$8C,$14 Nasty data
+B $B622
+
 b $B62A Room 0E
 D $B62A The current room is copied into C42A
+B $B71A Overhead for jumping
+B $B720 Next room UP
+B $B721 Next room DOWN
+B $B722 Next room LEFT
+B $B723 Next room RIGHT
+B $B724 Collectable item x co-ordinate
+B $B725 Collectable item y co-ordinate
+B $B726 Collectable item graphic index
+B $B727 Crusher x co-ordinate
+B $B728 Crusher y co-ordinate
+B $B729
+B $B72A Crusher time
+B $B72B Crusher flag
+B $B72C
+B $B72D,$0A
+B $B737 Coal UDG
+B $B73F Coal positions
+B $B748
+B $B74E Static character graphic IDs
+B $B796,$8C,$14 Nasty data
+B $B822
+
 b $B82A Room 0F
 D $B82A The current room is copied into C42A
+B $B91A Overhead for jumping
+B $B920 Next room UP
+B $B921 Next room DOWN
+B $B922 Next room LEFT
+B $B923 Next room RIGHT
+B $B924 Collectable item x co-ordinate
+B $B925 Collectable item y co-ordinate
+B $B926 Collectable item graphic index
+B $B927 Crusher x co-ordinate
+B $B928 Crusher y co-ordinate
+B $B929
+B $B92A Crusher time
+B $B92B Crusher flag
+B $B92C
+B $B92D,$0A
+B $B937 Coal UDG
+B $B93F Coal positions
+B $B948
+B $B94E Static character graphic IDs
+B $B996,$8C,$14 Nasty data
+B $BA22
+
 b $BA2A Room 10
 D $BA2A The current room is copied into C42A
+B $BB1A Overhead for jumping
+B $BB20 Next room UP
+B $BB21 Next room DOWN
+B $BB22 Next room LEFT
+B $BB23 Next room RIGHT
+B $BB24 Collectable item x co-ordinate
+B $BB25 Collectable item y co-ordinate
+B $BB26 Collectable item graphic index
+B $BB27 Crusher x co-ordinate
+B $BB28 Crusher y co-ordinate
+B $BB29
+B $BB2A Crusher time
+B $BB2B Crusher flag
+B $BB2C
+B $BB2D,$0A
+B $BB37 Coal UDG
+B $BB3F Coal positions
+B $BB48
+B $BB4E Static character graphic IDs
+B $BB96,$8C,$14 Nasty data
+B $BC22
+
 b $BC2A Room 11
 D $BC2A The current room is copied into C42A
+B $BD1A Overhead for jumping
+B $BD20 Next room UP
+B $BD21 Next room DOWN
+B $BD22 Next room LEFT
+B $BD23 Next room RIGHT
+B $BD24 Collectable item x co-ordinate
+B $BD25 Collectable item y co-ordinate
+B $BD26 Collectable item graphic index
+B $BD27 Crusher x co-ordinate
+B $BD28 Crusher y co-ordinate
+B $BD29
+B $BD2A Crusher time
+B $BD2B Crusher flag
+B $BD2C
+B $BD2D,$0A
+B $BD37 Coal UDG
+B $BD3F Coal positions
+B $BD48
+B $BD4E Static character graphic IDs
+B $BD96,$8C,$14 Nasty data
+B $BE22
+
 b $BE2A Room 12
 D $BE2A The current room is copied into C42A
+B $BF1A Overhead for jumping
+B $BF20 Next room UP
+B $BF21 Next room DOWN
+B $BF22 Next room LEFT
+B $BF23 Next room RIGHT
+B $BF24 Collectable item x co-ordinate
+B $BF25 Collectable item y co-ordinate
+B $BF26 Collectable item graphic index
+B $BF27 Crusher x co-ordinate
+B $BF28 Crusher y co-ordinate
+B $BF29
+B $BF2A Crusher time
+B $BF2B Crusher flag
+B $BF2C
+B $BF2D,$0A
+B $BF37 Coal UDG
+B $BF3F Coal positions
+B $BF48
+B $BF4E Static character graphic IDs
+B $BF96,$8C,$14 Nasty data
+B $C022
+
 b $C02A Room 13
-D $c02A The current room is copied into C42A
+D $C02A The current room is copied into C42A
+B $C11A Overhead for jumping
+B $C120 Next room UP
+B $C121 Next room DOWN
+B $C122 Next room LEFT
+B $C123 Next room RIGHT
+B $C124 Collectable item x co-ordinate
+B $C125 Collectable item y co-ordinate
+B $C126 Collectable item graphic index
+B $C127 Crusher x co-ordinate
+B $C128 Crusher y co-ordinate
+B $C129
+B $C12A Crusher time
+B $C12B Crusher flag
+B $C12C
+B $C12D,$0A
+B $C137 Coal UDG
+B $C13F Coal positions
+B $C148
+B $C14E Static character graphic IDs
+B $C196,$8C,$14 Nasty data
+B $C222
+
 b $C22A Room 14
-D $c22A The current room is copied into C42A
+D $C22A The current room is copied into C42A
+B $C31A Overhead for jumping
+B $C320 Next room UP
+B $C321 Next room DOWN
+B $C322 Next room LEFT
+B $C323 Next room RIGHT
+B $C324 Collectable item x co-ordinate
+B $C325 Collectable item y co-ordinate
+B $C326 Collectable item graphic index
+B $C327 Crusher x co-ordinate
+B $C328 Crusher y co-ordinate
+B $C329
+B $C32A Crusher time
+B $C32B Crusher flag
+B $C32C
+B $C32D,$0A
+B $C337 Coal UDG
+B $C33F Coal positions
+B $C348
+B $C34E Static character graphic IDs
+B $C396,$8C,$14 Nasty data
+B $C422
+
 g $C42A Static characters on screen
 D $C42A Each character is 3 bits ie: 3 bytes for 8 characters
 D $C42A $0C bytes per line, $F0 bytes per page
@@ -431,10 +899,10 @@ c $D290 Main entry point
 D $D290 When the game has loaded, the ROM loading routine returns to here
 u $D2E9
 b $D5B9 Colonel Bogey tune data
-B $D5B9,$128,4*$4A
+B $D5B9,$448,4
 D $D5B9 Each entry is 4 bytes - first two are pitch, second two are length
 D $D5B9 This data is wiped as soon as the game proper starts as it becomes part of the screen buffer
-u $D6ED
+u $DA01
 w $EA60 Offsets from character to relative screen positions
 c $EBE0 Print an animinated object on screen
 b $EC65
@@ -443,6 +911,8 @@ c $ECA2 Copy a sprite to the screen
 b $ECDC
 w $ECE0
 b $ECE4 Working buffer for moving sprites
+u $ED24
+C $ED24
 b $ED2E
 b $ED4E Chimney smoke for start room
 D $ED4E #UDG$ED4E,7,,5#UDG$ED4F,7,,5#UDG$ED50,7,,5#UDG$ED51,7,,5#UDG$ED52,7,,5 #UDG$EDC6,7,,5#UDG$EDC7,7,,5#UDG$EDC8,7,,5#UDG$EDC9,7,,5#UDG$EDCA,7,,5 #UDG$EE3E,7,,5#UDG$EE3F,7,,5#UDG$EE40,7,,5#UDG$EE41,7,,5#UDG$EE42,7,,5 #UDG$EEB6,7,,5#UDG$EEB7,7,,5#UDG$EEB8,7,,5#UDG$EEB9,7,,5#UDG$EEBA,7,,5
