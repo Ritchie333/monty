@@ -109,7 +109,7 @@ D $7680 #UDG$7690,7,,2#UDG$7691,7,,2 #UDG$76B0,7,,2#UDG$76B1,7,,2 #UDG$76D0,7,,2
 b $7700 Pull chain
 D $7700 #UDG$7700,7,,2#UDG$7701,7,,2 #UDG$7720,7,,2#UDG$7721,7,,2 #UDG$7740,7,,2#UDG$7741,7,,2 #UDG$7760,7,,2#UDG$7761,7,,2
 D $7700 #UDG$7710,7,,2#UDG$7711,7,,2 #UDG$7730,7,,2#UDG$7731,7,,2 #UDG$7750,7,,2#UDG$7751,7,,2 #UDG$7770,7,,2#UDG$7771,7,,2
-i $7780
+s $7780
 b $7800 Monty up
 D $7800 #UDG$7800,7,,2#UDG$7801,7,,2 #UDG$7820,7,,2#UDG$7821,7,,2 #UDG$7840,7,,2#UDG$7841,7,,2 #UDG$7860,7,,2#UDG$7861,7,,2 #UDG$7880,7,,2#UDG$7881,7,,2 #UDG$78A0,7,,2#UDG$78A1,7,,2 #UDG$78C0,7,,2#UDG$78C1,7,,2 #UDG$78E0,7,,2#UDG$78E1,7,,2
 D $7800 #UDG$7810,7,,2#UDG$7811,7,,2 #UDG$7830,7,,2#UDG$7831,7,,2 #UDG$7850,7,,2#UDG$7851,7,,2 #UDG$7870,7,,2#UDG$7871,7,,2 #UDG$7890,7,,2#UDG$7891,7,,2 #UDG$78B0,7,,2#UDG$78B1,7,,2 #UDG$78D0,7,,2#UDG$78D1,7,,2 #UDG$78F0,7,,2#UDG$78F1,7,,2
@@ -208,7 +208,7 @@ D $832E Bit 7 set when jumping
 c $832F Unused routine
 c $8395 Select the graphic for Monty and return the address in HL
 c $83AD Make a copy of the last movement data and act on it
-u $83B5
+c $83B5
 c $8452
 b $848C
 g $848F Position off the ground (when jumping)
@@ -226,9 +226,9 @@ D $861C #UDG$861C,7,,2#UDG$861D,7,,2 #UDG$863C,7,,2#UDG$863D,7,,2 #UDG$865C,7,,2
 D $861C #UDG$862C,7,,2#UDG$862D,7,,2 #UDG$864C,7,,2#UDG$864D,7,,2 #UDG$866C,7,,2#UDG$866D,7,,2 #UDG$868C,7,,2#UDG$868D,7,,2
 b $869C
 c $86BC
-u $870E
-u $871D
-i $872F Unused routine
+c $870E
+c $871D
+c $872F Unused routine
 c $874E Move all the nasties on the screen
 c $88F4
 c $8964 Update next position for nasties
@@ -318,7 +318,8 @@ c $96D9 Animate the rolling minecart in room 16
 u $979B Monty rolling (not used)
 D $979B #UDG$979B,7,,2#UDG$979C,7,,2 #UDG$97BB,7,,2#UDG$97BC,7,,2 #UDG$97DB,7,,2#UDG$97DC,7,,2 #UDG$97FB,7,,2#UDG$97FC,7,,2
 D $979B #UDG$97AB,7,,2#UDG$97AC,7,,2 #UDG$97CB,7,,2#UDG$97CC,7,,2 #UDG$97EB,7,,2#UDG$97EC,7,,2 #UDG$980B,7,,2#UDG$980C,7,,2
-i $981B Unused
+u $981B Unused
+C $981B
 b $9A2A Room 00
 D $9A2A The current room is copied into C42A
 b $9C2A Room 01
@@ -392,11 +393,15 @@ g $C622
 c $CD26 Convert a sprite ID to a graphic offset in DE
 R $CD26 A The graphic address to look up
 c $C62A Copy the room graphic buffer to screen so it is visible
-i $C641 Unused
+u $C641 Unused
+C $C641
 w $C700 IM2 vector jump table
-i $C800
+u $C800
+C $C800
 b $C850
-i $C88A
+s $C88A
+b $CA38
+s $CA39
 c $CAD1 Display the "game won" sequence
 c $CB03 Print a message
 R $CB03 IX Pointer to the text buffer
@@ -409,10 +414,11 @@ c $CDC4 Monty has grabbed the bucket - start the miner chase
 c $CDEF Interrupt routine for first room
 g $CE19 Frame counter (when zero, background animation happens)
 g $CE1A
-i $CE1B Unused
+c $CE1B
 b $CECC
-i $CECD Unused
-i $CF2C 
+c $CECD Unused
+c $CEEF
+s $CF2C Unused
 s $CF54 Screen attribute buffer
 c $D254 Copy the screen to storage buffer
 s $D260 Screen buffer
@@ -421,12 +427,12 @@ D $D260 Once the intro tune has played, this area to EA5F becomes the screen buf
 D $D260 Control continues to #R$D290
 c $D290 Main entry point
 D $D290 When the game has loaded, the ROM loading routine returns to here
-i $D2E9
+u $D2E9
 b $D5B9 Colonel Bogey tune data
 B $D5B9,$128,4*$4A
 D $D5B9 Each entry is 4 bytes - first two are pitch, second two are length
 D $D5B9 This data is wiped as soon as the game proper starts as it becomes part of the screen buffer
-i $D6E1
+u $D6ED
 w $EA60 Offsets from character to relative screen positions
 c $EBE0 Print an animinated object on screen
 b $EC65
@@ -463,7 +469,7 @@ D $F04B THE HAZARDS THAT CONFRONT A MOLE
 D $F04B IN SEARCH FOR HIS PRECIOUS COAL
 D $F04B DON'T LET MONTY DIE IN VAIN
 D $F04B PRESS A KEY AND TRY AGAIN
-i $F0FB
+c $F0FB
 b $F135
 w $F14B Pointer to start room UDG data
 b $F14D UDGs for start room
@@ -477,11 +483,14 @@ c $F7D6 Start a new game
 c $F817 Print the "game over" message and start a new game
 c $F858 Print the "game won" message and start a new game
 b $F86C
-i $FA26
+c $FA26
+s $FD7B
+c $FD9B
+c $FDB9
 c $FDD5 Print all static characters in the current room
 c $FDEA Print a line characters in a room
 c $FE41 Print a character in the room
-i $FE86
+c $FE86
 c $FE8F
 s $FE98
 c $FEA2

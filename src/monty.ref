@@ -43,6 +43,10 @@ SectionPrefix=Static
 [Monty:Angel]
 #HTML( #R$FF60<br/><img src="./images/udgs/Angel.png"/> )
 
+[Monty:Rolling (not used)]
+#HTML( #R$979B<br/><img src="./images/udgs/Monty_rolling.png"/> )
+
+
 [Moving:Bucket]
 #HTML( #R$6000<br/><img src="./images/udgs/Bucket.png"/> )
 
