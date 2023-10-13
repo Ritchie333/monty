@@ -282,7 +282,7 @@ D $9148 If not, Monty must be underneath it, and is crushed!
 c $917A Make Monty climb a ladder
 c $919D Add value of coal to the current score indicated by value in A
 c $91E8 Print the score
-b $9212
+b $9212 Score position data
 g $9217 Current score (in reverse digits)
 b $921C "SCORE: "
 g $9223 Current score (in text)
@@ -297,6 +297,8 @@ c $935C Set up the location of coal in the room
 c $940C Enter a room
 c $946E Monty has died. Play the "death" tune and lose a life
 c $949E Print the number of lives on the screen
+b $94B6 Lives display position
+b $94BB Lives display text
 c $94C3 Copy the data for the current room into the working buffer
 c $94D9 Move into a new room
 c $952F Put (non coal) collectable objects on screen

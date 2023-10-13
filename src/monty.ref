@@ -2,7 +2,7 @@
 Game=Wanted : Monty Mole
 Copyright=Copyright Peter Harrap / Gremlin Graphics 1984. This dissassembly by Ritchie Swann 2018-2023.
 
-[OtherCode:Loading system]
+[OtherCode:LoadingSystem]
 Source=monty_loader.skool
 
 [Index]
@@ -10,11 +10,13 @@ MemoryMaps
 Graphics
 DataTables
 Reference
+LoadingSystem
 
 [Index:Graphics:Graphics]
 Monty
 Moving
 Static
+
 
 [Page:Monty]
 SectionPrefix=Monty

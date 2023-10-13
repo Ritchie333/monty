@@ -1536,7 +1536,7 @@ c$8092 LD IX,$8122   ; #R$8122 = options data
  $8096 LD IY,$826B   ; #R$826B = strings to print
  $809A LD B,$05      ; Five lines
 *$809C PUSH BC       ; Remember number of lines.
-; This entry point is used by the routines at #R$91E8 and #R$949E.
+; This entry point is used by the routines at #R$91E8 (printing the score) and #R$949E (printing the number of lives).
 *$809D LD H,$00      ; { Put the Y position in HL.
  $809F LD L,(IX+$01) ; }
  $80A2 ADD HL,HL     ; Double it to point at a whole word.
@@ -3404,7 +3404,7 @@ c$90A8 DEC C         ;
  $90BA DJNZ $90AB    ;
  $90BC RET           ;
 
-; Animate the shower water in room $11
+; Animate the shower water in room #N$11
 ;
 ; Used by the routine at #R$8F9F.
 c$90BD LD HL,$912B   ;
@@ -3570,23 +3570,25 @@ c$919D LD B,A          ;
 ; Print the score
 ;
 ; Used by the routines at #R$919D, #R$9551, #R$CAD1, #R$CD41 and #R$F817.
-c$91E8 LD B,$05       ;
- $91EA LD IX,$9217    ;
- $91EE LD IY,$9227    ;
-*$91F2 LD A,(IX+$00)  ;
- $91F5 ADD A,$1B      ;
- $91F7 LD (IY+$00),A  ;
- $91FA DEC IY         ;
- $91FC INC IX         ;
- $91FE DJNZ $91F2     ;
- $9200 SET 7,(IY+$05) ;
- $9204 LD IX,$9212    ;
- $9208 LD IY,$921C    ;
- $920C LD B,$01       ;
- $920E PUSH BC        ;
- $920F JP $809D       ;
+c$91E8 LD B,$05       ; Print 5 characters
+ $91EA LD IX,$9217    ; Point IX to the score digits at #R$9217.
+ $91EE LD IY,$9227    ; Point IY to the end of the score text at #R$9223.
+*$91F2 LD A,(IX+$00)  ; Get the next digit.
+ $91F5 ADD A,$1B      ; Convert it to a character in the character set (#R$813B).
+ $91F7 LD (IY+$00),A  ; Store the digit in the printable text.
+ $91FA DEC IY         ; Move back a character.
+ $91FC INC IX         ; Move forward a digit.
+ $91FE DJNZ $91F2     ; Loop until all 5 characters are done.
+ $9200 SET 7,(IY+$05) ; Set bit 7 on the last character to mark the end of the string.
+ $9204 LD IX,$9212    ; Point IX at the score position data.
+ $9208 LD IY,$921C    ; Point IY at the text to print.
+ $920C LD B,$01       ; Print one line.
+ $920E PUSH BC        ; Ensure the stack is correct for the printing routine.
+ $920F JP $809D       ; Print the string.
 
-; Data block at 9212
+; Score position data
+;
+; Format is x position, y position, attribute, depth, attribute offset
 b$9212 DEFB $00,$BC,$0C,$45,$00
 
 ; Current score (in reverse digits)
@@ -3916,48 +3918,47 @@ c$940C LD SP,$5FFE   ; Reset the stack to #N$5FFE.
 ; Monty has died. Play the "death" tune and lose a life
 ;
 ; Used by the routines at #R$8B90, #R$9148 and #R$92DF.
-c$946E CALL $8D7F    ;
- $9471 LD HL,$964A   ;
- $9474 DEC (HL)      ;
- $9475 CALL $949E    ;
- $9478 LD A,($964A)  ;
- $947B OR A          ;
- $947C JP Z,$F817    ;
- $947F LD HL,($964B) ;
- $9482 LD ($5C7B),HL ;
- $9485 XOR A         ;
- $9486 LD ($8D58),A  ;
- $9489 LD ($8D52),A  ;
- $948C LD ($8D53),A  ;
+c$946E CALL $8D7F    ; Play the tune.
+ $9471 LD HL,$964A   ; { Subtract 1 from the number of lives.
+ $9474 DEC (HL)      ; }
+ $9475 CALL $949E    ; Redraw the display for this.
+ $9478 LD A,($964A)  ; { Have we run out of lives?
+ $947B OR A          ; }
+ $947C JP Z,$F817    ; Jump if so.
+ $947F LD HL,($964B) ; { Set the current position to the
+ $9482 LD ($5C7B),HL ; start position in this room. }
+ $9485 XOR A         ; Set A to 0 to reset some flags.
+ $9486 LD ($8D58),A  ; Reset distance fallen.
+ $9489 LD ($8D52),A  ; Reset room flags.
+ $948C LD ($8D53),A  ; Reset game flags.
  $948F LD HL,$869C   ;
  $9492 LD ($8492),HL ;
- $9495 LD ($848F),A  ;
+ $9495 LD ($848F),A  ; Reset jump position.
  $9498 LD ($8498),A  ;
- $949B JP $940C      ;
+ $949B JP $940C      ; Re-enter the room.
 
 ; Print the number of lives on the screen
 ;
 ; Used by the routines at #R$946E, #R$9551 and #R$CD41.
-c$949E LD A,($964A)  ;
- $94A1 ADD A,$1B     ;
- $94A3 SET 7,A       ;
- $94A5 LD ($94C2),A  ;
- $94A8 LD IX,$94B6   ;
- $94AC LD IY,$94BB   ;
- $94B0 LD B,$01      ;
- $94B2 PUSH BC       ;
- $94B3 JP $809D      ;
- $94B6 INC C         ;
- $94B7 INC C         ;
- $94B8 EX AF,AF'     ;
- $94B9 LD B,H        ;
- $94BA LD D,$0C      ;
- $94BC ADD HL,BC     ;
- $94BD LD D,$05      ;
- $94BF INC DE        ;
- $94C0 DEC H         ;
- $94C1 NOP           ;
- $94C2 NOP           ;
+c$949E LD A,($964A)  ; Get the number of lives.
+ $94A1 ADD A,$1B     ; Convert this to an offset into the character set at #R$813B.
+ $94A3 SET 7,A       ; Set bit 7 to make the string printing routine terminate after this character.
+ $94A5 LD ($94C2),A  ; Store this printable value at the end of the string text.
+ $94A8 LD IX,$94B6   ; Point IX to the string position and data.
+ $94AC LD IY,$94BB   ; Point IY to the string text
+ $94B0 LD B,$01      ; Set to print one row.
+ $94B2 PUSH BC       ; Make sure the stack returns from the string printing routine correctly.
+ $94B3 JP $809D      ; Print the string.
+
+; Lives display position
+;
+; Format is x position, y position, attribute, depth, attribute offset
+b$94B6 DEFB $0C,$0C,$08,$44,$16
+
+; Lives display text
+;
+; "LIVES:  "
+b$94BB DEFB $0C,$09,$16,$05,$13,$25,$00,$00
 
 ; Copy the data for the current room into the working buffer
 ;
