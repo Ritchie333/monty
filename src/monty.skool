@@ -1794,17 +1794,17 @@ c$82A6 LD HL,$832E   ; #R$832E is the last player input.
 g$832E DEFB $04
 
 ; Routine at 832F
-c$832F LD A,($848F)  ; Get the current input state.
+c$832F LD A,($848F)  ; Get the current position off the ground.
  $8332 OR A          ; Is it zero?
  $8333 JP NZ,$83B5   ; Jump forward if not.
- $8336 LD A,($832E)  ; Get the last movement.
+ $8336 LD A,($832E)  ; Get the last movement (#R$832E).
  $8339 BIT 7,A       ; Was "jump" pressed?
  $833B JR Z,$8342    ; Jump forward if not.
  $833D RES 7,A       ; { Reset the jump flag.
  $833F LD ($848F),A  ; }
-*$8342 LD A,($832E)  ;
- $8345 AND $07       ;
- $8347 CP $04        ;
+*$8342 LD A,($832E)  ; { Get the last movement without the jump bit.
+ $8345 AND $07       ; }
+ $8347 CP $04        ; ???
  $8349 RET Z         ;
  $834A LD B,A        ;
  $834B LD A,($849B)  ;
@@ -1843,26 +1843,30 @@ c$832F LD A,($848F)  ; Get the current input state.
  $8392 DEC A         ;
  $8393 JR $836A      ;
 
-; Select the graphic for Monty and return the address in HL
+; Select the graphic for Monty
 ;
 ; Used by the routines at #R$8A0A and #R$8A63.
-c$8395 LD L,A        ;
- $8396 LD H,$00      ;
- $8398 ADD HL,HL     ;
+;
+; A Frame number ( 0 - 3)
+; DE Base address of graphics
+; HL On exit, points to the graphic to draw in screen.
+c$8395 LD L,A        ; { Put the frame number in #REGhl.
+ $8396 LD H,$00      ; }
+ $8398 ADD HL,HL     ; { Multiply by 32 to get a screen offset. }
  $8399 ADD HL,HL     ;
  $839A ADD HL,HL     ;
  $839B ADD HL,HL     ;
  $839C ADD HL,HL     ;
- $839D ADD HL,DE     ;
- $839E LD A,($832E)  ;
- $83A1 AND $03       ;
- $83A3 EX DE,HL      ;
- $83A4 LD H,A        ;
- $83A5 LD L,$00      ;
- $83A7 SRL H         ;
- $83A9 RR L          ;
- $83AB ADD HL,DE     ;
- $83AC RET           ;
+ $839D ADD HL,DE     ; Add the base address
+ $839E LD A,($832E)  ; Get the last input data.
+ $83A1 AND $03       ; Ignore anything without the direction flags.
+ $83A3 EX DE,HL      ; Remember the base address.
+ $83A4 LD H,A        ; { Put the position in #REGhl.
+ $83A5 LD L,$00      ; }
+ $83A7 SRL H         ; { Convert this into an offset from the graphic table.
+ $83A9 RR L          ; }
+ $83AB ADD HL,DE     ; { Combine this to point to the correct graphic and return.
+ $83AC RET           ; }
 
 ; Make a copy of the last movement data and act on it
 c$83AD LD A,($832E)  ;
@@ -2015,8 +2019,8 @@ b$8498 DEFB $00
 ; Temporary storage for redrawing when jumping or falling
 w$8499 DEFW $EADE
 
-; Data block at 849B
-b$849B DEFB $01
+; Last input data when jumping or falling
+g$849B DEFB $01
 
 ; Monty up
 ;
@@ -2523,20 +2527,20 @@ c$89D4 LD IX,$8D52    ; Point #REGix at the room flags (#R$8D52).
  $89DB LD ($8D7D),HL  ; Put this in the temporary store (#R$8D7D).
  $89DE BIT 0,(IX+$00) ;
  $89E2 JP NZ,$8B1F    ;
- $89E5 LD A,($848F)   ;
- $89E8 OR A           ;
- $89E9 JP NZ,$8A63    ;
- $89EC LD A,($832E)   ;
- $89EF BIT 7,A        ;
- $89F1 JR Z,$8A03     ;
- $89F3 RES 7,A        ;
- $89F5 LD ($849B),A   ;
- $89F8 INC A          ;
- $89F9 LD ($848F),A   ;
- $89FC SET 1,(IX+$00) ;
- $8A00 JP $8A63       ;
-*$8A03 BIT 2,(IX+$00) ;
- $8A07 JP NZ,$917A    ;
+ $89E5 LD A,($848F)   ; Get Monty's jump position.
+ $89E8 OR A           ; Is it 0?
+ $89E9 JP NZ,$8A63    ; Move forward to handle jump movement if Monty is already in mid-air.
+ $89EC LD A,($832E)   ; Get the movement flags?
+ $89EF BIT 7,A        ; Is Monty jumping?
+ $89F1 JR Z,$8A03     ; Move forward if not.
+ $89F3 RES 7,A        ; Reset the jump flag.
+ $89F5 LD ($849B),A   ; Store this.
+ $89F8 INC A          ; { Set the initial position on the ground.
+ $89F9 LD ($848F),A   ; }
+ $89FC SET 1,(IX+$00) ; { Set bit 1 to show Monty is jumping and move forward.
+ $8A00 JP $8A63       ; }
+*$8A03 BIT 2,(IX+$00) ; Is Monty on a ladder?
+ $8A07 JP NZ,$917A    ; Move forward if not.
 ; Move Monty along the ladder.
 ; This entry point is used by the routine at #R$917A.
 *$8A0A LD A,($832E)   ;
@@ -2675,7 +2679,7 @@ c$8B1F LD A,($5C7C)  ; { Take 2 off the current Y position.
  $8B30 INC (HL)      ; { Increment the distance fallen. }
  $8B31 CALL $8452    ; Redraw Monty. Control continues to #R$8B34.
 ; This entry point is used by the routines at #R$8A0A and #R$8A63.
-c$8B34 CALL $8B90     ; See if Monty has collided with anything.
+*$8B34 CALL $8B90     ; See if Monty has collided with anything.
  $8B37 LD HL,$5C7C    ; Get the current position in #REGhl.
  $8B3A BIT 1,(IX+$00) ;
  $8B3E JR NZ,$8B46    ;
@@ -2720,12 +2724,12 @@ c$8B34 CALL $8B90     ; See if Monty has collided with anything.
 ; Determine what Monty has collided with
 ;
 ; Used by the routine at #R$8B34.
-c$8B90 CALL $8C3D     ; Check for collision
- $8B93 LD IX,$8D52    ;
- $8B97 LD IY,$8D54    ;
- $8B9B LD A,(IX+$00)  ;
+c$8B90 CALL $8C3D     ; Check for collision.
+ $8B93 LD IX,$8D52    ; Point #REGix at the room flags (#R$8D52).
+ $8B97 LD IY,$8D54    ; #R$8D54.
+ $8B9B LD A,(IX+$00)  ; { Clear all bits except 2 and 4 on the room flags.
  $8B9E AND $0A        ;
- $8BA0 LD (IX+$00),A  ;
+ $8BA0 LD (IX+$00),A  ; }
  $8BA3 LD A,(IY+$00)  ;
  $8BA6 OR A           ;
  $8BA7 JR NZ,$8BAD    ;
@@ -2738,12 +2742,12 @@ c$8B90 CALL $8C3D     ; Check for collision
  $8BBA OR A           ;
  $8BBB JR NZ,$8BC1    ;
  $8BBD SET 5,(IX+$00) ;
-*$8BC1 LD A,(IY+$03)  ;
- $8BC4 OR A           ;
- $8BC5 JR NZ,$8BCB    ;
- $8BC7 SET 4,(IX+$00) ;
-*$8BCB CP $01         ;
-*$8BCD JP Z,$946E     ;
+*$8BC1 LD A,(IY+$03)  ; Get the attribute at this location.
+ $8BC4 OR A           ; Is it zero?
+ $8BC5 JR NZ,$8BCB    ; Move forward if not.
+ $8BC7 SET 4,(IX+$00) ; Set bit 4 (Monty is in empty space).
+*$8BCB CP $01         ; Is it 1?
+*$8BCD JP Z,$946E     ; If so, Monty's touched a nasty, which is fatal.
  $8BD0 LD A,(IY+$02)  ;
  $8BD3 CP $01         ;
  $8BD5 JR Z,$8BCD     ;
@@ -2773,8 +2777,8 @@ c$8B90 CALL $8C3D     ; Check for collision
  $8C08 LD A,C         ;
  $8C09 OR A           ;
  $8C0A JP Z,$8B0C     ;
- $8C0D BIT 7,(IX+$01) ; { Has Monty reached the ground?
- $8C11 RET Z          ; Return if not. }
+ $8C0D BIT 7,(IX+$01) ; Has Monty reached the ground?
+ $8C11 RET Z          ; Return if not.
  ; Monty has reached the ground after falling.
  $8C12 RES 7,(IX+$01) ;
  $8C16 RES 0,(IX+$00) ;
@@ -2795,15 +2799,15 @@ c$8B90 CALL $8C3D     ; Check for collision
 ; Check if Monty can move (is there a wall in the way?)
 ;
 ; Used by the routine at #R$8B90.
-c$8C3D LD IY,$8D54     ;
+c$8C3D LD IY,$8D54     ; #R$8D54
  $8C41 LD B,$02        ;
- $8C43 LD A,($5C7C)    ;
- $8C46 LD C,A          ;
- $8C47 LD A,$BF        ;
- $8C49 SUB C           ;
- $8C4A PUSH AF         ;
- $8C4B AND $07         ;
- $8C4D JR Z,$8C51      ;
+ $8C43 LD A,($5C7C)    ; Get the Y co-ordinate (#R$5C7C).
+ $8C46 LD C,A          ; Remember this in #REGc.
+ $8C47 LD A,$BF        ; { Invert the bottom 6 bits.
+ $8C49 SUB C           ; }
+ $8C4A PUSH AF         ; Remember this.
+ $8C4B AND $07         ; Get the lowest 3 bits.
+ $8C4D JR Z,$8C51      ; Jump forward if none are set.
  $8C4F LD B,$03        ;
 *$8C51 LD A,B          ;
  $8C52 LD ($8D5B),A    ;
@@ -2826,21 +2830,21 @@ c$8C3D LD IY,$8D54     ;
  $8C73 RRCA            ;
  $8C74 RRCA            ;
  $8C75 LD ($8D5D),A    ;
- $8C78 LD A,($8D5E)    ;
- $8C7B LD L,A          ;
+ $8C78 LD A,($8D5E)    ; Get the Y co-ordinate.
+ $8C7B LD L,A          ; { Scale it up to a screen address.
  $8C7C LD H,$00        ;
  $8C7E ADD HL,HL       ;
  $8C7F ADD HL,HL       ;
  $8C80 ADD HL,HL       ;
  $8C81 ADD HL,HL       ;
- $8C82 ADD HL,HL       ;
- $8C83 LD A,($8D5D)    ;
- $8C86 LD D,$00        ;
- $8C88 LD E,A          ;
- $8C89 ADD HL,DE       ;
- $8C8A LD DE,$5800     ;
- $8C8D ADD HL,DE       ;
- $8C8E LD ($8D59),HL   ;
+ $8C82 ADD HL,HL       ; }
+ $8C83 LD A,($8D5D)    ; Get the X co-ordinate.
+ $8C86 LD D,$00        ; { Add this to get the desired offset.
+ $8C88 LD E,A          ; 
+ $8C89 ADD HL,DE       ; }
+ $8C8A LD DE,$5800     ; { Add the base address to get an attribute on screen.
+ $8C8D ADD HL,DE       ; }
+ $8C8E LD ($8D59),HL   ; Store this attribute.
  $8C91 LD A,($8D5C)    ;
  $8C94 LD B,A          ;
  $8C95 LD (IY+$00),$00 ;
@@ -2896,16 +2900,16 @@ c$8C3D LD IY,$8D54     ;
 
 ; Calculate new y position after jumping
 ;
-; A copy of this routine is at $8D2E
+; Used by the routine at #R$8C3D. A copy of this routine is at #R$8D2E
 ;
 ; IY pointer to jump table
-c$8D0F LD DE,$C51A     ;
+c$8D0F LD DE,$C51A     ; Get the overhead for jumping.
  $8D12 PUSH BC         ;
  $8D13 LD B,$04        ;
  $8D15 LD A,(HL)       ;
  $8D16 EX DE,HL        ;
 *$8D17 CP (HL)         ;
- $8D18 JR Z,$8D50      ;
+ $8D18 JR Z,$8D50      ; If there is a match, clean up the stack and return.
  $8D1A INC (IY+$00)    ;
  $8D1D INC HL          ;
  $8D1E DJNZ $8D17      ;
@@ -2916,8 +2920,11 @@ c$8D0F LD DE,$C51A     ;
  $8D27 DJNZ $8D0F      ;
  $8D29 LD (IY+$00),$04 ;
  $8D2D RET             ;
-; This entry point is used by the routine at #R$8C3D.
-*$8D2E LD DE,$C51A     ;
+
+; Routine at 8D2E
+;
+; Used by the routine at #R$8C3D.
+c$8D2E LD DE,$C51A     ;
  $8D31 PUSH BC         ;
  $8D32 LD B,$04        ;
  $8D34 LD A,(HL)       ;
@@ -2946,7 +2953,7 @@ c$8D0F LD DE,$C51A     ;
 ; { 1 | Monty is jumping }
 ; { 2 | Monty is at a ladder }
 ; { 3 | Monty has picked up the non-coal item }
-; { 4 | }
+; { 4 | Monty is standing in an empty space }
 ; { 5 | }
 ; { 6 | }
 ; { 7 | }
@@ -2978,7 +2985,7 @@ g$8D55 DEFB $09,$52,$45
 g$8D58 DEFB $00
 
 ; Current attribute address of Monty
-g$8D59 DEFB $00,$00
+g$8D59 DEFW $0000
 
 ; Y screen offset for attribute
 g$8D5B DEFB $00
@@ -2986,35 +2993,37 @@ g$8D5B DEFB $00
 ; X screen offset for attribute
 g$8D5C DEFB $00
 
-; Game status buffer entry at 8D5D
+; X co-ordinate for nasty (?)
 g$8D5D DEFB $00
 
-; Game status buffer entry at 8D5E
+; Y co-ordinate for nasty (?)
 g$8D5E DEFB $00
 
-; Return the current screen address for Monty in HL
+; Return the current screen address
 ;
 ; Used by the routine at #R$8B90.
-c$8D5F LD A,($5C7C)  ;
- $8D62 SUB $10       ;
+;
+; HL On exit, holds the screen address for the current location.
+c$8D5F LD A,($5C7C)  ; Get the Y co-ordinate.
+ $8D62 SUB $10       ; { Convert it to an offset in the screen address buffer.
  $8D64 LD L,A        ;
  $8D65 LD H,$00      ;
  $8D67 ADD HL,HL     ;
  $8D68 LD DE,$EA60   ;
- $8D6B ADD HL,DE     ;
- $8D6C LD A,(HL)     ;
+ $8D6B ADD HL,DE     ; }
+ $8D6C LD A,(HL)     ; { Put the screen address in #REGhl.
  $8D6D INC HL        ;
  $8D6E LD H,(HL)     ;
- $8D6F LD L,A        ;
- $8D70 LD D,$00      ;
- $8D72 LD A,($5C7B)  ;
- $8D75 AND $F8       ;
+ $8D6F LD L,A        ; }
+ $8D70 LD D,$00      ; Initialise D to add the X co-ordinate.
+ $8D72 LD A,($5C7B)  ; Get the X co-ordinate.
+ $8D75 AND $F8       ; { Convert to a screen offset and store it in E.
  $8D77 RRCA          ;
  $8D78 RRCA          ;
  $8D79 RRCA          ;
- $8D7A LD E,A        ;
- $8D7B ADD HL,DE     ;
- $8D7C RET           ;
+ $8D7A LD E,A        ; }
+ $8D7B ADD HL,DE     ; { Put the screen address in HL and return.
+ $8D7C RET           ; }
 
 ; Temp store for screen position
 g$8D7D DEFB $00,$00
@@ -4419,14 +4428,13 @@ c$96D9 LD A,($5C7C)  ; { Is Monty at the bottom of the screen?
  $9784 LD ($5C7B),HL ;
  $9787 LD ($964B),HL ;
  $978A LD ($9649),A  ;
- $978D XOR A         ;
- $978E LD ($8D58),A  ;
+ $978D XOR A         ; { Reset distance fallen.
+ $978E LD ($8D58),A  ; }
  $9791 LD ($8498),A  ;
  $9794 JP $940C      ;
- $9797 NOP           ;
- $9798 NOP           ;
- $9799 NOP           ;
- $979A NOP           ;
+
+ ; Unused
+s$9797 DEFS $04
 
 ; Monty rolling (not used)
 ;
@@ -6800,7 +6808,7 @@ b$C22A DEFB $00,$1E,$00,$00,$00,$00,$00,$00
 ;
 ; Each character is 3 bits ie: 3 bytes for 8 characters
 ; .
-; $0C bytes per line, $F0 bytes per page
+; #N$0C bytes per line, #N$F0 bytes per page
 g$C42A DEFB $92,$48,$49
  $C42D DEFB $24,$92,$49
  $C430 DEFB $24,$92,$49
