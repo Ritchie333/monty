@@ -2609,8 +2609,15 @@ b$826B DEFB $0F,$10,$14,$09,$0F,$0E,$93
 ; Game input : 0 - keyboard, 1 - Kempston, 2 - Sinclair
 g$82A3 DEFB $01
 
-; Data block at 82A4
-b$82A4 DEFB $0E,$00
+; Frame counter for input options
+;
+; Cycles between 00 and #N$0F. Used by the routine at #R$82A5.
+g$82A4 DEFB $0E
+
+; Set to 0 to print an option, or 1 to hide it
+;
+; Used by the routine at #R$82A5.
+g$82A5 DEFB $00
 
 ; Check for player input
 ;
@@ -2909,8 +2916,8 @@ g$848E DEFB $03
 ; Position off the ground (when jumping)
 g$848F DEFB $00
 
-; Data block at 8490
-b$8490 DEFB $6A,$4F
+; Unused
+u$8490 DEFB $6A,$4F
 
 ; Pointer to current movement flags
 ;
@@ -3397,8 +3404,8 @@ u$88F4 CP $02          ;
  $895D INC L           ;
  $895E JR $893B        ;
 
-; Game status buffer entry at 8960
-g$8960 DEFW $0000
+; Unused
+u$8960 DEFW $0000
 
 ; X co-ordinate for current nasty being drawn.
 ;
@@ -5297,8 +5304,8 @@ c$960F LD B,(IX+$02) ;
  $9640 DJNZ $9636    ;
  $9642 RET           ;
 
-; Data block at 9643
-b$9643 DEFB $00,$00,$00,$00
+; Unused
+s$9643 DEFS $04
 
 ; Storage block for calculating coal pickups
 ;
@@ -8969,7 +8976,8 @@ g$C52B DEFB $00
 ; Crusher top column
 g$C52C DEFB $00
 
-g$C52D DEFB $00,$00,$00,$00,$00,$00,$00,$00
+; Unused
+u$C52D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $C535 DEFB $00,$00
 
 ; Coal UDG
@@ -9326,8 +9334,8 @@ u$C800 LD E,E
  $C84E POP HL
  $C84F RET
 
-; Data block at C850
-b$C850 DEFB $01,$0A,$0A,$00,$90,$01,$28,$00
+; Unused
+u$C850 DEFB $01,$0A,$0A,$00,$90,$01,$28,$00
  $C858 DEFB $0A,$0A,$00,$FF,$80,$00,$00,$00
  $C860 DEFB $AF,$0A,$0A,$00,$14,$14,$14,$14
  $C868 DEFB $00,$00,$00,$00,$00,$00,$00,$00
@@ -9339,8 +9347,8 @@ b$C850 DEFB $01,$0A,$0A,$00,$90,$01,$28,$00
 ; Unused
 s$C88A DEFS $01AE
 
-; Data block at CA38
-b$CA38 DEFB $FF
+; Unused
+u$CA38 DEFB $FF
 
 ; Unused
 s$CA39 DEFS $98
@@ -9348,26 +9356,26 @@ s$CA39 DEFS $98
 ; Display the "game won" sequence
 ;
 ; Used by the routine at #R$F858.
-c$CAD1 LD HL,$4000   ;
- $CAD4 DI            ;
- $CAD5 LD IY,$5C3A   ;
- $CAD9 IM 1          ;
- $CADB EI            ;
- $CADC LD DE,$4001   ;
+c$CAD1 LD HL,$4000   ; Set #REGhl to the start of the screen buffer.
+ $CAD4 DI            ; Turn off interrupts, so IM1 can be set.
+ $CAD5 LD IY,$5C3A   ; Set #REGiy to the default used in the ROM.
+ $CAD9 IM 1          ; Switch to interrupt mode 1.
+ $CADB EI            ; Re-enable interrupts
+ $CADC LD DE,$4001   ; { Clear the screen.
  $CADF LD BC,$1AFF   ;
  $CAE2 LD (HL),$00   ;
- $CAE4 LDIR          ;
- $CAE6 LD HL,$5840   ;
+ $CAE4 LDIR          ; }
+ $CAE6 LD HL,$5840   ; { Set the attributes to bright cyan on black
  $CAE9 LD DE,$5841   ;
  $CAEC LD BC,$027F   ;
  $CAEF LD (HL),$45   ;
- $CAF1 LDIR          ;
- $CAF3 CALL $91E8    ;
- $CAF6 XOR A         ;
- $CAF7 LD ($CB92),A  ;
- $CAFA LD A,$05      ;
- $CAFC LD ($CB91),A  ;
- $CAFF LD IX,$5CE1   ;
+ $CAF1 LDIR          ; }
+ $CAF3 CALL $91E8    ; Print the score.
+ $CAF6 XOR A         ; { Reset the timer for scrolling the message.
+ $CAF7 LD ($CB92),A  ; }
+ $CAFA LD A,$05      ; { Start at column 5.
+ $CAFC LD ($CB91),A  ; }
+ $CAFF LD IX,$5CE1   ; Point #REGix to the end message.
 
 ; Print a message
 ;
@@ -9376,88 +9384,105 @@ c$CAD1 LD HL,$4000   ;
 ; or FE = end of message, FF = newline
 ;
 ; IX Pointer to the text buffer
-c$CB03 LD A,(IX+$00) ;
- $CB06 CP $FE        ;
- $CB08 RET Z         ;
- $CB09 CP $FF        ;
- $CB0B CALL Z,$CB15  ;
- $CB0E CALL NZ,$CB35 ;
- $CB11 INC IX        ;
- $CB13 JR $CB03      ;
-*$CB15 PUSH AF       ;
- $CB16 LD A,$05      ;
- $CB18 LD C,$00      ;
- $CB1A LD ($CB91),A  ;
- $CB1D LD A,($CB92)  ;
- $CB20 INC A         ;
+c$CB03 LD A,(IX+$00) ; Get the next line.
+ $CB06 CP $FE        ; Is it the end of the message?
+ $CB08 RET Z         ; Return if so.
+ $CB09 CP $FF        ; Is it a new line?
+ $CB0B CALL Z,$CB15  ; Print one if so.
+ $CB0E CALL NZ,$CB35 ; Otherwise print the line.
+ $CB11 INC IX        ; { Move to the next data and repeat.
+ $CB13 JR $CB03      ; }
+
+; Scroll a line of the message
+;
+; Used by the routine at #R$CB03.
+c$CB15 PUSH AF       ; Remember #REGa.
+ $CB16 LD A,$05      ; Start at column 5.
+ $CB18 LD C,$00      ; Start at row 0.
+ $CB1A LD ($CB91),A  ; Set the current column.
+ $CB1D LD A,($CB92)  ; { Increment the timer,
+ $CB20 INC A         ; which cycles between 0 and 3.
  $CB21 AND $03       ;
- $CB23 LD ($CB92),A  ;
- $CB26 JR NZ,$CB2A   ;
- $CB28 LD C,$10      ;
-*$CB2A LD A,$0A      ;
- $CB2C ADD A,C       ;
- $CB2D LD B,A        ;
-*$CB2E CALL $CB63    ;
- $CB31 DJNZ $CB2E    ;
- $CB33 POP AF        ;
- $CB34 RET           ;
-*$CB35 PUSH IX       ;
- $CB37 LD L,A        ;
- $CB38 LD H,$00      ;
- $CB3A ADD HL,HL     ;
+ $CB23 LD ($CB92),A  ; }
+ $CB26 JR NZ,$CB2A   ; If the timer is not yet zero, skip this.
+ $CB28 LD C,$10      ; { Scroll #N$1A columns.
+*$CB2A LD A,$0A      ; 
+ $CB2C ADD A,C       ; }
+ $CB2D LD B,A        ; Scroll #0A rows.
+*$CB2E CALL $CB63    ; Scroll the column.
+ $CB31 DJNZ $CB2E    ; Loop back if there is more to do.
+ $CB33 POP AF        ; { Restore #REGa and return.
+ $CB34 RET           ; }
+
+; Print a character in a message.
+;
+; .
+;
+; IX Pointer to the text buffer
+; A Character to print
+c$CB35 PUSH IX       ; Remember #REGix
+ $CB37 LD L,A        ; { Put the character in #REGhl.
+ $CB38 LD H,$00      ; }
+ $CB3A ADD HL,HL     ; { Multiply by 8 to get a correct offset.
  $CB3B ADD HL,HL     ;
- $CB3C ADD HL,HL     ;
- $CB3D LD DE,$813B   ;
- $CB40 ADD HL,DE     ;
- $CB41 PUSH HL       ;
- $CB42 POP IX        ;
- $CB44 LD HL,$50C0   ;
- $CB47 LD DE,($CB91) ;
- $CB4B LD D,$00      ;
- $CB4D ADD HL,DE     ;
- $CB4E LD B,$08      ;
-*$CB50 LD A,(IX+$00) ;
- $CB53 LD (HL),A     ;
- $CB54 INC H         ;
- $CB55 INC IX        ;
- $CB57 DJNZ $CB50    ;
- $CB59 POP IX        ;
- $CB5B LD A,($CB91)  ;
+ $CB3C ADD HL,HL     ; }
+ $CB3D LD DE,$813B   ; { Add basic offset to character set.
+ $CB40 ADD HL,DE     ; }
+ $CB41 PUSH HL       ; { Put the address of the graphic in #REGix.
+ $CB42 POP IX        ; }
+ $CB44 LD HL,$50C0   ; Point #REGhl at the bottom of the screen.
+ $CB47 LD DE,($CB91) ; { Put the column in #REGde.
+ $CB4B LD D,$00      ; }
+ $CB4D ADD HL,DE     ; Add this as an offset to get the actual screen address.
+ $CB4E LD B,$08      ; 8 rows to copy.
+*$CB50 LD A,(IX+$00) ; Get the graphic data.
+ $CB53 LD (HL),A     ; Copy it to screen.
+ $CB54 INC H         ; Move forward a row.
+ $CB55 INC IX        ; Move forward in the data.
+ $CB57 DJNZ $CB50    ; Loop back if there is more to do.
+ $CB59 POP IX        ; Restore #REGix.
+ $CB5B LD A,($CB91)  ; { Move to the next column.
  $CB5E INC A         ;
- $CB5F LD ($CB91),A  ;
+ $CB5F LD ($CB91),A  ; }
  $CB62 RET           ;
-*$CB63 PUSH AF       ;
+
+; Move a line of a message upwards
+;
+; Used by the routine at #R$CB15.
+c$CB63 PUSH AF       ; { Store all registers.
  $CB64 PUSH BC       ;
  $CB65 PUSH DE       ;
  $CB66 PUSH HL       ;
- $CB67 PUSH IX       ;
- $CB69 LD IX,$EB5E   ;
- $CB6D LD B,$7F      ;
+ $CB67 PUSH IX       ; }
+ $CB69 LD IX,$EB5E   ; Point #REGix at the bottom of the screen (using the offset from #R$EA60).
+ $CB6D LD B,$7F      ; Number of characters to scroll.
  $CB6F NOP           ;
- $CB70 HALT          ;
-*$CB71 PUSH BC       ;
- $CB72 LD H,(IX+$01) ;
- $CB75 LD L,(IX+$00) ;
- $CB78 LD D,(IX+$03) ;
- $CB7B LD E,(IX+$02) ;
- $CB7E LD BC,$0020   ;
- $CB81 LDIR          ;
- $CB83 POP BC        ;
- $CB84 DEC IX        ;
- $CB86 DEC IX        ;
- $CB88 DJNZ $CB71    ;
- $CB8A POP IX        ;
+ $CB70 HALT          ; Wait for interrupts, to stop flicker.
+*$CB71 PUSH BC       ; Preserve #REGbc.
+ $CB72 LD H,(IX+$01) ; { Copy from the first line.
+ $CB75 LD L,(IX+$00) ; }
+ $CB78 LD D,(IX+$03) ; { Copy to the second line.
+ $CB7B LD E,(IX+$02) ; }
+ $CB7E LD BC,$0020   ; Copy one line.
+ $CB81 LDIR          ; Do the copy.
+ $CB83 POP BC        ; Restore IX.
+ $CB84 DEC IX        ; { Move up a line.
+ $CB86 DEC IX        ; }
+ $CB88 DJNZ $CB71    ; Loop back until all lines are scrolled.
+ $CB8A POP IX        ; { Restore all registers and return.
  $CB8C POP HL        ;
  $CB8D POP DE        ;
  $CB8E POP BC        ;
  $CB8F POP AF        ;
- $CB90 RET           ;
+ $CB90 RET           ; }
 
-; Data block at CB91
+; Column to print the next character in a message.
 b$CB91 DEFB $00      ;
 
-; Data block at CB92
-b$CB92 DEFB $00      ;
+; Timer used when scrolling the end message
+;
+; Cycles between 00 and 03.
+g$CB92 DEFB $00      ;
 
 ; Run one frame in the first (outdoor) room
 ;
@@ -9817,8 +9842,8 @@ c$CDEF PUSH AF       ; { Cache all working registers.
 ; Frame counter (when zero, background animation happens)
 g$CE19 DEFB $03
 
-; Game status buffer entry at CE1A
-g$CE1A DEFB $87
+; Unused
+$CE1A DEFB $87
 
 ; Unused
 u$CE1B CALL $935C
@@ -9894,8 +9919,8 @@ u$CE1B CALL $935C
  $CEC6 LD ($CECC),A
  $CEC9 JP $940C
 
-; Data block at CECC
-b$CECC DEFB $FF
+; Unused
+u$CECC DEFB $FF
 
 ; Unused
 ;
@@ -11213,8 +11238,8 @@ c$EBE0 LD A,($ECDE)  ; #R$ECDE - Co-ordinates to print at.
  $EC63 LD (HL),A     ;
  $EC64 RET           ;
 
-; Data block at EC65
-b$EC65 DEFB $77,$23,$77,$11,$1E,$00,$19,$10
+; Unused
+u$EC65 DEFB $77,$23,$77,$11,$1E,$00,$19,$10
  $EC6D DEFB $F5,$C9
 
 ; Copy a sprite to the working buffer
@@ -11333,8 +11358,8 @@ u$ED24 AND B
  $ED2C INC HL
  $ED2D RET
 
-; Data block at ED2E
-b$ED2E DEFB $ED,$5B,$A6,$EB,$1A,$AE,$20,$04
+; Unused
+u$ED2E DEFB $ED,$5B,$A6,$EB,$1A,$AE,$20,$04
  $ED36 DEFB $23,$13,$18,$F8,$CB,$17,$20,$09
  $ED3E DEFB $13,$1A,$A7,$CD,$99,$FC,$20,$03
  $ED46 DEFB $C9,$CB,$7E,$23,$28,$FB,$23,$7E
@@ -11693,8 +11718,8 @@ u$F0FB EX DE,HL      ;
  $F131 JP NZ,$F064   ;
  $F134 RET           ;
 
-; Data block at F135
-b$F135 DEFB $52,$22,$52,$72,$22,$52,$72,$22
+; Unused
+u$F135 DEFB $52,$22,$52,$72,$22,$52,$72,$22
  $F13D DEFB $52,$72,$22,$52,$72,$22,$52,$72
  $F145 DEFB $22,$52,$72,$22,$52,$72
 
@@ -11847,8 +11872,8 @@ b$F37D DEFB $6B,$6B,$6B,$6B,$6F,$6F,$6F,$68
  $F59D DEFB $42,$42,$42,$42,$42,$42,$42,$42
  $F5A5 DEFB $42,$42,$42,$42,$42,$42,$42,$42
 
-; Data block at F5AD
-b$F5AD DEFB $A2,$D2,$A2,$52,$A2,$12,$32,$E2
+; Unused
+u$F5AD DEFB $A2,$D2,$A2,$52,$A2,$12,$32,$E2
  $F5B5 DEFB $42,$92,$62,$92,$62,$82,$D2,$62
  $F5BD DEFB $92,$62,$82,$D2,$62,$92,$E2,$92
  $F5C5 DEFB $E2,$52,$A2,$82,$92,$E2,$52,$A2
@@ -12183,17 +12208,17 @@ c$F817 DI            ; Disable interrupts.
  $F834 LD ($CB17),A  ;
  $F837 LD ($CB92),A  ;
  $F83A LD ($CB91),A  ;
- $F83D LD HL,$5840   ;
+ $F83D LD HL,$5840   ; { Display bright yellow on black.
  $F840 LD DE,$5841   ;
  $F843 LD BC,$027F   ;
  $F846 LD (HL),$46   ;
- $F848 LDIR          ;
- $F84A CALL $CB03    ;
- $F84D XOR A         ;
- $F84E LD A,$05      ;
- $F850 LD ($CB17),A  ;
- $F853 LD B,$FF      ;
- $F855 JP $F85D      ;
+ $F848 LDIR          ; }
+ $F84A CALL $CB03    ; Display the message.
+ $F84D XOR A         ; No effect.
+ $F84E LD A,$05      ; { Start drawing at column 5.
+ $F850 LD ($CB17),A  ; }
+ $F853 LD B,$FF      ; Time to pause at the end.
+ $F855 JP $F85D      ; Jump forward to close the message.
 
 ; Print the "game won" message and start a new game
 ;
@@ -12201,17 +12226,17 @@ c$F817 DI            ; Disable interrupts.
 c$F858 CALL $CAD1    ;
  $F85B LD B,$FF      ;
 ; This entry point is used by the routine at #R$F817.
-*$F85D IN A,($FE)    ;
+*$F85D IN A,($FE)    ; { Wait for a key to be pressed.
  $F85F AND $1F       ;
- $F861 XOR $1F       ;
- $F863 JR NZ,$F869   ;
- $F865 HALT          ;
- $F866 HALT          ;
- $F867 DJNZ $F85D    ;
-*$F869 JP $F7D6      ;
+ $F861 XOR $1F       ; }
+ $F863 JR NZ,$F869   ; If a key was pressed, jump forward.
+ $F865 HALT          ; { Pause and repeat if there are more
+ $F866 HALT          ; attempts required.
+ $F867 DJNZ $F85D    ; }
+*$F869 JP $F7D6      ; Restart the game.
 
-; Data block at F86C
-b$F86C DEFB $92,$B2,$A2,$C2,$C2,$52,$32,$62
+; Unused
+u$F86C DEFB $92,$B2,$A2,$C2,$C2,$52,$32,$62
  $F874 DEFB $C2,$52,$22,$D2,$A2,$92,$A2,$52
  $F87C DEFB $A2,$92,$22,$92,$A2,$C2,$C2,$92
  $F884 DEFB $62,$82,$D2,$62,$92,$62,$92,$A2
@@ -13077,8 +13102,8 @@ c$FF00 LD ($82A3),A  ;
  $FF03 LD IY,$5C3A   ;
  $FF07 RET           ;
 
-; Data block at FF08
-b$FF08 DEFB $00,$00,$00,$00,$00,$00,$00,$00
+; Unused
+u$FF08 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $FF10 DEFB $00,$00,$00,$00,$00,$00,$E0,$57
  $FF18 DEFB $F3,$0D,$CE,$0B,$E4,$50,$CE,$0B
  $FF20 DEFB $E5,$50,$B1,$33,$30,$5D,$05,$00

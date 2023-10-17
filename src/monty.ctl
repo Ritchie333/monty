@@ -966,7 +966,7 @@ D $D5B9 This data is wiped as soon as the game proper starts as it becomes part 
 u $DA01
 w $EA60 Offsets from character to relative screen positions
 c $EBE0 Print an animinated object on screen
-b $EC65
+u $EC65
 c $EC6F Copy a sprite to the working buffer
 c $ECA2 Copy a sprite to the screen
 b $ECDC
