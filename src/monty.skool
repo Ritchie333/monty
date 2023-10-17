@@ -4016,7 +4016,7 @@ c$8D7F LD HL,$FFE0    ; #R$FFE0 is the "dead Monty" graphic.
  $8D8E LD HL,$0000    ;
  $8D91 LD ($9177),HL  ;
  $8D94 CALL $D254     ; Copy the screen to the graphic buffer.
- $8D97 LD IX,$8D52    ; { Stop all nasties from moving.
+ $8D97 LD IX,$8D52    ; { Set Monty as being in mid-air.
  $8D9B SET 1,(IX+$01) ; }
  $8D9F EI             ; Enable interrupts
  $8DA0 LD IX,$5C7D    ; Load #REGix with the start of the death tune.
@@ -4039,7 +4039,7 @@ c$8D7F LD HL,$FFE0    ; #R$FFE0 is the "dead Monty" graphic.
  $8DCA JR NZ,$8DA4    ; If not, move back to play more of the tune.
  $8DCC RET            ; Otherwise return.
 
-; Animate one frame of all moving objects
+; Move a crusher
 ;
 ; Used by the routine at #R$8F9F.
 ;
@@ -4054,71 +4054,79 @@ c$8DCD LD IY,$C527     ; Point #REGiy at the crusher data (#R$C527).
  $8DDE DEC (IY+$03)    ; { Otherwise decrement the time to fire and return.
  $8DE1 RET             ; }
 ; The crusher should now be activated.
-*$8DE2 BIT 0,(IY+$04)  ; Check the room has crushers.
- $8DE6 CALL NZ,$9148   ; If so, see if Monty is underneath one and if so, kill him.
- $8DE9 BIT 0,(IY+$04)  ; Get the flag again.
- $8DED JR NZ,$8E10     ; 
- $8DEF INC (IY+$01)    ;
- $8DF2 INC (IY+$01)    ;
- $8DF5 LD A,(IY+$05)   ;
- $8DF8 CP (IY+$01)     ;
- $8DFB JR NC,$8E0C     ;
- $8DFD LD (IY+$04),$01 ;
- $8E01 CALL $FD9B      ;
- $8E04 RES 7,C         ;
- $8E06 INC C           ;
- $8E07 LD A,C          ;
- $8E08 LD (IY+$03),A   ;
- $8E0B RET             ;
-*$8E0C CALL $8E2C      ;
- $8E0F RET             ;
-*$8E10 DEC (IY+$01)    ;
- $8E13 DEC (IY+$01)    ;
- $8E16 LD A,(IY+$02)   ;
- $8E19 CP (IY+$01)     ;
- $8E1C JR C,$8E0C      ;
- $8E1E LD (IY+$04),$00 ;
- $8E22 LD DE,$0002     ;
- $8E25 LD HL,$066A     ;
- $8E28 CALL $03B6      ;
+*$8DE2 BIT 0,(IY+$04)  ; Is the crusher descending?
+ $8DE6 CALL NZ,$9148   ; See if Monty is underneath one and if so, kill him.
+ $8DE9 BIT 0,(IY+$04)  ; Is the crusher descending?
+ $8DED JR NZ,$8E10     ; Jump forward if not.
+; The crusher is ascending.
+ $8DEF INC (IY+$01)    ; { Move down two rows.
+ $8DF2 INC (IY+$01)    ; }
+ $8DF5 LD A,(IY+$05)   ; { Has the Y co-ordinate reached the top?
+ $8DF8 CP (IY+$01)     ; }
+ $8DFB JR NC,$8E0C     ; Jump forward if it hasn't.
+; The crusher has reached the top.
+ $8DFD LD (IY+$04),$01 ; Signal that the crusher is descending.
+ $8E01 CALL $FD9B      ; Get a pseudo-random number.
+ $8E04 RES 7,C         ; { Ensure it is a number between 1 and #N$80.
+ $8E06 INC C           ; }
+ $8E07 LD A,C          ; { Store it as the next time to fire and return.
+ $8E08 LD (IY+$03),A   ; 
+ $8E0B RET             ; }
+*$8E0C CALL $8E2C      ; { Redraw the crusher and return.
+ $8E0F RET             ; }
+; The crusher is descending.
+*$8E10 DEC (IY+$01)    ; { Move down two rows.
+ $8E13 DEC (IY+$01)    ; }
+ $8E16 LD A,(IY+$02)   ; { Has the Y co-ordinate reached the bottom?
+ $8E19 CP (IY+$01)     ; }
+ $8E1C JR C,$8E0C      ; Jump back if it hasn't.
+; The crusher has reached the bottom.
+ $8E1E LD (IY+$04),$00 ; Signal that the crusher is ascending.
+ $8E22 LD DE,$0002     ; Set the length.
+ $8E25 LD HL,$066A     ; Set the frequency.
+ $8E28 CALL $03B6      ; Call the ROM beep routine without enabling interrupts.
  $8E2B RET             ;
-*$8E2C LD IY,$C527     ;
- $8E30 LD L,(IY+$01)   ;
- $8E33 LD H,$00        ;
- $8E35 ADD HL,HL       ;
- $8E36 LD DE,$EA60     ;
- $8E39 ADD HL,DE       ;
- $8E3A PUSH HL         ;
- $8E3B POP IX          ;
- $8E3D LD B,$09        ;
- $8E3F BIT 0,(IY+$04)  ;
- $8E43 JR Z,$8E4B      ;
- $8E45 LD IY,$8E7A     ;
- $8E49 JR $8E4F        ;
-*$8E4B LD IY,$8E80     ;
-*$8E4F PUSH BC         ;
- $8E50 LD E,(IX+$00)   ;
- $8E53 LD D,(IX+$01)   ;
- $8E56 DEC IX          ;
- $8E58 DEC IX          ;
- $8E5A LD H,$00        ;
+
+; Draw a crusher
+;
+; Used by the routine at #R$8DCD
+*$8E2C LD IY,$C527     ; Point #REGiy at the crusher data.
+ $8E30 LD L,(IY+$01)   ; { Put the y co-ordinate in #REGhl.
+ $8E33 LD H,$00        ; }
+ $8E35 ADD HL,HL       ; Double this to get a word offset.
+ $8E36 LD DE,$EA60     ; { Add the base address of the screen address buffer (#R$EA60).
+ $8E39 ADD HL,DE       ; }
+ $8E3A PUSH HL         ; { Put the actual address in IX.
+ $8E3B POP IX          ; }
+ $8E3D LD B,$09        ; 9 rows to update.
+ $8E3F BIT 0,(IY+$04)  ; Is the crusher ascending?
+ $8E43 JR Z,$8E4B      ; Jump forward if it is.
+ $8E45 LD IY,$8E7A     ; { Point #REGiy at the crusher graphic.
+ $8E49 JR $8E4F        ; }
+*$8E4B LD IY,$8E80     ; Point #REGiy at the second line of the crusher graphic.
+*$8E4F PUSH BC         ; Remember #REGbc.
+ $8E50 LD E,(IX+$00)   ; { Put the screen address in #REGde.
+ $8E53 LD D,(IX+$01)   ; }
+ $8E56 DEC IX          ; { Move up a row.
+ $8E58 DEC IX          ; }
+ $8E5A LD H,$00        ; { Put the x co-ordinate in #REGhl.
  $8E5C LD A,($C527)    ;
- $8E5F LD L,A          ;
- $8E60 ADD HL,DE       ;
- $8E61 EX DE,HL        ;
- $8E62 LD HL,$9260     ;
- $8E65 ADD HL,DE       ;
- $8E66 LD B,$03        ;
-*$8E68 LD A,(IY+$00)   ;
- $8E6B LD (HL),A       ;
- $8E6C LD (DE),A       ;
- $8E6D INC IY          ;
+ $8E5F LD L,A          ; }
+ $8E60 ADD HL,DE       ; Add this to the base offset of the screen address buffer.
+ $8E61 EX DE,HL        ; Swap #REGde and #REGhl.
+ $8E62 LD HL,$9260     ; { Add the offset to the screen address to get an offset
+ $8E65 ADD HL,DE       ; on the screen buffer from #R$D260. }
+ $8E66 LD B,$03        ; 3 columns to update.
+*$8E68 LD A,(IY+$00)   ; Get the graphic.
+ $8E6B LD (HL),A       ; { Store it on the screen and the buffer.
+ $8E6C LD (DE),A       ; }
+ $8E6D INC IY          ; { Move forward.
  $8E6F INC HL          ;
- $8E70 INC DE          ;
- $8E71 DJNZ $8E68      ;
- $8E73 POP BC          ;
- $8E74 DJNZ $8E4F      ;
- $8E76 CALL $8E9B      ;
+ $8E70 INC DE          ; }
+ $8E71 DJNZ $8E68      ; Loop until all columns on this row are drawn.
+ $8E73 POP BC          ; Restore #REGbc to get the number of rows left.
+ $8E74 DJNZ $8E4F      ; Loop until all the rows are drawn.
+ $8E76 CALL $8E9B      ; Set the attribute for the crusher.
  $8E79 RET             ;
 
 ; Crusher graphic
@@ -4132,12 +4140,12 @@ b$8E7A DEFB $1F,$FF,$50,$1F,$FF,$A8,$1F,$FF
  ; Unused
 u$8E9A DEFB $00
 
-; Toggle the brightness status on an object
+; Set the attributes for a crusher.
 ;
 ; Used by the routine at #R$8DCD.
-c$8E9B LD IY,$C527    ;
- $8E9F LD A,(IY+$01)  ;
- $8EA2 SUB $08        ;
+c$8E9B LD IY,$C527    ; { Get the Y co-ordinate.
+ $8E9F LD A,(IY+$01)  ; }
+ $8EA2 SUB $08        ; { Convert this into a screen address and put it in #REGhl.
  $8EA4 AND $F8        ;
  $8EA6 RRCA           ;
  $8EA7 RRCA           ;
@@ -4147,33 +4155,34 @@ c$8E9B LD IY,$C527    ;
  $8EAC NEG            ;
  $8EAE DEC A          ;
  $8EAF LD L,A         ;
- $8EB0 LD H,$00       ;
- $8EB2 ADD HL,HL      ;
+ $8EB0 LD H,$00       ; }
+ $8EB2 ADD HL,HL      ; { Multiply by 16 to get an appropriate offset in the attribute buffer.
  $8EB3 ADD HL,HL      ;
  $8EB4 ADD HL,HL      ;
  $8EB5 ADD HL,HL      ;
- $8EB6 ADD HL,HL      ;
- $8EB7 LD DE,$5800    ;
- $8EBA ADD HL,DE      ;
- $8EBB LD E,(IY+$00)  ;
- $8EBE LD D,$00       ;
- $8EC0 ADD HL,DE      ;
- $8EC1 BIT 0,(IY+$04) ;
- $8EC5 JR Z,$8ED0     ;
- $8EC7 SET 6,(HL)     ;
+ $8EB6 ADD HL,HL      ; }
+ $8EB7 LD DE,$5800    ; { Add the base offset of the attribute buffer.
+ $8EBA ADD HL,DE      ; }
+ $8EBB LD E,(IY+$00)  ; { Put the X co-ordinate in #REGde.
+ $8EBE LD D,$00       ; }
+ $8EC0 ADD HL,DE      ; Add this to get the correct attribute address.
+ $8EC1 BIT 0,(IY+$04) ; Is the crusher ascending?
+ $8EC5 JR Z,$8ED0     ; Move forward if so.
+ $8EC7 SET 6,(HL)     ; { Turn on the brightness bit for the three colums in this row.
  $8EC9 INC HL         ;
  $8ECA RES 6,(HL)     ;
  $8ECC INC HL         ;
- $8ECD RES 6,(HL)     ;
- $8ECF RET            ;
-*$8ED0 LD DE,$0020    ;
- $8ED3 ADD HL,DE      ;
- $8ED4 SET 6,(HL)     ;
+ $8ECD RES 6,(HL)     ; }
+ $8ECF RET            ; Return.
+; The crusher is ascending, turn off the brightness.
+*$8ED0 LD DE,$0020    ; { Move up a row.
+ $8ED3 ADD HL,DE      ; }
+ $8ED4 SET 6,(HL)     ; { Turn off the brightness bits.
  $8ED6 INC HL         ;
  $8ED7 SET 6,(HL)     ;
  $8ED9 INC HL         ;
- $8EDA SET 6,(HL)     ;
- $8EDC RET            ;
+ $8EDA SET 6,(HL)     ; }
+ $8EDC RET            ; Return.
 
 ; Animate Monty's angel as he has died
 ;
@@ -8948,18 +8957,20 @@ g$C527 DEFB $00
 ; y co-ordinate of crusher
 g$C528 DEFB $00
 
-; Game status buffer entry at C529
+; Crusher bottom column
 g$C529 DEFB $00
 
 ; Ticks left until a crusher should fire
 g$C52A DEFB $00
 
-; If set to 1, the room has crushers
+; Set to 0 if a crusher is ascending, or 1 if it is descending
 g$C52B DEFB $00
 
-; Game status buffer entry at C52C
-g$C52C DEFB $00,$00,$00,$00,$00,$00,$00,$00
- $C534 DEFB $00,$00,$00
+; Crusher top column
+g$C52C DEFB $00
+
+g$C52D DEFB $00,$00,$00,$00,$00,$00,$00,$00
+ $C535 DEFB $00,$00
 
 ; Coal UDG
 g$C537 DEFB $00,$00,$00,$00,$00,$00,$00,$00
