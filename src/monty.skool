@@ -18,6 +18,7 @@
 @expand=#DEF(#UDGADDR(a,n) #EVAL($a+$124+#UDGBYTES($a+(($n/8)*3),($n%8))*9))
 @expand=#DEF(#UDGXSTR(a,n) #UDG(#UDGADDR($a,$n)+1,#PEEK(#UDGADDR($a,$n))))
 @expand=#DEF(#UDGXSCR(a)(s) #UDGS32,20,2(${s})(#UDGXSTR(#PC,32*$y+$x)(*${s})${s}) )
+@expand=#DEF(#UDGSADDR(y,x) #UDG($7C00+((#PEEK($F14D+(28*$y+$x))-$80)*8),#PEEK($F37D+(28*$y+$x))))
 
 ; Loading screen
 ;
@@ -2228,7 +2229,7 @@ b$7BE0 DEFB $00,$00,$1E,$00,$31,$06,$60,$89
  $7BF0 DEFB $62,$48,$61,$90,$60,$20,$60,$40
  $7BF8 DEFB $63,$5E,$64,$41,$F4,$40,$F3,$80
 
-; 1-character graphics
+; Start room graphics
 ;
 ; #UDG$7C00,7,,2 #UDG$7C10,7,,2 #UDG$7C20,7,,2 #UDG$7C30,7,,2 #UDG$7C40,7,,2
 ; #UDG$7C50,7,,2 #UDG$7C60,7,,2 #UDG$7C70,7,,2
@@ -9071,14 +9072,14 @@ g$C629 DEFB $00
 ; Copy the room graphic buffer to screen so it is visible
 ;
 ; Used by the routines at #R$9551 and #R$CD41.
-c$C62A LD HL,$CF54   ;
+c$C62A LD HL,$CF54   ; { Copy attribute address to attribute buffer.
  $C62D LD DE,$5800   ;
  $C630 LD BC,$0300   ;
- $C633 LDIR          ;
- $C635 LD HL,$D260   ;
+ $C633 LDIR          ; }
+ $C635 LD HL,$D260   ; { Copy screen address to screen buffer.
  $C638 LD DE,$4000   ;
  $C63B LD BC,$1800   ;
- $C63E LDIR          ;
+ $C63E LDIR          ; }
  $C640 RET           ;
 
 ; Unused
@@ -11480,37 +11481,39 @@ u$EF7C DEFB $00,$00
 ; Set up graphics for the start room
 ;
 ; Used by the routine at #R$CD41.
-c$EF7E LD ($F041),HL ;
- $EF81 LD A,(HL)     ;
+; 
+; HL Pointer to start room data (#R$F14B)
+c$EF7E LD ($F041),HL ; Store the pointer to start room data.
+ $EF81 LD A,(HL)     ; { Get the address from this and put it in #REGhl.
  $EF82 INC HL        ;
  $EF83 LD H,(HL)     ;
- $EF84 LD L,A        ;
- $EF85 LD ($F043),HL ;
- $EF88 LD HL,($F041) ;
- $EF8B INC HL        ;
- $EF8C INC HL        ;
- $EF8D LD ($F041),HL ;
- $EF90 LD D,$02      ;
- $EF92 LD E,$02      ;
- $EF94 LD ($F045),DE ;
- $EF98 LD B,$14      ;
-*$EF9A PUSH BC       ;
- $EF9B LD B,$1C      ;
- $EF9D LD DE,($F045) ;
-*$EFA1 PUSH BC       ;
- $EFA2 LD HL,($F041) ;
- $EFA5 LD A,(HL)     ;
- $EFA6 INC HL        ;
- $EFA7 LD ($F041),HL ;
- $EFAA CALL $EFBD    ;
- $EFAD POP BC        ;
- $EFAE DJNZ $EFA1    ;
- $EFB0 POP BC        ;
- $EFB1 LD DE,($F045) ;
- $EFB5 INC D         ;
- $EFB6 LD ($F045),DE ;
- $EFBA DJNZ $EF9A    ;
- $EFBC RET           ;
+ $EF84 LD L,A        ; }
+ $EF85 LD ($F043),HL ; Store this.
+ $EF88 LD HL,($F041) ; Get the data pointer.
+ $EF8B INC HL        ; { Go to the next address, which has the UDGs.
+ $EF8C INC HL        ; }
+ $EF8D LD ($F041),HL ; { Store this.}
+ $EF90 LD D,$02      ; { Start at row 2 column 2.
+ $EF92 LD E,$02      ; }
+ $EF94 LD ($F045),DE ; Set this as the current position. 
+ $EF98 LD B,$14      ; #N$14 rows
+*$EF9A PUSH BC       ; Store this.
+ $EF9B LD B,$1C      ; #N$1C columns
+ $EF9D LD DE,($F045) ; Get the next position.
+*$EFA1 PUSH BC       ; Remember #REGbc
+ $EFA2 LD HL,($F041) ; Get the next data.
+ $EFA5 LD A,(HL)     ; Get the byte.
+ $EFA6 INC HL        ; { Move to the next address and store it.
+ $EFA7 LD ($F041),HL ; }
+ $EFAA CALL $EFBD    ; Print the graphic
+ $EFAD POP BC        ; { Loop until all the columns for this row are done.
+ $EFAE DJNZ $EFA1    ; }
+ $EFB0 POP BC        ; Restore #REGbc
+ $EFB1 LD DE,($F045) ; { Move to the next row.
+ $EFB5 INC D         ; 
+ $EFB6 LD ($F045),DE ; }
+ $EFBA DJNZ $EF9A    ; { Loop until all the rows are done.
+ $EFBC RET           ; }
 
 ; Draw static UDGs on the start room
 ;
@@ -11518,66 +11521,68 @@ c$EF7E LD ($F041),HL ;
 ;
 ; HL Pointer to graphic IDs
 ; A Character to print
-; D X position
-; E Y position
+; D Y position
+; E X position
 ; B Current row count
-c$EFBD PUSH AF       ;
+c$EFBD PUSH AF       ; { Store all registers being used.
  $EFBE PUSH BC       ;
  $EFBF PUSH HL       ;
- $EFC0 PUSH DE       ;
- $EFC1 CP $7F        ;
- $EFC3 JR NC,$F033   ;
- $EFC5 LD H,$00      ;
- $EFC7 LD L,A        ;
- $EFC8 ADD HL,HL     ;
+ $EFC0 PUSH DE       ; }
+ $EFC1 CP $7F        ; { If the character is #N80 or above, move forward.
+ $EFC3 JR NC,$F033   ; }
+; This is an ordinary character in the ROM
+ $EFC5 LD H,$00      ; { Put the character in #REGhl.
+ $EFC7 LD L,A        ; }
+ $EFC8 ADD HL,HL     ; { Multiply by 8 to get the correct offset.
  $EFC9 ADD HL,HL     ;
- $EFCA ADD HL,HL     ;
- $EFCB LD BC,$3C00   ;
-*$EFCE ADD HL,BC     ;
- $EFCF LD ($F047),HL ;
- $EFD2 LD A,D        ;
+ $EFCA ADD HL,HL     ; }
+ $EFCB LD BC,$3C00   ; { Add the base address for the ROM character set.
+; Now print the character
+*$EFCE ADD HL,BC     ; }
+ $EFCF LD ($F047),HL ; Store the current address being printed.
+ $EFD2 LD A,D        ; { Convert the Y position to a screen offset.
  $EFD3 SUB $17       ;
- $EFD5 NEG           ;
- $EFD7 LD L,A        ;
- $EFD8 LD H,$00      ;
- $EFDA ADD HL,HL     ;
+ $EFD5 NEG           ; }
+ $EFD7 LD L,A        ; { Put this in #REGhl.
+ $EFD8 LD H,$00      ; }
+ $EFDA ADD HL,HL     ; { Multiply by 8 to get the correct offset.
  $EFDB ADD HL,HL     ;
- $EFDC ADD HL,HL     ;
- $EFDD LD BC,$0007   ;
- $EFE0 ADD HL,BC     ;
- $EFE1 EX DE,HL      ;
- $EFE2 LD HL,$EA60   ;
+ $EFDC ADD HL,HL     ; }
+ $EFDD LD BC,$0007   ; { Add an offset of 7 to point at the bottom of the graphic.
+ $EFE0 ADD HL,BC     ; }
+ $EFE1 EX DE,HL      ; { Add the base address for the screen address buffer.
+ $EFE2 LD HL,$EA60   ; 
  $EFE5 ADD HL,DE     ;
- $EFE6 ADD HL,DE     ;
- $EFE7 LD ($F049),HL ;
- $EFEA LD B,$08      ;
-*$EFEC LD A,(HL)     ;
+ $EFE6 ADD HL,DE     ; }
+ $EFE7 LD ($F049),HL ; Store this.
+ $EFEA LD B,$08      ; Print 8 rows.
+*$EFEC LD A,(HL)     ; { Put the actual screen address in #REGhl.
  $EFED INC HL        ;
  $EFEE LD H,(HL)     ;
- $EFEF LD L,A        ;
- $EFF0 POP DE        ;
- $EFF1 PUSH DE       ;
- $EFF2 LD D,$00      ;
- $EFF4 ADD HL,DE     ;
- $EFF5 EX DE,HL      ;
- $EFF6 CALL $FE8F    ;
- $EFF9 LD A,(HL)     ;
- $EFFA INC HL        ;
- $EFFB LD ($F047),HL ;
- $EFFE EX DE,HL      ;
- $EFFF LD (HL),A     ;
- $F000 LD HL,($F049) ;
- $F003 DEC HL        ;
- $F004 DEC HL        ;
- $F005 LD ($F049),HL ;
- $F008 DJNZ $EFEC    ;
- $F00A POP DE        ;
- $F00B POP HL        ;
- $F00C PUSH HL       ;
+ $EFEF LD L,A        ; }
+ $EFF0 POP DE        ; Restore the X co-ordinate.
+ $EFF1 PUSH DE       ; Store it again.
+ $EFF2 LD D,$00      ; { Add it to the screen address.
+ $EFF4 ADD HL,DE     ; }
+ $EFF5 EX DE,HL      ; { Convert this into an address in the screen buffer.
+ $EFF6 CALL $FE8F    ; }
+ $EFF9 LD A,(HL)     ; Get the byte.
+ $EFFA INC HL        ; { Move to the next data position and store it.
+ $EFFB LD ($F047),HL ; }
+ $EFFE EX DE,HL      ; Restore #REGhl.
+ $EFFF LD (HL),A     ; Set the byte.
+ $F000 LD HL,($F049) ; { Move the current screen address up a row.
+ $F003 DEC HL        ; 
+ $F004 DEC HL        ; 
+ $F005 LD ($F049),HL ; }
+ $F008 DJNZ $EFEC    ; { Loop until all rows have been printed.}
+ $F00A POP DE        ; { Restore #REGde and #REGhl.
+ $F00B POP HL        ; }
+ $F00C PUSH HL       ; { Get an offset to the attribute buffer.
  $F00D PUSH DE       ;
  $F00E LD DE,$0230   ;
- $F011 ADD HL,DE     ;
- $F012 DEC HL        ;
+ $F011 ADD HL,DE     ; }
+ $F012 DEC HL        ; Move up a row.
  $F013 POP DE        ;
  $F014 PUSH DE       ;
  $F015 LD A,E        ;
@@ -11586,13 +11591,13 @@ c$EFBD PUSH AF       ;
  $F019 EX DE,HL      ;
  $F01A LD B,$05      ;
 *$F01C ADD HL,HL     ;
- $F01D DJNZ $F01C    ;
+ $F01D DJNZ $F01C    ; 
  $F01F PUSH DE       ;
  $F020 LD E,A        ;
  $F021 LD D,$00      ;
  $F023 ADD HL,DE     ;
- $F024 LD DE,$CF54   ;
- $F027 ADD HL,DE     ;
+ $F024 LD DE,$CF54   ; { Add the base address of the attribute buffer.
+ $F027 ADD HL,DE     ; }
  $F028 POP DE        ;
  $F029 EX DE,HL      ;
  $F02A LD A,(HL)     ;
@@ -11600,18 +11605,19 @@ c$EFBD PUSH AF       ;
  $F02C LD (HL),A     ;
  $F02D POP DE        ;
  $F02E INC E         ;
- $F02F POP HL        ;
+ $F02F POP HL        ; { Restore all registers and return.
  $F030 POP BC        ;
  $F031 POP AF        ;
- $F032 RET           ;
-*$F033 SUB $80       ;
- $F035 LD H,$00      ;
- $F037 LD L,A        ;
- $F038 ADD HL,HL     ;
+ $F032 RET           ; }
+; This is a custom character
+*$F033 SUB $80       ; Subtract #N$80 to get the real value.
+ $F035 LD H,$00      ; { Put this in #REGhl.
+ $F037 LD L,A        ; }
+ $F038 ADD HL,HL     ; { Multiply by 8 to get an offset in the screen buffer.
  $F039 ADD HL,HL     ;
- $F03A ADD HL,HL     ;
- $F03B LD BC,($F043) ;
- $F03F JR $EFCE      ;
+ $F03A ADD HL,HL     ; }
+ $F03B LD BC,($F043) ; Get the start of the graphics.
+ $F03F JR $EFCE      ; Print the character.
 
 ; Pointer to start room data
 w$F041 DEFW $2F5D
@@ -11619,10 +11625,16 @@ w$F041 DEFW $2F5D
 ; Pointer to start room UDGs
 w$F043 DEFW $21FD
 
-; Data block at F045
-w$F045 DEFW $1602
- $F047 DEFW $3C88
- $F049 DEFW $EA7E
+; Current position drawing the start room
+g$F045 DEFW $02,$16
+
+; Address of UDG currently being printed in the start room
+g$F047 DEFW $3C88
+
+; Screen position to draw the next UDG in the start room
+;
+; This is an offset relative to #R$EA60.
+g$F049 DEFW $EA7E
 
 ; End message
 ;
@@ -11702,6 +11714,8 @@ b$F135 DEFB $52,$22,$52,$72,$22,$52,$72,$22
 w$F14B DEFW $7C00
 
 ; UDGs for start room
+;
+; #UDGS28,20,2(startroom)(#UDGSADDR($y,$x)(*udg)udg)
 b$F14D DEFB $81,$80,$80,$80,$80,$80,$80,$80
  $F155 DEFB $80,$80,$80,$80,$80,$80,$80,$80
  $F15D DEFB $82,$83,$80,$84,$85,$86,$87,$88

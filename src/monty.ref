@@ -220,6 +220,9 @@ SectionPrefix=Screens
 [Screens:Loading screen]
 #HTML( #R$4000<br/><img src="./images/scr/loading.png"/> )
 
+[Screens:Start room]
+#HTML( #R$4000<br/><img src="./images/udgs/startroom.png"/> )
+
 [Screens:Room 00]
 #HTML( #R$9A2A<br/><img src="./images/udgs/room_00.png"/> )
 
@@ -282,3 +285,19 @@ SectionPrefix=Screens
 
 [Screens:Room 14]
 #HTML( #R$C22A<br/><img src="./images/udgs/room_14.png"/> )
+
+[Poke:Infinite lives]
+#N($9474),0
+
+[Poke:Fall any height]
+#N($8C22),#N$FF
+
+[Poke:Immunity from monsters]
+#N($8BCD),#N$FF
+#N($8BD4),#N$FF
+#N($8BDB),#N$FF
+#N($8BE2),#N$FF
+#N($92E7),#N$21
+
+[Poke:Immunity from crushers]
+#N($9172),#N$C9
