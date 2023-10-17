@@ -335,9 +335,10 @@ u $981B Unused
 C $981B
 
 b $9A2A Room 00
-D $9A2A The current room is copied into C42A
+D $9A2A The current room is copied into #R$C42A
 B $9A2A,$F0,3 Static characters
-B $9B1A Overhead for jumping
+B $9B1A Wall attributes
+W $9B1E Offset for Monty's graphic
 B $9B20 Next room UP
 B $9B21 Next room DOWN
 B $9B22 Next room LEFT
@@ -355,14 +356,15 @@ B $9B2D,$0A
 B $9B37 Coal UDG
 B $9B3F,9,3 Coal positions
 B $9B48
-B $9B4E Static character graphic IDs
+B $9B4E,$48,9 Static character graphics
 B $9B96,$8C,$14 Nasty data
-B $9C22
+B $9C22 Moving platforms
 
 b $9C2A Room 01
-D $9C2A The current room is copied into C42A
+D $9C2A The current room is copied into #R$C42A
 B $9C2A,$F0,3 Static characters
-B $9D1A Overhead for jumping
+B $9D1A Wall attributes
+W $9D1E Offset for Monty's graphic
 B $9D20 Next room UP
 B $9D21 Next room DOWN
 B $9D22 Next room LEFT
@@ -380,14 +382,15 @@ B $9D2D,$0A
 B $9D37 Coal UDG
 B $9D3F,9,3 Coal positions
 B $9D48
-B $9D4E Static character graphic IDs
+B $9D4E Static character graphics
 B $9D96,$8C,$14 Nasty data
-B $9E22
+B $9E22 Moving platforms
 
 b $9E2A Room 02
-D $9E2A The current room is copied into C42A
+D $9E2A The current room is copied into #R$C42A
 B $9E2A,$F0,3 Static characters
-B $9F1A Overhead for jumping
+B $9F1A Wall attributes
+W $9F1E Offset for Monty's graphic
 B $9F20 Next room UP
 B $9F21 Next room DOWN
 B $9F22 Next room LEFT
@@ -405,14 +408,15 @@ B $9F2D,$0A
 B $9F37 Coal UDG
 B $9F3F,9,3 Coal positions
 B $9F48
-B $9F4E Static character graphic IDs
+B $9F4E,$48,9 Static character graphics
 B $9F96,$8C,$14 Nasty data
-B $A022
+B $A022 Moving platforms
 
 b $A02A Room 03
-D $A02A The current room is copied into C42A
+D $A02A The current room is copied into #R$C42A
 B $A02A,$F0,3 Static characters
-B $A11A Overhead for jumping
+B $A11A Wall attributes
+W $A11E Offset for Monty's graphic
 B $A120 Next room UP
 B $A121 Next room DOWN
 B $A122 Next room LEFT
@@ -430,13 +434,15 @@ B $A12D,$0A
 B $A137 Coal UDG
 B $A13F,9,3 Coal positions
 B $A148
-B $A14E Static character graphic IDs
+B $A14E,$48,9 Static character graphics
 B $A196,$8C,$14 Nasty data
-B $A222
+B $A222 Moving platforms
 
 b $A22A Room 04
-D $A22A The current room is copied into C42A
-B $A31A Overhead for jumping
+D $A22A The current room is copied into #R$C42A
+B $A22A,$F0,3 Static characters
+B $A31A Wall attributes
+W $A31E Offset for Monty's graphic
 B $A320 Next room UP
 B $A321 Next room DOWN
 B $A322 Next room LEFT
@@ -454,13 +460,15 @@ B $A32D,$0A
 B $A337 Coal UDG
 B $A33F,9,3 Coal positions
 B $A348
-B $A34E Static character graphic IDs
+B $A34E,$48,9 Static character graphics
 B $A396,$8C,$14 Nasty data
-B $A422
+B $A422 Moving platforms
 
 b $A42A Room 05
-D $A42A The current room is copied into C42A
-B $A51A Overhead for jumping
+D $A42A The current room is copied into #R$C42A
+B $A42A,$F0,3 Static characters
+B $A51A Wall attributes
+W $A51E Offset for Monty's graphic
 B $A520 Next room UP
 B $A521 Next room DOWN
 B $A522 Next room LEFT
@@ -478,13 +486,15 @@ B $A52D,$0A
 B $A537 Coal UDG
 B $A53F,9,3 Coal positions
 B $A548
-B $A54E Static character graphic IDs
+B $A54E,$48,9 Static character graphics
 B $A596,$8C,$14 Nasty data
-B $A622
+B $A622 Moving platforms
 
 b $A62A Room 06
-D $A62A The current room is copied into C42A
-B $A71A Overhead for jumping
+D $A62A The current room is copied into #R$C42A
+B $A62A,$F0,3 Static characters
+B $A71A Wall attributes
+W $A71E Offset for Monty's graphic
 B $A720 Next room UP
 B $A721 Next room DOWN
 B $A722 Next room LEFT
@@ -502,13 +512,15 @@ B $A72D,$0A
 B $A737 Coal UDG
 B $A73F,9,3 Coal positions
 B $A748
-B $A74E Static character graphic IDs
+B $A74E,$48,9 Static character graphics
 B $A796,$8C,$14 Nasty data
-B $A822
+B $A822 Moving platforms
 
 b $A82A Room 07
-D $A82A The current room is copied into C42A
-B $A91A Overhead for jumping
+D $A82A The current room is copied into #R$C42A
+B $A82A,$F0,3 Static characters
+B $A91A Wall attributes
+W $A91E Offset for Monty's graphic
 B $A920 Next room UP
 B $A921 Next room DOWN
 B $A922 Next room LEFT
@@ -526,13 +538,15 @@ B $A92D,$0A
 B $A937 Coal UDG
 B $A93F,9,3 Coal positions
 B $A948
-B $A94E Static character graphic IDs
+B $A94E,$48,9 Static character graphics
 B $A996,$8C,$14 Nasty data
-B $AA22
+B $AA22 Moving platforms
 
 b $AA2A Room 08
-D $AA2A The current room is copied into C42A
-B $AB1A Overhead for jumping
+D $AA2A The current room is copied into #R$C42A
+B $AA2A,$F0,3 Static characters
+B $AB1A Wall attributes
+W $AB1E Offset for Monty's graphic
 B $AB20 Next room UP
 B $AB21 Next room DOWN
 B $AB22 Next room LEFT
@@ -550,13 +564,15 @@ B $AB2D,$0A
 B $AB37 Coal UDG
 B $AB3F,9,3 Coal positions
 B $AB48
-B $AB4E Static character graphic IDs
+B $AB4E,$48,9 Static character graphics
 B $AB96,$8C,$14 Nasty data
-B $AC22
+B $AC22 Moving platforms
 
 b $AC2A Room 09
-D $AC2A The current room is copied into C42A
-B $AD1A Overhead for jumping
+D $AC2A The current room is copied into #R$C42A
+B $AC2A,$F0,3 Static characters
+B $AD1A Wall attributes
+W $AD1E Offset for Monty's graphic
 B $AD20 Next room UP
 B $AD21 Next room DOWN
 B $AD22 Next room LEFT
@@ -574,13 +590,15 @@ B $AD2D,$0A
 B $AD37 Coal UDG
 B $AD3F,9,3 Coal positions
 B $AD48
-B $AD4E Static character graphic IDs
+B $AD4E,$48,9 Static character graphics
 B $AD96,$8C,$14 Nasty data
-B $AE22
+B $AE22 Moving platforms
 
 b $AE2A Room 0A
-D $AE2A The current room is copied into C42A
-B $AF1A Overhead for jumping
+D $AE2A The current room is copied into #R$C42A
+B $AE2A,$F0,3 Static characters
+B $AF1A Wall attributes
+W $AF1E Offset for Monty's graphic
 B $AF20 Next room UP
 B $AF21 Next room DOWN
 B $AF22 Next room LEFT
@@ -598,13 +616,15 @@ B $AF2D,$0A
 B $AF37 Coal UDG
 B $AF3F,9,3 Coal positions
 B $AF48
-B $AF4E Static character graphic IDs
+B $AF4E,$48,9 Static character graphics
 B $AF96,$8C,$14 Nasty data
-B $B022
+B $B022 Moving platforms
 
 b $B02A Room 0B
-D $B02A The current room is copied into C42A
-B $B11A Overhead for jumping
+D $B02A The current room is copied into #R$C42A
+B $B02A,$F0,3 Static characters
+B $B11A Wall attributes
+W $B11E Offset for Monty's graphic
 B $B120 Next room UP
 B $B121 Next room DOWN
 B $B122 Next room LEFT
@@ -622,13 +642,15 @@ B $B12D,$0A
 B $B137 Coal UDG
 B $B13F,9,3 Coal positions
 B $B148
-B $B14E Static character graphic IDs
+B $B14E,$48,9 Static character graphics
 B $B196,$8C,$14 Nasty data
-B $B222
+B $B222 Moving platforms
 
 b $B22A Room 0C
-D $B22A The current room is copied into C42A
-B $B31A Overhead for jumping
+D $B22A The current room is copied into #R$C42A
+B $B22A,$F0,3 Static characters
+B $B31A Wall attributes
+W $B31E Offset for Monty's graphic
 B $B320 Next room UP
 B $B321 Next room DOWN
 B $B322 Next room LEFT
@@ -646,13 +668,15 @@ B $B32D,$0A
 B $B337 Coal UDG
 B $B33F,9,3 Coal positions
 B $B348
-B $B34E Static character graphic IDs
+B $B34E,$48,9 Static character graphics
 B $B396,$8C,$14 Nasty data
-B $B422
+B $B422 Moving platforms
 
 b $B42A Room 0D
-D $B42A The current room is copied into C42A
-B $B51A Overhead for jumping
+D $B42A The current room is copied into #R$C42A
+B $B42A,$F0,3 Static characters
+B $B51A Wall attributes
+W $B51E Offset for Monty's graphic
 B $B520 Next room UP
 B $B521 Next room DOWN
 B $B522 Next room LEFT
@@ -670,13 +694,15 @@ B $B52D,$0A
 B $B537 Coal UDG
 B $B53F,9,3 Coal positions
 B $B548
-B $B54E Static character graphic IDs
+B $B54E,$48,9 Static character graphics
 B $B596,$8C,$14 Nasty data
-B $B622
+B $B622 Moving platforms
 
 b $B62A Room 0E
-D $B62A The current room is copied into C42A
-B $B71A Overhead for jumping
+D $B62A The current room is copied into #R$C42A
+B $B62A,$F0,3 Static characters
+B $B71A Wall attributes
+W $B71E Offset for Monty's graphic
 B $B720 Next room UP
 B $B721 Next room DOWN
 B $B722 Next room LEFT
@@ -694,13 +720,15 @@ B $B72D,$0A
 B $B737 Coal UDG
 B $B73F,9,3 Coal positions
 B $B748
-B $B74E Static character graphic IDs
+B $B74E,$48,9 Static character graphic IDs
 B $B796,$8C,$14 Nasty data
-B $B822
+B $B822 Moving platforms
 
 b $B82A Room 0F
-D $B82A The current room is copied into C42A
-B $B91A Overhead for jumping
+D $B82A The current room is copied into #R$C42A
+B $B82A,$F0,3 Static characters
+B $B91A Wall attributes
+W $B91E Offset for Monty's graphic
 B $B920 Next room UP
 B $B921 Next room DOWN
 B $B922 Next room LEFT
@@ -718,13 +746,15 @@ B $B92D,$0A
 B $B937 Coal UDG
 B $B93F,9,3 Coal positions
 B $B948
-B $B94E Static character graphic IDs
+B $B94E,$48,9 Static character graphics
 B $B996,$8C,$14 Nasty data
-B $BA22
+B $BA22 Moving platforms
 
 b $BA2A Room 10
-D $BA2A The current room is copied into C42A
-B $BB1A Overhead for jumping
+D $BA2A The current room is copied into #R$C42A
+B $BA2A,$F0,3 Static characters
+B $BB1A Wall attributes
+W $BB1E Offset for Monty's graphic
 B $BB20 Next room UP
 B $BB21 Next room DOWN
 B $BB22 Next room LEFT
@@ -742,13 +772,15 @@ B $BB2D,$0A
 B $BB37 Coal UDG
 B $BB3F,9,3 Coal positions
 B $BB48
-B $BB4E Static character graphic IDs
+B $BB4E,$48,9 Static character graphics
 B $BB96,$8C,$14 Nasty data
-B $BC22
+B $BC22 Moving platforms
 
 b $BC2A Room 11
-D $BC2A The current room is copied into C42A
-B $BD1A Overhead for jumping
+D $BC2A The current room is copied into #R$C42A
+B $BC2A,$F0,3 Static characters
+B $BD1A Wall attributes
+W $BD1E Offset for Monty's graphic
 B $BD20 Next room UP
 B $BD21 Next room DOWN
 B $BD22 Next room LEFT
@@ -766,13 +798,15 @@ B $BD2D,$0A
 B $BD37 Coal UDG
 B $BD3F,9,3 Coal positions
 B $BD48
-B $BD4E Static character graphic IDs
+B $BD4E,$48,9 Static character graphic IDs
 B $BD96,$8C,$14 Nasty data
-B $BE22
+B $BE22 Moving platforms
 
 b $BE2A Room 12
-D $BE2A The current room is copied into C42A
-B $BF1A Overhead for jumping
+D $BE2A The current room is copied into #R$C42A
+B $BE2A,$F0,3 Static characters
+B $BF1A Wall attributes
+W $BF1E Offset for Monty's graphic
 B $BF20 Next room UP
 B $BF21 Next room DOWN
 B $BF22 Next room LEFT
@@ -790,13 +824,15 @@ B $BF2D,$0A
 B $BF37 Coal UDG
 B $BF3F,9,3 Coal positions
 B $BF48
-B $BF4E Static character graphic IDs
+B $BF4E,$48,9 Static character graphics
 B $BF96,$8C,$14 Nasty data
-B $C022
+B $C022 Moving platforms
 
 b $C02A Room 13
-D $C02A The current room is copied into C42A
-B $C11A Overhead for jumping
+D $C02A The current room is copied into #R$C42A
+B $C02A,$F0,3 Static characters
+B $C11A Wall attributes
+W $C11E Offset for Monty's graphic
 B $C120 Next room UP
 B $C121 Next room DOWN
 B $C122 Next room LEFT
@@ -814,13 +850,15 @@ B $C12D,$0A
 B $C137 Coal UDG
 B $C13F,9,3 Coal positions
 B $C148
-B $C14E Static character graphic IDs
+B $C14E,$48,9 Static character graphics
 B $C196,$8C,$14 Nasty data
-B $C222
+B $C222 Moving platforms
 
 b $C22A Room 14
-D $C22A The current room is copied into C42A
-B $C31A Overhead for jumping
+D $C22A The current room is copied into #R$C42A
+B $C22A,$F0,3 Static characters
+B $C31A Wall attributes
+W $C31E Offset for Monty's graphic
 B $C320 Next room UP
 B $C321 Next room DOWN
 B $C322 Next room LEFT
@@ -838,15 +876,17 @@ B $C32D,$0A
 B $C337 Coal UDG
 B $C33F,9,3 Coal positions
 B $C348
-B $C34E Static character graphic IDs
+B $C34E,$48,9 Static character graphics
 B $C396,$8C,$14 Nasty data
-B $C422
+B $C422 Moving platforms
 
 g $C42A Static characters on screen
 D $C42A Each character is 3 bits ie: 3 bytes for 8 characters
 D $C42A $0C bytes per line, $F0 bytes per page
 B $C42A,$F0,3
-g $C51A Current overhead for jumping
+g $C51A Wall attributes
+g $C51E Offset for Monty's graphic
+W $C51E
 g $C520 Next room UP
 g $C521 Next room DOWN
 g $C522 Next room LEFT
@@ -864,14 +904,24 @@ g $C537 Coal UDG
 g $C53F Positions of coal in the room
 B $C53F,$0F,3
 g $C54E Static character graphics
+B $C54E,$48,9
+D $C54E First byte is the attribute, other bytes are the data
 g $C596 Nasty data
 B $C596,$8C,$14
 D $C596 Each data buffer contains :
 D $C596 $00 - Set 1 to visible
 D $C596 $0B - Set 1 to reverse direction
-g $C622
+g $C622 Moving platform 1 left x co-ordinate
+g $C623 Moving platform 1 left y co-ordinate
+g $C624 Moving platform left edge
+g $C625 Moving platform right edge
+g $C626 Moving platform 2 right x co-ordinate 
+g $C627 Moving platform 2 right y co-ordinate
+g$C628 Set bit 7 if the platform is closing, otherwise reset if it is opening
+
 c $CD26 Convert a sprite ID to a graphic offset in DE
 R $CD26 A The graphic address to look up
+
 c $C62A Copy the room graphic buffer to screen so it is visible
 u $C641 Unused
 C $C641

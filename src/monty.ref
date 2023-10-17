@@ -16,7 +16,7 @@ LoadingSystem
 Monty
 Moving
 Static
-
+Screens
 
 [Page:Monty]
 SectionPrefix=Monty
@@ -26,6 +26,9 @@ SectionPrefix=Moving
 
 [Page:Static]
 SectionPrefix=Static
+
+[Page:Screens]
+SectionPrefix=Screens
 
 [Monty:Up]
 #HTML( #R$849C<br/><img src="./images/udgs/Monty_up.png"/> )
@@ -209,7 +212,10 @@ SectionPrefix=Static
 #HTML( #R$7BA0<br/><img src="./images/udgs/Key.png"/> )
 
 [Static:Shower head]
-#HTML( #R$7BC0<br/><img src="./images/udgs/Shower_head.png"/> )
+#HTML( #R$7BC0<br/><img src="./images/udgs/Shower_head.png"/><br/>#R$910B<br/><img src="./images/udgs/Shower.png"/> )
 
 [Static:Plant]
 #HTML( #R$7BE0<br/><img src="./images/udgs/Plant.png"/> )
+
+[Screens:Loading screen]
+#HTML( #R$4000<br/><img src="./images/scr/loading.png"/> )
