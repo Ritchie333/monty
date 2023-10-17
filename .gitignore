@@ -1,4 +1,5 @@
 .DS_Store
 monty
 src/*.sna
+src/*.z80
 src/*.rzx

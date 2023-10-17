@@ -39,6 +39,9 @@ SectionPrefix=Static
 [Monty:Right]
 #HTML( #R$849C<br/><img src="./images/udgs/Monty_right.png"/> )
 
+[Monty:Climbing]
+#HTML( #R$849C<br/><img src="./images/udgs/Monty_climbing.png"/> )
+
 [Monty:Dead]
 #HTML( #R$FFE0<br/><img src="./images/udgs/Monty_dead.png"/> )
 

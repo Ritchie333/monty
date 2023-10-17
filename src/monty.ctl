@@ -3,12 +3,19 @@
 @expand=#DEF(#GRAFIXSTR(a)(s) #GRAFIX($a)(${s}_a*)#GRAFIX($a+$20)(${s}_b*)#GRAFIX($a+$40)(${s}_c*)#GRAFIX($a+$60)(${s}_d*) #UDGARRAY*(${s}_a;${s}_b;${s}_c;${s}_d)($s))
 @expand=#DEF(#GRAFIXDHSTR(a)(s) #GRAFIXDH($a)(${s}_a*)#GRAFIXDH($a+$20)(${s}_b*)#GRAFIXDH($a+$40)(${s}_c*)#GRAFIXDH($a+$60)(${s}_d*) #UDGARRAY*(${s}_a;${s}_b;${s}_c;${s}_d)($s))
 
+b $4000 Loading screen
+
 u $5B00 Not used
 
 c $5B5B IM2 vector jump
 D $5B5B This routine is called by the IM2 vector jump at #R$C700. The specific code changes throughout the game, depending on what should happen at which point.
 
-i $5B5E
+u $5B5E
+
+g $5C76 Next pseudo-random number
+W $5C76
+
+u $5C78
 
 g $5C7B Current x co-ordinate
 g $5C7C Current y co-ordinate
@@ -109,7 +116,7 @@ D $7680 #UDG$7690,7,,2#UDG$7691,7,,2 #UDG$76B0,7,,2#UDG$76B1,7,,2 #UDG$76D0,7,,2
 b $7700 Pull chain
 D $7700 #UDG$7700,7,,2#UDG$7701,7,,2 #UDG$7720,7,,2#UDG$7721,7,,2 #UDG$7740,7,,2#UDG$7741,7,,2 #UDG$7760,7,,2#UDG$7761,7,,2
 D $7700 #UDG$7710,7,,2#UDG$7711,7,,2 #UDG$7730,7,,2#UDG$7731,7,,2 #UDG$7750,7,,2#UDG$7751,7,,2 #UDG$7770,7,,2#UDG$7771,7,,2
-s $7780
+b $7780 (empty)
 b $7800 Monty up
 D $7800 #UDG$7800,7,,2#UDG$7801,7,,2 #UDG$7820,7,,2#UDG$7821,7,,2 #UDG$7840,7,,2#UDG$7841,7,,2 #UDG$7860,7,,2#UDG$7861,7,,2 #UDG$7880,7,,2#UDG$7881,7,,2 #UDG$78A0,7,,2#UDG$78A1,7,,2 #UDG$78C0,7,,2#UDG$78C1,7,,2 #UDG$78E0,7,,2#UDG$78E1,7,,2
 D $7800 #UDG$7810,7,,2#UDG$7811,7,,2 #UDG$7830,7,,2#UDG$7831,7,,2 #UDG$7850,7,,2#UDG$7851,7,,2 #UDG$7870,7,,2#UDG$7871,7,,2 #UDG$7890,7,,2#UDG$7891,7,,2 #UDG$78B0,7,,2#UDG$78B1,7,,2 #UDG$78D0,7,,2#UDG$78D1,7,,2 #UDG$78F0,7,,2#UDG$78F1,7,,2
@@ -276,7 +283,10 @@ R $90A3 C New bits to include
 c $90A8 Animate water
 R $90A8 HL Starting screen address of the water
 R $90A8 C Width of the water in UDGs
-c $90BD Animate the shower water in room $11
+c $90BD Animate the shower water in room #N$11
+b $910B
+b $912B
+c $912C Animate the shower water in room #N$11 (2)
 c $9148 Check that a crusher has killed Monty
 D $9148 This is done by checking the area three lines under the crusher is empty
 D $9148 If not, Monty must be underneath it, and is crushed!
@@ -343,7 +353,7 @@ B $9B2B Crusher flag
 B $9B2C
 B $9B2D,$0A
 B $9B37 Coal UDG
-B $9B3F Coal positions
+B $9B3F,9,3 Coal positions
 B $9B48
 B $9B4E Static character graphic IDs
 B $9B96,$8C,$14 Nasty data
@@ -368,7 +378,7 @@ B $9D2B Crusher flag
 B $9D2C
 B $9D2D,$0A
 B $9D37 Coal UDG
-B $9D3F Coal positions
+B $9D3F,9,3 Coal positions
 B $9D48
 B $9D4E Static character graphic IDs
 B $9D96,$8C,$14 Nasty data
@@ -393,7 +403,7 @@ B $9F2B Crusher flag
 B $9F2C
 B $9F2D,$0A
 B $9F37 Coal UDG
-B $9F3F Coal positions
+B $9F3F,9,3 Coal positions
 B $9F48
 B $9F4E Static character graphic IDs
 B $9F96,$8C,$14 Nasty data
@@ -418,7 +428,7 @@ B $A12B Crusher flag
 B $A12C
 B $A12D,$0A
 B $A137 Coal UDG
-B $A13F Coal positions
+B $A13F,9,3 Coal positions
 B $A148
 B $A14E Static character graphic IDs
 B $A196,$8C,$14 Nasty data
@@ -442,7 +452,7 @@ B $A32B Crusher flag
 B $A32C
 B $A32D,$0A
 B $A337 Coal UDG
-B $A33F Coal positions
+B $A33F,9,3 Coal positions
 B $A348
 B $A34E Static character graphic IDs
 B $A396,$8C,$14 Nasty data
@@ -466,7 +476,7 @@ B $A52B Crusher flag
 B $A52C
 B $A52D,$0A
 B $A537 Coal UDG
-B $A53F Coal positions
+B $A53F,9,3 Coal positions
 B $A548
 B $A54E Static character graphic IDs
 B $A596,$8C,$14 Nasty data
@@ -490,7 +500,7 @@ B $A72B Crusher flag
 B $A72C
 B $A72D,$0A
 B $A737 Coal UDG
-B $A73F Coal positions
+B $A73F,9,3 Coal positions
 B $A748
 B $A74E Static character graphic IDs
 B $A796,$8C,$14 Nasty data
@@ -514,7 +524,7 @@ B $A92B Crusher flag
 B $A92C
 B $A92D,$0A
 B $A937 Coal UDG
-B $A93F Coal positions
+B $A93F,9,3 Coal positions
 B $A948
 B $A94E Static character graphic IDs
 B $A996,$8C,$14 Nasty data
@@ -538,7 +548,7 @@ B $AB2B Crusher flag
 B $AB2C
 B $AB2D,$0A
 B $AB37 Coal UDG
-B $AB3F Coal positions
+B $AB3F,9,3 Coal positions
 B $AB48
 B $AB4E Static character graphic IDs
 B $AB96,$8C,$14 Nasty data
@@ -562,7 +572,7 @@ B $AD2B Crusher flag
 B $AD2C
 B $AD2D,$0A
 B $AD37 Coal UDG
-B $AD3F Coal positions
+B $AD3F,9,3 Coal positions
 B $AD48
 B $AD4E Static character graphic IDs
 B $AD96,$8C,$14 Nasty data
@@ -586,7 +596,7 @@ B $AF2B Crusher flag
 B $AF2C
 B $AF2D,$0A
 B $AF37 Coal UDG
-B $AF3F Coal positions
+B $AF3F,9,3 Coal positions
 B $AF48
 B $AF4E Static character graphic IDs
 B $AF96,$8C,$14 Nasty data
@@ -610,7 +620,7 @@ B $B12B Crusher flag
 B $B12C
 B $B12D,$0A
 B $B137 Coal UDG
-B $B13F Coal positions
+B $B13F,9,3 Coal positions
 B $B148
 B $B14E Static character graphic IDs
 B $B196,$8C,$14 Nasty data
@@ -634,7 +644,7 @@ B $B32B Crusher flag
 B $B32C
 B $B32D,$0A
 B $B337 Coal UDG
-B $B33F Coal positions
+B $B33F,9,3 Coal positions
 B $B348
 B $B34E Static character graphic IDs
 B $B396,$8C,$14 Nasty data
@@ -658,7 +668,7 @@ B $B52B Crusher flag
 B $B52C
 B $B52D,$0A
 B $B537 Coal UDG
-B $B53F Coal positions
+B $B53F,9,3 Coal positions
 B $B548
 B $B54E Static character graphic IDs
 B $B596,$8C,$14 Nasty data
@@ -682,7 +692,7 @@ B $B72B Crusher flag
 B $B72C
 B $B72D,$0A
 B $B737 Coal UDG
-B $B73F Coal positions
+B $B73F,9,3 Coal positions
 B $B748
 B $B74E Static character graphic IDs
 B $B796,$8C,$14 Nasty data
@@ -706,7 +716,7 @@ B $B92B Crusher flag
 B $B92C
 B $B92D,$0A
 B $B937 Coal UDG
-B $B93F Coal positions
+B $B93F,9,3 Coal positions
 B $B948
 B $B94E Static character graphic IDs
 B $B996,$8C,$14 Nasty data
@@ -730,7 +740,7 @@ B $BB2B Crusher flag
 B $BB2C
 B $BB2D,$0A
 B $BB37 Coal UDG
-B $BB3F Coal positions
+B $BB3F,9,3 Coal positions
 B $BB48
 B $BB4E Static character graphic IDs
 B $BB96,$8C,$14 Nasty data
@@ -754,7 +764,7 @@ B $BD2B Crusher flag
 B $BD2C
 B $BD2D,$0A
 B $BD37 Coal UDG
-B $BD3F Coal positions
+B $BD3F,9,3 Coal positions
 B $BD48
 B $BD4E Static character graphic IDs
 B $BD96,$8C,$14 Nasty data
@@ -778,7 +788,7 @@ B $BF2B Crusher flag
 B $BF2C
 B $BF2D,$0A
 B $BF37 Coal UDG
-B $BF3F Coal positions
+B $BF3F,9,3 Coal positions
 B $BF48
 B $BF4E Static character graphic IDs
 B $BF96,$8C,$14 Nasty data
@@ -802,7 +812,7 @@ B $C12B Crusher flag
 B $C12C
 B $C12D,$0A
 B $C137 Coal UDG
-B $C13F Coal positions
+B $C13F,9,3 Coal positions
 B $C148
 B $C14E Static character graphic IDs
 B $C196,$8C,$14 Nasty data
@@ -826,7 +836,7 @@ B $C32B Crusher flag
 B $C32C
 B $C32D,$0A
 B $C337 Coal UDG
-B $C33F Coal positions
+B $C33F,9,3 Coal positions
 B $C348
 B $C34E Static character graphic IDs
 B $C396,$8C,$14 Nasty data
