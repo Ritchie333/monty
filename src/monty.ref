@@ -221,7 +221,7 @@ SectionPrefix=Screens
 #HTML( #R$4000<br/><img src="./images/scr/loading.png"/> )
 
 [Screens:Start room]
-#HTML( #R$4000<br/><img src="./images/udgs/startroom.png"/> )
+#HTML( #R$F14D #R$F37D<br/><img src="./images/udgs/startroom.png"/> )
 
 [Screens:Room 00]
 #HTML( #R$9A2A<br/><img src="./images/udgs/room_00.png"/> )
