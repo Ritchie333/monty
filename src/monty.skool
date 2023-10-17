@@ -4,6 +4,21 @@
 @expand=#DEF(#GRAFIXDHSTR(a)(s) #GRAFIXDH($a)(${s}_a*)#GRAFIXDH($a+$20)(${s}_b*)#GRAFIXDH($a+$40)(${s}_c*)#GRAFIXDH($a+$60)(${s}_d*) #UDGARRAY*(${s}_a;${s}_b;${s}_c;${s}_d)($s))
 @expand=#DEF(#UDGSTR(a) #UDG($a+1,#PEEK$a) #UDG($a+10,#PEEK($a+9)) #UDG($a+$13,#PEEK($a+$12)) #UDG($a+$1C,#PEEK($a+$1B)) #UDG($a+$25,#PEEK($a+$24)) #UDG($a+$2E,#PEEK($a+$2D)) #UDG($a+$37,#PEEK($a+$36)) #UDG($a+$40,#PEEK($a+$3F)) )
 
+@expand=#DEF(#UDGBYTES(a,n)
+@expand=+#IF($n==0)(#EVAL(#PEEK($a)/$20))
+@expand=+#IF($n==1)(#EVAL((#PEEK($a)&$1f)/4))
+@expand=+#IF($n==2)(#EVAL(((#PEEK($a)&$3)*2)+(#PEEK($a+1)/$80)))
+@expand=+#IF($n==3)(#EVAL(((#PEEK($a+1)&$7f)/$10)))
+@expand=+#IF($n==4)(#EVAL(((#PEEK($a+1)&$f)/2)))
+@expand=+#IF($n==5)(#EVAL(((#PEEK($a+1)&1)*4)+(#PEEK($a+2)/$40)))
+@expand=+#IF($n==6)(#EVAL((#PEEK($a+2)&$3f)/8))
+@expand=+#IF($n==7)(#EVAL(((#PEEK($a+2)&$7))))
+@expand=+)
+
+@expand=#DEF(#UDGADDR(a,n) #EVAL($a+$124+#UDGBYTES($a+(($n/8)*3),($n%8))*9))
+@expand=#DEF(#UDGXSTR(a,n) #UDG(#UDGADDR($a,$n)+1,#PEEK(#UDGADDR($a,$n))))
+@expand=#DEF(#UDGXSCR(a)(s) #UDGS32,20,2(${s})(#UDGXSTR(#PC,32*$y+$x)(*${s})${s}) )
+
 ; Loading screen
 ;
 ; #UDGTABLE { #SCR2(loading) } TABLE#
@@ -3262,7 +3277,7 @@ c$8866 LD C,(IX+$09)   ; Get the attribute.
  $8877 LD A,(IX+$0B)   ; { Otherwise get the attribute and just draw it.
  $887A JP $FBC6        ; }
 
-; Draw a type 1 - 3 nasty.
+; Draw a type 1 - 3 nasty
 ;
 ; Used by the routine at #R$8751.
 ;
@@ -3952,11 +3967,8 @@ g$8D53 DEFB $00
 
 ; Movement flags.
 ;
-; These four bytes describe what movement can be MADE
+; These four bytes describe what movement can be made
 ; up, down, left and right, with the following values:
-;
-; .
-;
 ; #TABLE( center, default )
 ; { =h value | =h description }
 ; { 0 | Wall }
@@ -4872,7 +4884,7 @@ c$9327 LD IX,$C596   ; Point IX to the nasties buffer at #R$C596.
  $9357 LD IX,$0000   ; { Clear #REGix and return.
  $935B RET           ; }
 
-; Check to see if Monty has moved near any coal, and if so, pick it up.
+; Check to see if Monty has moved near any coal, and if so, pick it up
 ;
 ; Used by the routine at #R$940C.
 c$935C LD HL,($5C7B) ; Get the current position.
@@ -5195,7 +5207,7 @@ c$9568 LD DE,$0031   ; { BEEP without disabling interrupts.
  $95AA ADD HL,DE     ; }
  $95AB JP $968D      ; Jump forward to clear the second line of the item.
 
-; Reset the index of the collectable item, as it was picked up.
+; Reset the index of the collectable item, as it was picked up
 ;
 ; Used by the routine at #R$968D.
 c$95AE XOR A         ; { Set the index at #R$C526 to 0.
@@ -5787,6 +5799,10 @@ u$981B CALL $985F
 ; Room 00
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_00)
 b$9A2A DEFB $92,$48,$49                                                                     ; {Static
  $9A2D DEFB $24,$92,$49                                                                     ; characters
  $9A30 DEFB $24,$92,$49                                                                     ;
@@ -5928,6 +5944,10 @@ b$9A2A DEFB $92,$48,$49                                                         
 ; Room 01
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_01)
 b$9C2A DEFB $49,$24,$92                                                                     ; {Static
  $9C2D DEFB $49,$24,$92                                                                     ; characters
  $9C30 DEFB $24,$80,$00                                                                     ;
@@ -6070,6 +6090,10 @@ b$9C2A DEFB $49,$24,$92                                                         
 ; Room 02
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_02)
 b$9E2A DEFB $49,$24,$92                                                                     ; {Static
  $9E2D DEFB $49,$24,$92                                                                     ; characters
  $9E30 DEFB $24,$81,$80                                                                     ;
@@ -6211,6 +6235,10 @@ b$9E2A DEFB $49,$24,$92                                                         
 ; Room 03
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_03)
 b$A02A DEFB $49,$24,$92                                                                     ; {Static
  $A02D DEFB $49,$24,$92                                                                     ; characters
  $A030 DEFB $44,$90,$30                                                                     ;
@@ -6352,6 +6380,10 @@ b$A02A DEFB $49,$24,$92                                                         
 ; Room 04
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_04)
 b$A22A DEFB $49,$24,$92                                                                     ; {Static
  $A22D DEFB $49,$24,$92                                                                     ; characters
  $A230 DEFB $44,$91,$80                                                                     ;
@@ -6493,6 +6525,10 @@ b$A22A DEFB $49,$24,$92                                                         
 ; Room 05
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_05)
 b$A42A DEFB $49,$24,$90                                                                     ; {Static
  $A42D DEFB $49,$24,$92                                                                     ; characters
  $A430 DEFB $44,$90,$06                                                                     ;
@@ -6634,6 +6670,10 @@ b$A42A DEFB $49,$24,$90                                                         
 ; Room 06
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_06)
 b$A62A DEFB $49,$24,$49                                                                     ; {Static
  $A62D DEFB $24,$A4,$49                                                                     ; characters
  $A630 DEFB $20,$0C,$00                                                                     ;
@@ -6775,6 +6815,10 @@ b$A62A DEFB $49,$24,$49                                                         
 ; Room 07
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_07)
 b$A82A DEFB $49,$24,$48                                                                     ; {Static
  $A82D DEFB $03,$00,$09                                                                     ; characters
  $A830 DEFB $49,$24,$92                                                                     ;
@@ -6916,6 +6960,10 @@ b$A82A DEFB $49,$24,$48                                                         
 ; Room 08
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_08)
 b$AA2A DEFB $49,$24,$92                                                                     ; {Static
  $AA2D DEFB $49,$24,$92                                                                     ; characters
  $AA30 DEFB $49,$24,$92                                                                     ;
@@ -7057,6 +7105,10 @@ b$AA2A DEFB $49,$24,$92                                                         
 ; Room 09
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_09)
 b$AC2A DEFB $49,$24,$92                                                                     ; {Static
  $AC2D DEFB $49,$24,$92                                                                     ; characters
  $AC30 DEFB $49,$24,$92                                                                     ;
@@ -7198,6 +7250,10 @@ b$AC2A DEFB $49,$24,$92                                                         
 ; Room 0A
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_0A)
 b$AE2A DEFB $49,$24,$92                                                                     ; {Static
  $AE2D DEFB $49,$24,$92                                                                     ; characters
  $AE30 DEFB $49,$24,$92                                                                     ;
@@ -7339,6 +7395,10 @@ b$AE2A DEFB $49,$24,$92                                                         
 ; Room 0B
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_0B)
 b$B02A DEFB $48,$60,$92                                                                     ; {Static
  $B02D DEFB $49,$24,$92                                                                     ; characters
  $B030 DEFB $49,$24,$92                                                                     ;
@@ -7480,6 +7540,10 @@ b$B02A DEFB $48,$60,$92                                                         
 ; Room 0C
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_0C)
 b$B22A DEFB $51,$49,$22                                                                     ; {Static
  $B22D DEFB $89,$48,$A4                                                                     ; characters
  $B230 DEFB $8A,$24,$A2                                                                     ;
@@ -7621,6 +7685,10 @@ b$B22A DEFB $51,$49,$22                                                         
 ; Room 0D
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_0D)
 b$B42A DEFB $51,$49,$22                                                                     ; {Static
  $B42D DEFB $89,$48,$A4                                                                     ; characters
  $B430 DEFB $8A,$24,$A2                                                                     ;
@@ -7762,6 +7830,10 @@ b$B42A DEFB $51,$49,$22                                                         
 ; Room 0E
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_0E)
 b$B62A DEFB $51,$49,$22                                                                     ; {Static
  $B62D DEFB $89,$48,$A4                                                                     ; characters
  $B630 DEFB $8A,$24,$A2                                                                     ;
@@ -7903,6 +7975,10 @@ b$B62A DEFB $51,$49,$22                                                         
 ; Room 0F
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_0F)
 b$B82A DEFB $51,$49,$22                                                                     ; {Static
  $B82D DEFB $89,$48,$A4                                                                     ; characters
  $B830 DEFB $8A,$24,$A2                                                                     ;
@@ -8044,6 +8120,10 @@ b$B82A DEFB $51,$49,$22                                                         
 ; Room 10
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_10)
 b$BA2A DEFB $92,$49,$24                                                                     ; {Static
  $BA2D DEFB $92,$49,$20                                                                     ; characters
  $BA30 DEFB $00,$00,$04                                                                     ;
@@ -8185,6 +8265,10 @@ b$BA2A DEFB $92,$49,$24                                                         
 ; Room 11
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_11)
 b$BC2A DEFB $49,$24,$92                                                                     ; {Static
  $BC2D DEFB $49,$24,$92                                                                     ; characters
  $BC30 DEFB $49,$24,$92                                                                     ;
@@ -8326,6 +8410,10 @@ b$BC2A DEFB $49,$24,$92                                                         
 ; Room 12
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_12)
 b$BE2A DEFB $49,$24,$92                                                                     ; {Static
  $BE2D DEFB $49,$24,$92                                                                     ; characters
  $BE30 DEFB $49,$24,$92                                                                     ;
@@ -8467,6 +8555,10 @@ b$BE2A DEFB $49,$24,$92                                                         
 ; Room 13
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_13)
 b$C02A DEFB $49,$24,$92                                                                     ; {Static
  $C02D DEFB $49,$24,$92                                                                     ; characters
  $C030 DEFB $49,$24,$92                                                                     ;
@@ -8608,6 +8700,10 @@ b$C02A DEFB $49,$24,$92                                                         
 ; Room 14
 ;
 ; The current room is copied into #R$C42A
+;
+; .
+;
+; #UDGXSCR(#PC)(Room_14)
 b$C22A DEFB $00,$1E,$00                                                                     ; {Static
  $C22D DEFB $00,$00,$00                                                                     ; characters
  $C230 DEFB $00,$00,$00                                                                     ;
@@ -9866,7 +9962,7 @@ u$CEEF LD HL,$4000   ;
 s$CF2C DEFS $28
 
 ; Screen attribute buffer
-s$CF54 DEFS $0300
+b$CF54 DEFS $0300
 
 ; Copy the screen to storage buffer
 ;

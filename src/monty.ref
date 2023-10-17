@@ -219,3 +219,66 @@ SectionPrefix=Screens
 
 [Screens:Loading screen]
 #HTML( #R$4000<br/><img src="./images/scr/loading.png"/> )
+
+[Screens:Room 00]
+#HTML( #R$9A2A<br/><img src="./images/udgs/room_00.png"/> )
+
+[Screens:Room 01]
+#HTML( #R$9C2A<br/><img src="./images/udgs/room_01.png"/> )
+
+[Screens:Room 02]
+#HTML( #R$9E2A<br/><img src="./images/udgs/room_02.png"/> )
+
+[Screens:Room 03]
+#HTML( #R$A02A<br/><img src="./images/udgs/room_03.png"/> )
+
+[Screens:Room 04]
+#HTML( #R$A22A<br/><img src="./images/udgs/room_04.png"/> )
+
+[Screens:Room 05]
+#HTML( #R$A42A<br/><img src="./images/udgs/room_05.png"/> )
+
+[Screens:Room 06]
+#HTML( #R$A62A<br/><img src="./images/udgs/room_06.png"/> )
+
+[Screens:Room 07]
+#HTML( #R$A82A<br/><img src="./images/udgs/room_07.png"/> )
+
+[Screens:Room 08]
+#HTML( #R$AA2A<br/><img src="./images/udgs/room_08.png"/> )
+
+[Screens:Room 09]
+#HTML( #R$AC2A<br/><img src="./images/udgs/room_09.png"/> )
+
+[Screens:Room 0A]
+#HTML( #R$AE2A<br/><img src="./images/udgs/room_0A.png"/> )
+
+[Screens:Room 0B]
+#HTML( #R$B02A<br/><img src="./images/udgs/room_0B.png"/> )
+
+[Screens:Room 0C]
+#HTML( #R$B22A<br/><img src="./images/udgs/room_0C.png"/> )
+
+[Screens:Room 0D]
+#HTML( #R$B42A<br/><img src="./images/udgs/room_0D.png"/> )
+
+[Screens:Room 0E]
+#HTML( #R$B62A<br/><img src="./images/udgs/room_0E.png"/> )
+
+[Screens:Room 0F]
+#HTML( #R$B82A<br/><img src="./images/udgs/room_0F.png"/> )
+
+[Screens:Room 10]
+#HTML( #R$BA2A<br/><img src="./images/udgs/room_10.png"/> )
+
+[Screens:Room 11]
+#HTML( #R$BC2A<br/><img src="./images/udgs/room_11.png"/> )
+
+[Screens:Room 12]
+#HTML( #R$BE2A<br/><img src="./images/udgs/room_12.png"/> )
+
+[Screens:Room 13]
+#HTML( #R$C02A<br/><img src="./images/udgs/room_13.png"/> )
+
+[Screens:Room 14]
+#HTML( #R$C22A<br/><img src="./images/udgs/room_14.png"/> )
