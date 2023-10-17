@@ -21,6 +21,7 @@ g $5C7B Current x co-ordinate
 g $5C7C Current y co-ordinate
 
 w $5C7D Abide With Me tune data
+W $5C7D,$64,4
 
 b $5CE1 Game won message
 D $5CE1 OUR GALLANT MOLES / COMPLETED THE TASK / THROUGH PICKETS THICK / HIS LUCK DID LAST

@@ -962,56 +962,34 @@ g$5C7B DEFB $58
 g$5C7C DEFB $FF
 
 ; Abide With Me tune data
-w$5C7D DEFW $0149
- $5C7F DEFW $052F
- $5C81 DEFW $00A4
- $5C83 DEFW $052F
- $5C85 DEFW $0092
- $5C87 DEFW $05D2
- $5C89 DEFW $0105
- $5C8B DEFW $0688
- $5C8D DEFW $0188
- $5C8F DEFW $045C
- $5C91 DEFW $00DC
- $5C93 DEFW $03E2
- $5C95 DEFW $00C4
- $5C97 DEFW $045C
- $5C99 DEFW $00C4
- $5C9B DEFW $045C
- $5C9D DEFW $00AE
- $5C9F DEFW $04E5
- $5CA1 DEFW $0293
- $5CA3 DEFW $052F
- $5CA5 DEFW $0149
- $5CA7 DEFW $052F
- $5CA9 DEFW $00AE
- $5CAB DEFW $04E5
- $5CAD DEFW $00C4
- $5CAF DEFW $045C
- $5CB1 DEFW $01B8
- $5CB3 DEFW $03E2
- $5CB5 DEFW $0188
- $5CB7 DEFW $045C
- $5CB9 DEFW $00AE
- $5CBB DEFW $04E5
- $5CBD DEFW $0092
- $5CBF DEFW $05D2
- $5CC1 DEFW $00A4
- $5CC3 DEFW $052F
- $5CC5 DEFW $00B8
- $5CC7 DEFW $049E
- $5CC9 DEFW $0310
- $5CCB DEFW $045C
- $5CCD DEFW $0149
- $5CCF DEFW $052F
- $5CD1 DEFW $00A4
- $5CD3 DEFW $052F
- $5CD5 DEFW $0092
- $5CD7 DEFW $05D2
- $5CD9 DEFW $0105
- $5CDB DEFW $0088
- $5CDD DEFW $0000
- $5CDF DEFW $0000
+;
+; The first word is the length, the second is the frequency
+; When both are 0 (or the angel reaches the top of the screen), the tune ends
+w$5C7D DEFW $0149,$052F
+ $5C81 DEFW $00A4,$052F
+ $5C85 DEFW $0092,$05D2
+ $5C89 DEFW $0105,$0688
+ $5C8D DEFW $0188,$045C
+ $5C91 DEFW $00DC,$03E2
+ $5C95 DEFW $00C4,$045C
+ $5C99 DEFW $00C4,$045C
+ $5C9D DEFW $00AE,$04E5
+ $5CA1 DEFW $0293,$052F
+ $5CA5 DEFW $0149,$052F
+ $5CA9 DEFW $00AE,$04E5
+ $5CAD DEFW $00C4,$045C
+ $5CB1 DEFW $01B8,$03E2
+ $5CB5 DEFW $0188,$045C
+ $5CB9 DEFW $00AE,$04E5
+ $5CBD DEFW $0092,$05D2
+ $5CC1 DEFW $00A4,$052F
+ $5CC5 DEFW $00B8,$049E
+ $5CC9 DEFW $0310,$045C
+ $5CCD DEFW $0149,$052F
+ $5CD1 DEFW $00A4,$052F
+ $5CD5 DEFW $0092,$05D2
+ $5CD9 DEFW $0105,$0088
+ $5CDD DEFW $0000,$0000
 
 ; Game won message
 ;
@@ -4032,34 +4010,34 @@ g$8D7D DEFB $00,$00
 ; Used by the routine at #R$946E.
 c$8D7F LD HL,$FFE0    ; #R$FFE0 is the "dead Monty" graphic.
  $8D82 LD ($ECE0),HL  ; Store this.
- $8D85 LD HL,($5C7B)  ;
- $8D88 LD ($ECDE),HL  ;
- $8D8B CALL $EBE0     ;
+ $8D85 LD HL,($5C7B)  ; Get the current position.
+ $8D88 LD ($ECDE),HL  ; Store this as the place to print.
+ $8D8B CALL $EBE0     ; Print the graphic.
  $8D8E LD HL,$0000    ;
  $8D91 LD ($9177),HL  ;
- $8D94 CALL $D254     ;
- $8D97 LD IX,$8D52    ;
- $8D9B SET 1,(IX+$01) ;
- $8D9F EI             ;
- $8DA0 LD IX,$5C7D    ;
-*$8DA4 PUSH IX        ;
- $8DA6 LD E,(IX+$00)  ;
- $8DA9 LD D,(IX+$01)  ;
- $8DAC LD L,(IX+$02)  ;
- $8DAF LD H,(IX+$03)  ;
- $8DB2 CALL $03B6     ;
- $8DB5 LD B,$FF       ;
-*$8DB7 DJNZ $8DB7     ;
- $8DB9 POP IX         ;
- $8DBB LD A,($9179)   ;
- $8DBE CP $FF         ;
- $8DC0 RET Z          ;
- $8DC1 LD DE,$0004    ;
- $8DC4 ADD IX,DE      ;
- $8DC6 XOR A          ;
- $8DC7 OR (IX+$00)    ;
- $8DCA JR NZ,$8DA4    ;
- $8DCC RET            ;
+ $8D94 CALL $D254     ; Copy the screen to the graphic buffer.
+ $8D97 LD IX,$8D52    ; { Stop all nasties from moving.
+ $8D9B SET 1,(IX+$01) ; }
+ $8D9F EI             ; Enable interrupts
+ $8DA0 LD IX,$5C7D    ; Load #REGix with the start of the death tune.
+*$8DA4 PUSH IX        ; Remember this, as the ROM routine overwrites it.
+ $8DA6 LD E,(IX+$00)  ; { Put the length in #REGde.
+ $8DA9 LD D,(IX+$01)  ; }
+ $8DAC LD L,(IX+$02)  ; { Put the frequency in #REGhl.
+ $8DAF LD H,(IX+$03)  ; }
+ $8DB2 CALL $03B6     ; BEEP without enabling interrupts.
+ $8DB5 LD B,$FF       ; { Pause between notes.
+*$8DB7 DJNZ $8DB7     ; }
+ $8DB9 POP IX         ; Restore IX.
+ $8DBB LD A,($9179)   ; Get the current frame number.
+ $8DBE CP $FF         ; Is it #$FF, meaning the angel has gone?
+ $8DC0 RET Z          ; Return if so.
+ $8DC1 LD DE,$0004    ; { Move forward to the next bit of tune data.
+ $8DC4 ADD IX,DE      ; }
+ $8DC6 XOR A          ; { Is the length 0?
+ $8DC7 OR (IX+$00)    ; }
+ $8DCA JR NZ,$8DA4    ; If not, move back to play more of the tune.
+ $8DCC RET            ; Otherwise return.
 
 ; Animate one frame of all moving objects
 ;
@@ -4200,41 +4178,43 @@ c$8E9B LD IY,$C527    ;
 ; Animate Monty's angel as he has died
 ;
 ; Used by the routine at #R$8F9F.
-c$8EDD LD A,($9179)  ;
+c$8EDD LD A,($9179)  ; { Increase the frame number between 0 and 3.
  $8EE0 INC A         ;
  $8EE1 AND $03       ;
- $8EE3 LD ($9179),A  ;
- $8EE6 OR A          ;
- $8EE7 JP NZ,$9048   ;
- $8EEA LD HL,$5C7C   ;
- $8EED INC (HL)      ;
- $8EEE INC (HL)      ;
- $8EEF LD A,$BE      ;
- $8EF1 CP (HL)       ;
- $8EF2 JR NC,$8F12   ;
+ $8EE3 LD ($9179),A  ; }
+ $8EE6 OR A          ; Is the frame zero?
+ $8EE7 JP NZ,$9048   ; Exit if so.
+ $8EEA LD HL,$5C7C   ; Get the current Y co-ordinate.
+ $8EED INC (HL)      ; { Move up two rows.
+ $8EEE INC (HL)      ; }
+ $8EEF LD A,$BE      ; { Has the angel reached the top of the screen?
+ $8EF1 CP (HL)       ; }
+ $8EF2 JR NC,$8F12   ; Move forward if not.
+; The angel has now reached the top of the screen.
  $8EF4 LD HL,$7780   ; #R$7780 is the empty graphic.
  $8EF7 LD ($ECE0),HL ; Store the graphic to draw.
  $8EFA LD HL,($5C7B) ; { Get the player's position.
  $8EFD LD ($ECDE),HL ; }
  $8F00 CALL $EBE0    ; Draw (erase) the graphic.
- $8F03 LD HL,$8D53   ; 
- $8F06 RES 1,(HL)    ;
- $8F08 SET 0,(HL)    ;
- $8F0A LD A,$FF      ;
- $8F0C LD ($9179),A  ;
- $8F0F JP $9048      ;
-*$8F12 LD HL,($9177) ;
- $8F15 LD DE,$0020   ;
+ $8F03 LD HL,$8D53   ; Get the game flags.
+ $8F06 RES 1,(HL)    ; Reset flag 1 (Monty in mid-air).
+ $8F08 SET 0,(HL)    ; Set flag 0 (nasties can move)
+ $8F0A LD A,$FF      ; { Set the frame to #N$FF, denoting "not used"
+ $8F0C LD ($9179),A  ; }
+ $8F0F JP $9048      ; Exit to restore all registers.
+; The angel needs redrawing.
+*$8F12 LD HL,($9177) ; { Move the current position up a row.
+ $8F15 LD DE,$0020   ; 
  $8F18 ADD HL,DE     ;
- $8F19 RES 7,L       ;
- $8F1B LD ($9177),HL ;
- $8F1E LD DE,$FF60   ;
- $8F21 ADD HL,DE     ;
- $8F22 LD ($ECE0),HL ;
- $8F25 LD HL,($5C7B) ;
- $8F28 LD ($ECDE),HL ;
- $8F2B CALL $EBE0    ;
- $8F2E JP $9048      ;
+ $8F19 RES 7,L       ; 
+ $8F1B LD ($9177),HL ; }
+ $8F1E LD DE,$FF60   ; { Move back to get an appropriate screen address.
+ $8F21 ADD HL,DE     ; }
+ $8F22 LD ($ECE0),HL ; Set this as the graphic to print.
+ $8F25 LD HL,($5C7B) ; { Set the current position as the position to draw.
+ $8F28 LD ($ECDE),HL ; }
+ $8F2B CALL $EBE0    ; Draw the graphic.
+ $8F2E JP $9048      ; Exit to restore all registers.
 
 ; Update the moving platforms
 ;
@@ -4589,13 +4569,10 @@ c$9148 LD A,(IY+$01) ; Get the crusher Y co-ordinate.
  $9173 DI            ; { Otherwise, something was in the way of the crusher, which must have been Monty,
  $9174 JP $946E      ; so kill him. }
 
-; Game status buffer at 9177
-g$9177 DEFB $00     ;
+; Offset for Monty's angel as it is animated
+g$9177 DEFW $0000    ;
 
-; Game status buffer at 9178
-g$9178 DEFB $00     ;
-
-; Game status buffer at 9179
+; Frame number for the angel (0-3)
 g$9179 DEFB $00     ;
 
 
