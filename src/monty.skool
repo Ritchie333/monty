@@ -3764,7 +3764,7 @@ c$8B90 CALL $8C3D     ; Check for collision.
  $8C39 LD ($8494),HL  ;
  $8C3C RET            ;
 
-; Check if Monty can move (is there a wall in the way?)
+; Check what attributes are around Monty
 ;
 ; Used by the routine at #R$8B90.
 c$8C3D LD IY,$8D54     ; Point #REGiy at the movement table at #R$8D54.
@@ -3873,22 +3873,22 @@ c$8C3D LD IY,$8D54     ; Point #REGiy at the movement table at #R$8D54.
 ; HL Attribute in the current position
 ; IY Pointer to movement table  (#R$8D54)
 ; B Number of columns
-c$8D0F LD DE,$C51A     ; Get the background attribute.
+c$8D0F LD DE,$C51A     ; Get the list of attributes.
  $8D12 PUSH BC         ; Remember #REGbc
- $8D13 LD B,$04        ; Count four directions.
+ $8D13 LD B,$04        ; Count four types.
  $8D15 LD A,(HL)       ; { Is the current attribute this one?
  $8D16 EX DE,HL        ;
 *$8D17 CP (HL)         ; }
- $8D18 JR Z,$8D50      ; If so, skip setting flags as the way forward is blocked.
- $8D1A INC (IY+$00)    ; Mark this direction as okay to move in.
+ $8D18 JR Z,$8D50      ; If so, found the attribute we want.
+ $8D1A INC (IY+$00)    ; Increment the type of attribute looked for.
  $8D1D INC HL          ; Move to the next attribute.
  $8D1E DJNZ $8D17      ; Repeat for the next four types.
  $8D20 EX DE,HL        ; Restore #REGhl to the start of the table.
  $8D21 POP BC          ; Restore #REGbc.
- $8D22 LD (IY+$00),$00 ; Initialise to no movement.
+ $8D22 LD (IY+$00),$00 ; Set to no attribute found.
  $8D26 INC HL          ; Move forward a column.
  $8D27 DJNZ $8D0F      ; Repeat until all columns have been checked.
- $8D29 LD (IY+$00),$04 ; { Mark this direction as okay to move in.
+ $8D29 LD (IY+$00),$04 ; { Mark this as empty space
  $8D2D RET             ; and return. }
 
 ; Update the movement tables (down)
@@ -3900,12 +3900,12 @@ c$8D0F LD DE,$C51A     ; Get the background attribute.
 ; B Number of rows
 c$8D2E LD DE,$C51A     ; Point to the start of the movement attributes table (#R$C51A).
  $8D31 PUSH BC         ; Remember #REGbc.
- $8D32 LD B,$04        ; Count four directions.
+ $8D32 LD B,$04        ; Count four types.
  $8D34 LD A,(HL)       ; { Is the current attribute this one?
  $8D35 EX DE,HL        ;
 *$8D36 CP (HL)         ; }
- $8D37 JR Z,$8D50      ; If so, skip setting flags.
- $8D39 INC (IY+$00)    ; Mark this direction as okay to move in.
+ $8D37 JR Z,$8D50      ; If so, found the attribute we want.
+ $8D39 INC (IY+$00)    ; Increment the type of attribute looked for.
  $8D3C INC HL          ; Move to the next attribute.
  $8D3D DJNZ $8D36      ; Repeat for the next four types.
  $8D3F EX DE,HL        ; Restore #REGhl to the start of the table.
@@ -3914,9 +3914,9 @@ c$8D2E LD DE,$C51A     ; Point to the start of the movement attributes table (#R
  $8D45 LD DE,$0020     ; { Move forward a row.
  $8D48 ADD HL,DE       ; }
  $8D49 DJNZ $8D2E      ; Repeat until all rows have been checked.
- $8D4B LD (IY+$00),$04 ; { Mark this direction as okay to move in
+ $8D4B LD (IY+$00),$04 ; { Mark this as empty space
  $8D4F RET             ; and return. }
- ; There is a wall in the way and Monty can't move any further.
+ ; We've found a matching attribute and have set it.
  ; This entry point is used by the routine at #R$8D0F.
 *$8D50 POP BC          ; { Tidy up the stack and return.
  $8D51 RET             ; }
@@ -3957,10 +3957,10 @@ g$8D53 DEFB $00
 ; up, down, left and right, with the following values:
 ; #TABLE( center, default )
 ; { =h value | =h description }
-; { 0 | Wall }
-; { 1 | Nasty }
-; { 2 | Ladder }
-; { 3 | }
+; { 0 | Movement is blocked }
+; { 1 | Fire (fatal) }
+; { 2 | Ladder (can be climbed) }
+; { 3 | Not used }
 ; { 4 | Empty space }
 ; TABLE#
 g$8D54 DEFB $03, $09, $52, $45
@@ -8932,16 +8932,33 @@ g$C42A DEFB $92,$48,$49
  $C514 DEFB $24,$92,$48
  $C517 DEFB $C0,$00,$92
 
-; Attributes that denote a wall
+; "Water" attribute
 ;
-; If Monty is next to an attribute with this value,
-; he won't be able to move any further.
-g$C51A DEFB $4D,$44
+; Monty can walk through any cell with this attribute.
+; Used by the routines in #R$8D0F and #R$8D2E.
+g$C51A DEFB $4D
 
-; Attribute that denotes Monty can climb around it
+; "Fire" attribute
+;
+; If Monty touches this attribute, he will die.
+; Used by the routines in #R$8D0F and #R$8D2E.
+g$C51B DEFB $44
+
+; "Ladder" attribute
+;
+; If Monty touches this attribute, he can climb around it.
+; Used by the routines in #R$8D0F and #R$8D2E.
 g$C51C DEFB $45
 
-; Attribute (?)
+; "Wall" attribute
+;
+; Monty can't walk through any cell with this attribute.
+; Used by the routines in #R$8D0F and #R$8D2E.
+;
+; .
+;
+; This attribute may have had a previous use, but the code at #8C3D
+; sets it to a wall regardless.
 g$C51D DEFB $42
 
 ; Offset for Monty's graphic
@@ -9784,8 +9801,8 @@ c$CD41 LD HL,$964D   ; { Reset the "collected" flag on all coal.
  $CD8C CALL $949E    ; Print number of lives.
  $CD8F CALL $D254    ; Copy the screen back to the buffer.
  $CD92 EI            ; Turn interrupts on, the service routine can now be run.
- $CD93 LD A,$75      ; { Make #N$75 (bright cyan on yellow) a wall attribute. (#R$C51A)
- $CD95 LD ($C51B),A  ; }
+ $CD93 LD A,$75      ; { Make #N$75 (bright cyan on yellow) a deadly attribute. (#R$C51A)
+ $CD95 LD ($C51B),A  ; so Monty will die if he touches the water under bridge. }
 *$CD98 CALL $FF5B    ; Wait for interrupts and run one frame in the room.
  $CD9B CALL $9298    ; Check for collision.
  $CD9E CALL $82A6    ; Check for player input.
