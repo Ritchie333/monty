@@ -290,6 +290,71 @@ SectionPrefix=Screens
 [Screens:Room 14]
 #HTML( #R$C22A<br/><img src="./images/udgs/room_14.png"/> )
 
+[Screens:Map]
+#HTML(
+    <table>
+        <tr>
+            <td><img src="./images/udgs/startroom.png" width=64px height=48px /></td>
+            <td><img src="./images/udgs/room_00.png" width=64px height=48px /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><img src="./images/udgs/room_01.png" width=64px height=48px /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><img src="./images/udgs/room_02.png" width=64px height=48px /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><img src="./images/udgs/room_03.png" width=64px height=48px /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><img src="./images/udgs/room_04.png" width=64px height=48px /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><img src="./images/udgs/room_05.png" width=64px height=48px /></td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+            <td><img src="./images/udgs/room_14.png" width=64px height=48px /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><img src="./images/udgs/room_06.png" width=64px height=48px /></td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+            <td><img src="./images/udgs/room_0C.png" width=64px height=48px /></td>
+            <td><img src="./images/udgs/room_0D.png" width=64px height=48px /></td>
+            <td><img src="./images/udgs/room_0E.png" width=64px height=48px /></td>
+            <td><img src="./images/udgs/room_0F.png" width=64px height=48px /></td>
+            <td><img src="./images/udgs/room_10.png" width=64px height=48px /></td>
+            <td><img src="./images/udgs/room_13.png" width=64px height=48px /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><img src="./images/udgs/room_07.png" width=64px height=48px /></td>
+            <td><img src="./images/udgs/room_08.png" width=64px height=48px /></td>
+            <td><img src="./images/udgs/room_09.png" width=64px height=48px /></td>
+            <td><img src="./images/udgs/room_0A.png" width=64px height=48px /></td>
+            <td><img src="./images/udgs/room_0B.png" width=64px height=48px /></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><img src="./images/udgs/room_11.png" width=64px height=48px /></td>
+            <td><img src="./images/udgs/room_12.png" width=64px height=48px /></td>
+        </tr>
+    </table> 
+)
+
 [Screens:Unused screen capture]
 #HTML( #R$DA01<br/><img src="./images/scr/screen_capture.png"/> )
 

@@ -2366,7 +2366,7 @@ b$7C00 DEFB $00,$00,$00,$00,$00,$00,$00,$00
 ; Used by the routine at #R$F7D6.
 c$8000 DI            ; Disable interrupts.
  $8001 CALL $8092    ; Display options.
- $8004 LD IX,$8127   ; #N8127 - default option.
+ $8004 LD IX,$8127   ; #R$8127 - default option.
  $8008 LD A,$01      ; { Set default option to 1.
  $800A CALL $FF00    ; }
  $800D EI            ; Re-enable interrupts.
@@ -12347,11 +12347,11 @@ g$F7D5 DEFB $00
 
 ; Start a new game
 ;
-; Used by the routine at #R$F858.
+; Used by the routines at #R$D290 and #R$F858.
 c$F7D6 XOR A         ; Set A to 0 to clear some flags.
  $F7D7 DI            ; Disable interrupts.
  $F7D8 LD ($848F),A  ; Set position on ground (#R$848F) to 0.
- $F7DB LD ($8498),A  ; 
+ $F7DB LD ($8498),A  ; Set time jumping (#R$8498) to 0.
  $F7DE LD ($8D58),A  ; Set distance fallen (#R$8D58) to 0.
  $F7E1 LD ($8D52),A  ; Set room flags (#R$8D52) to 0.
  $F7E4 LD ($8D53),A  ; Set game flags (#R$8D53) to 0.
