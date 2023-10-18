@@ -3586,7 +3586,7 @@ c$8A63 LD A,($848F)   ; Get the position off the ground.
  $8AC1 JP $8B34       ; Jump forward to set movement restrictions.
 
 ; Unused
-c$8AC4 LD A,($5C7B)   ;
+u$8AC4 LD A,($5C7B)   ;
  $8AC7 INC A          ;
  $8AC8 JR $8A71       ;
 *$8ACA CP $04         ;
