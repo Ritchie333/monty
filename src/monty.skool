@@ -3909,7 +3909,7 @@ c$8D2E LD DE,$C51A     ; Point to the start of the movement attributes table (#R
  $8D3C INC HL          ; Move to the next attribute.
  $8D3D DJNZ $8D36      ; Repeat for the next four types.
  $8D3F EX DE,HL        ; Restore #REGhl to the start of the table.
- $8D40 POP BC          ; Restore #REGbc
+ $8D40 POP BC          ; Restore #REGbc.
  $8D41 LD (IY+$00),$00 ; Initialise to no movement.
  $8D45 LD DE,$0020     ; { Move forward a row.
  $8D48 ADD HL,DE       ; }
@@ -4848,7 +4848,7 @@ c$9298 LD HL,($5C7B) ; Get the current position in #REGhl (#R$5C7B)
  $9318 LD (IX+$09),A   ; used in the room's static data. (#R$C54E) }
  $931B PUSH IX         ; Remember #REGix.
  $931D CALL $8751      ; Update the nasties on screen.
- $9320 POP IX          ; #Restore #REGix.
+ $9320 POP IX          ; Restore #REGix.
  $9322 LD (IX+$00),$03 ; Flag the nasty as being invisible.
  $9326 RET             ; Return.
 
@@ -5023,7 +5023,7 @@ c$946E CALL $8D7F    ; Play the tune.
  $947C JP Z,$F817    ; Jump if so.
  $947F LD HL,($964B) ; { Set the current position to the
  $9482 LD ($5C7B),HL ; start position in this room. }
- $9485 XOR A         ; Set A to 0 to reset some flags.
+ $9485 XOR A         ; Set #REGa to 0 to reset some flags.
  $9486 LD ($8D58),A  ; Reset distance fallen.
  $9489 LD ($8D52),A  ; Reset room flags.
  $948C LD ($8D53),A  ; Reset game flags.
@@ -5461,7 +5461,7 @@ c$96D9 LD A,($5C7C)  ; { Is Monty at the bottom of the screen?
  $977C POP BC        ; Restore #REGbc.
  $977D DJNZ $9746    ; Loop while there is still more to draw.
 ; Monty has fallen off the edge, put him in the next room.
- $977F LD A,$11      ; Set #REGA to #N$11 to set up some flags.
+ $977F LD A,$11      ; Set #REGa to #N$11 to set up some flags.
  $9781 LD HL,$A1C0   ; { Set the position to X = $C0, Y = $A1
  $9784 LD ($5C7B),HL ;
  $9787 LD ($964B),HL ; }
