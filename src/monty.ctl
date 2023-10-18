@@ -1138,7 +1138,7 @@ D $8E7A #UDGARRAY3,7,2,3($8E7A-$8E7C)(crusher)
 B $8E7A,32,8
 u $8E9A
 B $8E9A,1,1
-c $8E9B Set the attributes for a crusher.
+c $8E9B Set the attributes for a crusher
 D $8E9B Used by the routine at #R$8DCD.
 C $8E9B,7 Get the Y co-ordinate.
 C $8EA2,16 Convert this into a screen address and put it in #REGhl.

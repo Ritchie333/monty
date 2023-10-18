@@ -4158,7 +4158,7 @@ b$8E7A DEFB $1F,$FF,$50,$1F,$FF,$A8,$1F,$FF
  ; Unused
 u$8E9A DEFB $00
 
-; Set the attributes for a crusher.
+; Set the attributes for a crusher
 ;
 ; Used by the routine at #R$8DCD.
 c$8E9B LD IY,$C527    ; { Get the Y co-ordinate.
