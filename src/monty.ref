@@ -80,7 +80,7 @@ SectionPrefix=Screens
 #HTML( #R$6400<br/><img src="./images/udgs/Candle.png"/> )
 
 [Moving:Bat]
-#HTML( #R$6480<br/><img src="./images/udgs/Candle.png"/> )
+#HTML( #R$6480<br/><img src="./images/udgs/Bat.png"/> )
 
 [Moving:No smoking sign]
 #HTML( #R$6500<br/><img src="./images/udgs/No_smoking.png"/> )
@@ -133,8 +133,8 @@ SectionPrefix=Screens
 [Moving:Genie R]
 #HTML( #R$6D00<br/><img src="./images/udgs/Genie_R.png"/> )
 
-[Moving:Peasant]
-#HTML( #R$6D80<br/><img src="./images/udgs/Peasant.png"/> )
+[Moving:Waterfall]
+#HTML( #R$6D80<br/><img src="./images/udgs/Waterfall.png"/> )
 
 [Moving:Bee]
 #HTML( #R$6E00<br/><img src="./images/udgs/Bee.png"/> )
@@ -316,3 +316,15 @@ commonly known as the hymn Abide with Me, composed by Henry Francis Lyte in 1914
 The character Arthur, and the loading screen graphic, are obvious references
 to Arthur Scargill, who was President of the National Union of Mineworkers
 when the game was published, during the 1984-85 miner's strike which he was leading.
+
+[Fact:Unused objects]
+There is a dog defined in Room 00 (#R$9A2A) that is not used. To see it :
+
+POKE #N$9BE6 , 0
+
+However, it is put in the top left of the screen. To make it a bit more prominent :
+
+POKE #N$9BF2 , #N$40
+POKE #N$9BF3 , #N$60
+
+There is a graphic of Monty rolling at #R$979B that is not used.

@@ -1633,9 +1633,9 @@ b$6D00 DEFB $01,$80,$07,$E0,$07,$E0,$03,$C0
  $6D70 DEFB $6E,$76,$71,$8E,$0F,$F0,$03,$E0
  $6D78 DEFB $03,$80,$07,$00,$0C,$00,$48,$00
 
-; Peasant
+; Waterfall
 ;
-; #GRAFIXSTR($6D80)(Peasant)
+; #GRAFIXSTR($6D80)(Waterfall)
 b$6D80 DEFB $07,$C0,$1F,$20,$1E,$70,$3F,$E8
  $6D88 DEFB $1F,$E8,$15,$C8,$02,$A4,$12,$28
  $6D90 DEFB $1E,$78,$0F,$70,$07,$60,$19,$20
