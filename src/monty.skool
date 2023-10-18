@@ -2703,8 +2703,11 @@ c$82A6 LD HL,$832E   ; #R$832E is the last player input.
 
 ; Last input data
 ;
-; 0 - up, 1 - down, 2 - left, 3 - right, plus bit 7 set when jumping
+; #TABLE( default, center) { =h value | =h description } { 0 | up } { 1 | down } { 2 | left } { 3 | right } { 4 | no movement } TABLE#
+; Bit 7 is set when jumping.
+;
 ; .
+;
 ; Set by the routine in #R$82A6, referenced by the routines at #R$8395, #R$83AD, #R$83B5, #R$8D94, #R$8A63, #R$8B1F and #R$917A.
 g$832E DEFB $04
 
@@ -2719,8 +2722,8 @@ u$832F LD A,($848F)  ; Get the current position off the ground.
  $833F LD ($848F),A  ; }
 *$8342 LD A,($832E)  ; { Get the last movement without the jump bit.
  $8345 AND $07       ; }
- $8347 CP $04        ; ???
- $8349 RET Z         ;
+ $8347 CP $04        ; Was there any movement?
+ $8349 RET Z         ; Return if not.
  $834A LD B,A        ;
  $834B LD A,($849B)  ;
  $834E CP B          ;
@@ -2783,8 +2786,8 @@ c$8395 LD L,A        ; { Put the frame number in #REGhl.
  $83AB ADD HL,DE     ; { Combine this to point to the correct graphic and return.
  $83AC RET           ; }
 
-; Make a copy of the last movement data and act on it
-c$83AD LD A,($832E)  ;
+; Unused
+u$83AD LD A,($832E)  ;
  $83B0 LD ($849B),A  ;
  $83B3 JR $8366      ;
 
@@ -2871,41 +2874,41 @@ c$8452 LD L,A        ; { Double the Y co-ordinate to get a word offset.
  $8456 LD DE,$EA60   ; { Get the appropriate pointer to a screen offset and store it in #R$8499.
  $8459 ADD HL,DE     ; 
  $845A LD ($8499),HL ; }
- $845D LD B,$02      ;
-*$845F LD A,(HL)     ;
+ $845D LD B,$02      ; Draw 2 rows.
+*$845F LD A,(HL)     ; { Put the actual screen address in #REGhl.
  $8460 INC HL        ;
  $8461 LD H,(HL)     ;
- $8462 LD L,A        ;
- $8463 LD D,$00      ;
- $8465 LD A,($5C7B)  ;
+ $8462 LD L,A        ; }
+ $8463 LD D,$00      ; { Store the top 5 bits of the X co-ordinate in #REGde.
+ $8465 LD A,($5C7B)  ; 
  $8468 SRL A         ;
  $846A SRL A         ;
  $846C SRL A         ;
- $846E LD E,A        ;
- $846F ADD HL,DE     ;
- $8470 EX DE,HL      ;
+ $846E LD E,A        ; }
+ $846F ADD HL,DE     ; Add this to get the actual screen address.
+ $8470 EX DE,HL      ; { Add a offset to give an address in the screen buffer at #R$D260.
  $8471 LD HL,$9260   ;
- $8474 ADD HL,DE     ;
- $8475 LD A,(HL)     ;
- $8476 EX DE,HL      ;
- $8477 LD (HL),A     ;
- $8478 INC HL        ;
- $8479 INC DE        ;
- $847A EX DE,HL      ;
- $847B LD A,(HL)     ;
- $847C EX DE,HL      ;
- $847D LD (HL),A     ;
- $847E INC HL        ;
- $847F INC DE        ;
- $8480 EX DE,HL      ;
- $8481 LD A,(HL)     ;
- $8482 EX DE,HL      ;
- $8483 LD (HL),A     ;
- $8484 LD HL,($8499) ;
- $8487 DEC HL        ;
- $8488 DEC HL        ;
- $8489 DJNZ $845F    ;
- $848B RET           ;
+ $8474 ADD HL,DE     ; }
+ $8475 LD A,(HL)     ; Get the graphic data.
+ $8476 EX DE,HL      ; { Set it.
+ $8477 LD (HL),A     ; }
+ $8478 INC HL        ; { Move forward to the next cell.
+ $8479 INC DE        ; }
+ $847A EX DE,HL      ; { Get the graphic data.
+ $847B LD A,(HL)     ; }
+ $847C EX DE,HL      ; { Set it.
+ $847D LD (HL),A     ; }
+ $847E INC HL        ; { Move forward to the next cell.
+ $847F INC DE        ; }
+ $8480 EX DE,HL      ; { Get the graphic data.
+ $8481 LD A,(HL)     ; }
+ $8482 EX DE,HL      ; { Set it.
+ $8483 LD (HL),A     ; }
+ $8484 LD HL,($8499) ; Get the screen offset.
+ $8487 DEC HL        ; { Move up an entry.
+ $8488 DEC HL        ; }
+ $8489 DJNZ $845F    ; { Loop until both rows have been drawn.
+ $848B RET           ; }å
 
 ; Last address of Monty graphic
 b$848C DEFW $849C
@@ -3255,10 +3258,10 @@ c$8866 LD C,(IX+$09)   ; Get the attribute.
  $8869 LD H,(IX+$0D)   ; { Get the current co-ordinates.
  $886C LD L,(IX+$0C)   ; }
 ; This entry point is used by the routine in #R$8751.
-*$886F LD A,L          ;
+*$886F LD A,L          ; { Convert the X co-ordinate into an appropriate screen address.
  $8870 CP L            ;
  $8871 AND H           ;
- $8872 AND $07         ;
+ $8872 AND $07         ; }
  $8874 JP Z,$FBED      ; Draw the attribute, restoring the old background.
  $8877 LD A,(IX+$0B)   ; { Otherwise get the attribute and just draw it.
  $887A JP $FBC6        ; }
@@ -3407,12 +3410,12 @@ u$88F4 CP $02          ;
 ; Unused
 u$8960 DEFW $0000
 
-; X co-ordinate for current nasty being drawn.
+; X co-ordinate for current nasty being drawn
 ;
 ; Used by the routine in #R$8751.
 g$8962 DEFB $00
 
-; Y co-ordinate for current nasty being drawn.
+; Y co-ordinate for current nasty being drawn
 ;
 ; Used by the routine in #R$8751.
 g$8963 DEFB $00
@@ -3427,6 +3430,7 @@ c$8964 CP $03          ; Is the nasty invisible?
  $8969 LD A,(IX+$10)   ; { Decrement the current distance.
  $896C DEC A           ; }
  $896D JP NZ,$8762     ; Jump if it is not zero.
+; The nasty needs to be redrawn.
  $8970 LD A,(IX+$0E)   ; Get the width or height.
  $8973 LD (IX+$10),A   ; Set this to the current distance travelled.
  $8976 LD (IX+$00),$03 ; Make the nasty invisible in its current position.
@@ -3441,40 +3445,40 @@ c$8964 CP $03          ; Is the nasty invisible?
  $8984 LD D,$00        ;
  $8986 LD HL,$C596     ;
  $8989 ADD HL,DE       ; }
- $898A LD A,$02        ; 
- $898C LD (HL),A       ;
- $898D LD B,(IX+$0E)   ;
- $8990 DEC B           ;
- $8991 LD C,(IX+$11)   ;
+ $898A LD A,$02        ; { Set that this is a unidirectional nasty
+ $898C LD (HL),A       ; (should already be set). }
+ $898D LD B,(IX+$0E)   ; { Multiply the distance covered by the speed
+ $8990 DEC B           ; to denote the offset to move back to the initial position
+ $8991 LD C,(IX+$11)   ; and store it in #REGb.
  $8994 XOR A           ;
 *$8995 ADD A,C         ;
- $8996 DJNZ $8995      ;
- $8998 LD B,A          ;
- $8999 LD A,(IX+$0B)   ;
- $899C OR A            ;
- $899D JR NZ,$89A9     ;
- $899F LD A,(IX+$0D)   ;
- $89A2 SUB B           ;
- $89A3 LD (IX+$0D),A   ;
- $89A6 JP $8857        ;
-*$89A9 CP $01          ;
- $89AB JR NZ,$89B7     ;
- $89AD LD A,(IX+$0D)   ;
- $89B0 ADD A,B         ;
+ $8996 DJNZ $8995      ; 
+ $8998 LD B,A          ; }
+ $8999 LD A,(IX+$0B)   ; Get the current direction.
+ $899C OR A            ; Is the nasty moving up?
+ $899D JR NZ,$89A9     ; Jump forward if not.
+ $899F LD A,(IX+$0D)   ; { Move the Y co-ordinate down by the appropriate distance
+ $89A2 SUB B           ; and move forward.
+ $89A3 LD (IX+$0D),A   ; 
+ $89A6 JP $8857        ; }
+*$89A9 CP $01          ; Is the nasty moving up?
+ $89AB JR NZ,$89B7     ; Jump forward if not.
+ $89AD LD A,(IX+$0D)   ; { Move the Y co-ordinate up by the appropriate distance
+ $89B0 ADD A,B         ; and move forward.
  $89B1 LD (IX+$0D),A   ;
- $89B4 JP $8857        ;
-*$89B7 CP $02          ;
- $89B9 JR NZ,$89C5     ;
- $89BB LD A,(IX+$0C)   ;
- $89BE ADD A,B         ;
+ $89B4 JP $8857        ; }
+*$89B7 CP $02          ; Is the nasty moving left?
+ $89B9 JR NZ,$89C5     ; Jump forward if not.
+ $89BB LD A,(IX+$0C)   ; { Move the X co-ordinate right by the appropriate distance
+ $89BE ADD A,B         ; and move forward.
  $89BF LD (IX+$0C),A   ;
- $89C2 JP $8857        ;
-*$89C5 CP $03          ;
- $89C7 JP NZ,$8857     ;
- $89CA LD A,(IX+$0C)   ;
- $89CD SUB B           ;
- $89CE LD (IX+$0C),A   ;
- $89D1 JP $8857        ;
+ $89C2 JP $8857        ; }
+*$89C5 CP $03          ; Is the nasty moving right?
+ $89C7 JP NZ,$8857     ; Jump forward if not.
+ $89CA LD A,(IX+$0C)   ; { Move the X co-ordinate left by the appropriate distance
+ $89CD SUB B           ; and move forward.
+ $89CE LD (IX+$0C),A   ; 
+ $89D1 JP $8857        ; }
 
 ; Update Monty's position
 ;
@@ -3497,47 +3501,48 @@ c$89D4 LD IX,$8D52    ; Point #REGix at the room flags (#R$8D52).
  $89FC SET 1,(IX+$00) ; { Set bit 1 to show Monty is jumping and move forward.
  $8A00 JP $8A63       ; }
 *$8A03 BIT 2,(IX+$00) ; Is Monty on a ladder?
- $8A07 JP NZ,$917A    ; Move forward if not.
-; Move Monty along the ladder.
+ $8A07 JP NZ,$917A    ; Move forward if so.
 ; This entry point is used by the routine at #R$917A.
-*$8A0A LD A,($832E)   ;
- $8A0D AND $07        ;
- $8A0F CP $04         ;
- $8A11 JP Z,$8B34     ;
- $8A14 LD B,A         ;
- $8A15 LD A,($849B)   ;
- $8A18 CP B           ;
- $8A19 JR NZ,$8A5B    ;
- $8A1B CP $02         ;
- $8A1D JR NZ,$8A48    ;
- $8A1F LD A,($5C7B)   ;
+*$8A0A LD A,($832E)   ; Get the last input data.
+ $8A0D AND $07        ; Remove the jump flag.
+ $8A0F CP $04         ; Was there valid input?
+ $8A11 JP Z,$8B34     ; Jump forward if not.
+ $8A14 LD B,A         ; { Does the input match the last input
+ $8A15 LD A,($849B)   ; when jumping or falling?
+ $8A18 CP B           ; }
+ $8A19 JR NZ,$8A5B    ; Jump forward if not.
+; Act on moving left.
+ $8A1B CP $02         ; Was 'left' pressed?
+ $8A1D JR NZ,$8A48    ; Jump forward if not.
+ $8A1F LD A,($5C7B)   ; { Decrease the X co-ordinate by 2.
  $8A22 SUB $02        ;
- $8A24 LD ($5C7B),A   ;
+ $8A24 LD ($5C7B),A   ; }
 ; This entry point is used by the routine at #R$917A.
-*$8A27 LD A,($848E)   ;
+*$8A27 LD A,($848E)   ; { Cycle Monty's frame between 0-7.
  $8A2A INC A          ;
 *$8A2B AND $07        ;
- $8A2D LD ($848E),A   ;
- $8A30 SRL A          ;
- $8A32 LD DE,$849C    ;
- $8A35 BIT 2,(IX+$00) ;
- $8A39 JR Z,$8A3F     ;
- $8A3B LD DE,($C51E)  ;
-*$8A3F CALL $8395     ;
- $8A42 LD ($848C),HL  ;
- $8A45 JP $8B34       ;
-*$8A48 CP $03         ;
- $8A4A JP NZ,$8B34    ;
- $8A4D LD A,($5C7B)   ;
+ $8A2D LD ($848E),A   ; }
+ $8A30 SRL A          ; Halve this to get the right frame offset.
+ $8A32 LD DE,$849C    ; Point #REGde at the start of Monty's graphic (#R$849C).
+ $8A35 BIT 2,(IX+$00) ; Is Monty on a ladder?
+ $8A39 JR Z,$8A3F     ; Jump forward if so.
+ $8A3B LD DE,($C51E)  ; Point #REGde at the offset for Monty's graphic in this room.
+*$8A3F CALL $8395     ; Select the right graphic for Monty.
+ $8A42 LD ($848C),HL  ; Store this. (#R$848C).
+ $8A45 JP $8B34       ; Jump forward and check on room flags.
+; Act on moving right?
+*$8A48 CP $03         ; Was 'right' pressed?
+ $8A4A JP NZ,$8B34    ; Jump forward if not to check for the room flags.
+ $8A4D LD A,($5C7B)   ; { Increase the X co-ordinate by 2.
  $8A50 ADD A,$02      ;
- $8A52 LD ($5C7B),A   ;
- $8A55 LD A,($848E)   ;
- $8A58 DEC A          ;
- $8A59 JR $8A2B       ;
+ $8A52 LD ($5C7B),A   ; }
+ $8A55 LD A,($848E)   ; Get Monty's frame counter.
+ $8A58 DEC A          ; { Decrease by 1 and call the earlier routine to update
+ $8A59 JR $8A2B       ; the graphic. }
 ; This entry point is used by the routine at #R$917A.
-*$8A5B LD A,($832E)   ;
- $8A5E LD ($849B),A   ;
- $8A61 JR $8A27       ;
+*$8A5B LD A,($832E)   ; { Copy the last input to a copy.
+ $8A5E LD ($849B),A   ; }
+ $8A61 JR $8A27       ; Jump back to draw Monty.
 
 ; Make Monty jump
 ;
@@ -3616,16 +3621,16 @@ c$8AD3 LD A,($848E)   ; { Move to the next animation frame 0 - 7.
  $8B06 CALL $03B6     ; Call the ROM BEEP routine without disabling interrupts.
  $8B09 JP $8B34       ; Move forward to check for movement restrictions.
 
-; Set movement flags on Monty
+; See if Monty has walked off a ladder, and if so, set some flags.
 ;
 ; Used by the routine at #R$8B90.
-c$8B0C BIT 1,(IX+$00) ;
- $8B10 RET NZ         ;
- $8B11 BIT 2,(IX+$00) ;
- $8B15 RET NZ         ;
- $8B16 SET 0,(IX+$00) ;
- $8B1A SET 7,(IX+$01) ;
- $8B1E RET            ;
+c$8B0C BIT 1,(IX+$00) ; Is Monty jumping?
+ $8B10 RET NZ         ; Return if so.
+ $8B11 BIT 2,(IX+$00) ; Can Monty climb?
+ $8B15 RET NZ         ; Return if so.
+ $8B16 SET 0,(IX+$00) ; Set that background objects can move.
+ $8B1A SET 7,(IX+$01) ; Set that Monty is in mid-air.
+ $8B1E RET            ; Return.
 
 ; Update Monty and act on room flags
 ;
@@ -3645,36 +3650,38 @@ c$8B1F LD A,($5C7C)  ; { Take 2 off the current Y position.
 *$8B34 CALL $8B90     ; Check Monty's current movement.
  $8B37 LD HL,$5C7C    ; Get the current position in #REGhl.
  $8B3A BIT 1,(IX+$00) ; Is Monty jumping?
- $8B3E JR NZ,$8B46    ; Move forward if not.
- $8B40 SET 0,(HL)     ; 
+ $8B3E JR NZ,$8B46    ; Move forward if so.
+ $8B40 SET 0,(HL)     ; { Align Monty with a pixel boundary.
  $8B42 DEC HL         ;
  $8B43 RES 0,(HL)     ;
- $8B45 INC HL         ;
-*$8B46 LD A,($8D7E)   ;
- $8B49 BIT 7,(IX+$00) ;
- $8B4D JR Z,$8B55     ;
- $8B4F CP (HL)        ;
- $8B50 JR NC,$8B55    ;
- $8B52 LD (HL),A      ;
- $8B53 JR $8B5F       ;
-*$8B55 BIT 6,(IX+$00) ;
- $8B59 JR Z,$8B5F     ;
- $8B5B CP (HL)        ;
- $8B5C JR C,$8B5F     ;
- $8B5E LD (HL),A      ;
-*$8B5F LD HL,$5C7B    ;
- $8B62 LD A,($8D7D)   ;
- $8B65 BIT 5,(IX+$00) ;
- $8B69 JR Z,$8B71     ;
- $8B6B CP (HL)        ;
- $8B6C JR C,$8B71     ;
- $8B6E LD (HL),A      ;
- $8B6F JR $8B7B       ;
-*$8B71 BIT 4,(IX+$00) ;
- $8B75 JR Z,$8B7B     ;
- $8B77 CP (HL)        ;
- $8B78 JR NC,$8B7B    ;
- $8B7A LD (HL),A      ;
+ $8B45 INC HL         ; }
+; Check that Monty can move in all directions, and block movement
+; that is not possible.
+*$8B46 LD A,($8D7E)   ; Get the temporary Y co-ordinate.
+ $8B49 BIT 7,(IX+$00) ; Can Monty move up?
+ $8B4D JR Z,$8B55     ; Jump if so.
+ $8B4F CP (HL)        ; Is the current co-ordinate out of bounds?
+ $8B50 JR NC,$8B55    ; Jump forward if not.
+ $8B52 LD (HL),A      ; { Re-align Monty on the appropriate boundary
+ $8B53 JR $8B5F       ; and jump forward. }
+*$8B55 BIT 6,(IX+$00) ; Can Monty move down?
+ $8B59 JR Z,$8B5F     ; Jump if so.
+ $8B5B CP (HL)        ; Is the current co-ordinate out of bounds?
+ $8B5C JR C,$8B5F     ; Jump forward if not.
+ $8B5E LD (HL),A      ; Re-align Monty on the appropriate boundary.
+*$8B5F LD HL,$5C7B    ; Point #REGhl at Monty's co-ordinates.
+ $8B62 LD A,($8D7D)   ; Get the temporary X co-ordinate.
+ $8B65 BIT 5,(IX+$00) ; Can Monty move left?
+ $8B69 JR Z,$8B71     ; Jump if so.
+ $8B6B CP (HL)        ; Is the current co-ordinate out of bounds?
+ $8B6C JR C,$8B71     ; Jump forward if not.
+ $8B6E LD (HL),A      ; { Re-align Monty on the appropriate boundary
+ $8B6F JR $8B7B       ; and jump forward. }
+*$8B71 BIT 4,(IX+$00) ; Can Monty move right?
+ $8B75 JR Z,$8B7B     ; Jump if so.
+ $8B77 CP (HL)        ; Is the current co-ordinate out of bounds?
+ $8B78 JR NC,$8B7B    ; Jump forward if not.
+ $8B7A LD (HL),A      ; Re-align Monty on the appropriate boundary.
 ; Redraw Monty in the new screen position.
 *$8B7B LD HL,($5C7B)  ; Get the screen position.
  $8B7E LD ($ECDE),HL  ; Set this for the graphic to print.
@@ -3750,7 +3757,7 @@ c$8B90 CALL $8C3D     ; Check for collision.
  ; Monty has reached the ground after falling.
  $8C12 RES 7,(IX+$01) ; Reset the mid-air flag.
  $8C16 RES 0,(IX+$00) ; Enable background objects to move.
- $8C1A RES 1,(IX+$00) ; Disable (???)
+ $8C1A RES 1,(IX+$00) ; Set that Monty is not jumping.
  $8C1E LD A,($8D58)   ; Get the height fallen.
  $8C21 CP $20         ; Is it above 20?
  $8C23 JP NC,$946E    ; Yes, Monty has fallen too far, so he's dead.
@@ -3760,9 +3767,9 @@ c$8B90 CALL $8C3D     ; Check for collision.
  $8C2D LD ($8498),A   ; Reset the time being jumped.
  $8C30 LD HL,$869C    ; { Reset the pointer to the movement table
  $8C33 LD ($8492),HL  ; back to #R$869C. }
- $8C36 LD HL,($8496)  ;
- $8C39 LD ($8494),HL  ;
- $8C3C RET            ;
+ $8C36 LD HL,($8496)  ; { Reset the pitch to sound when jumping
+ $8C39 LD ($8494),HL  ; back to the default. }
+ $8C3C RET            ; Return.
 
 ; Check what attributes are around Monty
 ;
@@ -4521,7 +4528,7 @@ c$90BD LD HL,$912B   ; Get the graphic index for the shower head (#R$912B).
  $9108 DJNZ $90F4    ; { Loop until all the rows are drawn.
  $910A RET           ; }
 
-; Graphic buffer for shower water in room #N$11.
+; Graphic buffer for shower water in room #N$11
 ;
 ; #UDGARRAY2,7,2,2($910B-$910C;$911B-$911C)(shower)
 b$910B DEFB $01,$B2,$00,$00,$01,$04,$03,$06
@@ -4529,7 +4536,7 @@ b$910B DEFB $01,$B2,$00,$00,$01,$04,$03,$06
  $911B DEFB $01,$A2,$01,$30,$00,$50,$00,$60
  $9123 DEFB $00,$01,$01,$10,$00,$18,$00,$28
 
-; Graphic index for shower in room #N$11.
+; Graphic index for shower in room #N$11
 b$912B DEFB $00
 
 ; Animate the shower water in room #N$11 (2)
@@ -4795,7 +4802,7 @@ c$927E LD HL,($5C7B)  ; Get the current position in #REGhl.
  $9294 CALL $9568     ; { Pick up the item and return.
  $9297 RET            ; }
 
-; Check if Monty has collided with a nasty that can be removed with an item.
+; Check if Monty has collided with a nasty that can be removed with an item
 ;
 ; Used by the routines at #R$940C, #R$CD41 and #R$CE1B.
 c$9298 LD HL,($5C7B) ; Get the current position in #REGhl (#R$5C7B)
@@ -4825,7 +4832,7 @@ c$9298 LD HL,($5C7B) ; Get the current position in #REGhl (#R$5C7B)
  $92CE CALL $9228    ; Was there a collision?
  $92D1 JR NZ,$92DF   ; Jump if so.
  $92D3 LD HL,($5C7B) ; Get the position
- $92D6 LD D,$F1      ; { ???
+ $92D6 LD D,$F1      ; { Move forward a column and back two rows (?)
  $92D8 LD E,$0F      ;
  $92DA ADD HL,DE     ; }
  $92DB CALL $9228    ; Was there a collision?
@@ -9057,11 +9064,11 @@ g$C54E DEFB $47,$00,$00,$00,$00,$00,$00,$00,$00
 ; { 0C | Current X co-ordinate }
 ; { 0D | Current Y co-ordinate }
 ; { 0E | Width or height of path covered }
-; { 0F | }
+; { 0F | Not used }
 ; { 10 | Current distance before changing direction }
 ; { 11 | Speed ( 0 - static, 1 - slow, 2 - fast ) }
-; { 12 | }
-; { 13 | }
+; { 12 | Not used }
+; { 13 | Not used }
 ; TABLE#
 g$C596 DEFB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
  $C5AA DEFB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
@@ -9451,7 +9458,7 @@ c$CB15 PUSH AF       ; Remember #REGa.
  $CB33 POP AF        ; { Restore #REGa and return.
  $CB34 RET           ; }
 
-; Print a character in a message.
+; Print a character in a message
 ;
 ; .
 ;
@@ -9763,10 +9770,10 @@ g$CD3D DEFB $00
 ; Current screen position of the nut dropped by the squirrel
 g$CD3E DEFB $9F
 
-; Timer for animating nut.
+; Timer for animating nut
 g$CD3F DEFB $03
 
-; Animation frame for nut.
+; Animation frame for nut
 g$CD40 DEFB $00
 
 ; Display the first (outdoor) room
@@ -11777,28 +11784,28 @@ c$EFBD PUSH AF       ; { Store all registers being used.
  $F00E LD DE,$0230   ;
  $F011 ADD HL,DE     ; }
  $F012 DEC HL        ; Move up a row.
- $F013 POP DE        ;
- $F014 PUSH DE       ;
- $F015 LD A,E        ;
+ $F013 POP DE        ; Restore #REGde.
+ $F014 PUSH DE       ; Store it again.
+ $F015 LD A,E        ; { Put the Y co-ordinate in #REGhl.
  $F016 LD E,D        ;
  $F017 LD D,$00      ;
- $F019 EX DE,HL      ;
- $F01A LD B,$05      ;
+ $F019 EX DE,HL      ; }
+ $F01A LD B,$05      ; { Multiply 2^5 times ie: 32 to get an appropriate address.
 *$F01C ADD HL,HL     ;
- $F01D DJNZ $F01C    ; 
- $F01F PUSH DE       ;
- $F020 LD E,A        ;
+ $F01D DJNZ $F01C    ; }
+ $F01F PUSH DE       ; Store #REGde.
+ $F020 LD E,A        ; { Add the X co-ordinate.
  $F021 LD D,$00      ;
- $F023 ADD HL,DE     ;
+ $F023 ADD HL,DE     ; }
  $F024 LD DE,$CF54   ; { Add the base address of the attribute buffer.
  $F027 ADD HL,DE     ; }
- $F028 POP DE        ;
- $F029 EX DE,HL      ;
+ $F028 POP DE        ; Restore #REGde.
+ $F029 EX DE,HL      ; { Copy the graphic data.
  $F02A LD A,(HL)     ;
  $F02B EX DE,HL      ;
- $F02C LD (HL),A     ;
- $F02D POP DE        ;
- $F02E INC E         ;
+ $F02C LD (HL),A     ; }
+ $F02D POP DE        ; Restore #REGde
+ $F02E INC E         ; Move to the next row.
  $F02F POP HL        ; { Restore all registers and return.
  $F030 POP BC        ;
  $F031 POP AF        ;
@@ -12154,30 +12161,30 @@ c$F6A6 DI             ; Turn off interrupts.
  $F6CC CALL NZ,$F71A  ; Hide if it there is.
  $F6CF RET            ;
 ; Handle wall in room #N$06.
-*$F6D0 LD C,$07       ;
- $F6D2 LD HL,$9710    ;
- $F6D5 BIT 5,(IX+$00) ;
- $F6D9 RET NZ         ;
- $F6DA JR $F6C8       ;
+*$F6D0 LD C,$07       ; Set #REGc to the length.
+ $F6D2 LD HL,$9710    ; Set #REGhl to the position.
+ $F6D5 BIT 5,(IX+$00) ; { Return if the wall shouldn't be opened yet.
+ $F6D9 RET NZ         ; }
+ $F6DA JR $F6C8       ; Jump forward to open it.
 ; Handle wall in room #N$0B.
-*$F6DC LD C,$05       ;
- $F6DE LD HL,$8F14    ;
- $F6E1 BIT 4,(IX+$00) ;
- $F6E5 RET NZ         ;
- $F6E6 JR $F6C8       ;
+*$F6DC LD C,$05       ; Set #REGc to the length.
+ $F6DE LD HL,$8F14    ; Set #REGhl to the position.
+ $F6E1 BIT 4,(IX+$00) ; { Return if the wall shouldn't be opened yet.
+ $F6E5 RET NZ         ; }
+ $F6E6 JR $F6C8       ; Jump forward to open it.
 ; Handle wall in room #N$0F.
-*$F6E8 LD C,$05       ;
- $F6EA LD HL,$471F    ;
- $F6ED BIT 3,(IX+$00) ;
- $F6F1 RET NZ         ;
- $F6F2 JR $F6C8       ;
+*$F6E8 LD C,$05       ; Set #REGc to the length.
+ $F6EA LD HL,$471F    ; Set #REGhl to the position.
+ $F6ED BIT 3,(IX+$00) ; { Return if the wall shouldn't be opened yet.
+ $F6F1 RET NZ         ; }
+ $F6F2 JR $F6C8       ; Jump forward to open it.
 ; Handle any other room.
 *$F6F4 LD A,(IX+$00)  ; { Turn off bits 0, 1, 6 and 7 on the wall flags
  $F6F7 AND $3C        ; and return.
  $F6F9 LD (IX+$00),A  ;
  $F6FC RET            ; }
 
-; Erase a wall from screen
+; Erase a wall from the screen
 ;
 ; Used by the entry point at #R$F71A.
 ;
@@ -12201,8 +12208,8 @@ c$F6FD LD A,$BF       ; { Subtract the Y co-ordinate from the screen height.
  $F712 LD A,(IY+$00)  ; Get the attribute for character 0 (empty space).
 *$F715 LD (HL),A      ; Set it on screen here.
  $F716 ADD HL,DE      ; Move to the next row.
- $F717 DJNZ $F715     ; Repeat for the number of rows.
- $F719 RET            ;
+ $F717 DJNZ $F715     ; { Repeat for the number of rows until done.
+ $F719 RET            ; }
 
 ; Hide a wall after enough coal has been collected.
 ;
@@ -12324,10 +12331,10 @@ c$F7C7 CALL $8F31    ; Update moving platforms.
 ; TABLE#
 g$F7D1 DEFB $00
 
-; Y co-ordinate for the disappearing wall.
+; Y co-ordinate for the disappearing wall
 g$F7D2 DEFB $00
 
-; X co-ordinate for the disappearing wall.
+; X co-ordinate for the disappearing wall
 g$F7D3 DEFB $00
 
 ; Timer state for the magic wall
@@ -13015,8 +13022,8 @@ s$FD7B DEFS $20
 ; Used by the routines at #R$8751 and #R$8DCD.
 ;
 ; BC On return, holds new crusher time
-c$FD9B LD DE,($5C76) ;
- $FD9F LD H,E        ;
+c$FD9B LD DE,($5C76) ; Put the previous value in #REGde.
+ $FD9F LD H,E        ; { Do some arithmetic to get a new value.
  $FDA0 LD L,$FD      ;
  $FDA2 LD A,D        ;
  $FDA3 OR A          ;
@@ -13029,10 +13036,10 @@ c$FD9B LD DE,($5C76) ;
  $FDAD LD D,B        ;
  $FDAE SBC HL,DE     ;
  $FDB0 JR NC,$FDB3   ;
- $FDB2 INC HL        ;
-*$FDB3 LD ($5C76),HL ;
- $FDB6 LD B,H        ;
- $FDB7 LD C,L        ;
+ $FDB2 INC HL        ; }
+*$FDB3 LD ($5C76),HL ; Set the new value in #R$5C76.
+ $FDB6 LD B,H        ; { Copy this to #REGbc and return.
+ $FDB7 LD C,L        ; }
  $FDB8 RET           ;
 
 ; Unused
