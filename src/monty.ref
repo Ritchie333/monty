@@ -286,6 +286,9 @@ SectionPrefix=Screens
 [Screens:Room 14]
 #HTML( #R$C22A<br/><img src="./images/udgs/room_14.png"/> )
 
+[Screens:Unused screen capture]
+#HTML( #R$DA01<br/><img src="./images/scr/screen_capture.png"/> )
+
 [Poke:Infinite lives]
 #N($9474),0
 

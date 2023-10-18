@@ -950,7 +950,7 @@ b $CECC
 c $CECD Unused
 c $CEEF
 s $CF2C Unused
-s $CF54 Screen attribute buffer
+g $CF54 Screen attribute buffer
 c $D254 Copy the screen to storage buffer
 s $D260 Screen buffer
 c $D260 Save game to tape
@@ -960,20 +960,23 @@ c $D290 Main entry point
 D $D290 When the game has loaded, the ROM loading routine returns to here
 u $D2E9
 b $D5B9 Colonel Bogey tune data
-B $D5B9,$448,4
+B $D5B9,$444,4
 D $D5B9 Each entry is 4 bytes - first two are pitch, second two are length
 D $D5B9 This data is wiped as soon as the game proper starts as it becomes part of the screen buffer
-u $DA01
+u $DA00
 w $EA60 Offsets from character to relative screen positions
 c $EBE0 Print an animinated object on screen
+c $EC59
 u $EC65
+C $EC65
 c $EC6F Copy a sprite to the working buffer
 c $ECA2 Copy a sprite to the screen
 b $ECDC
 w $ECE0
 b $ECE4 Working buffer for moving sprites
-u $ED24
-C $ED24
+w $ED14
+u $ED16
+C $ED16
 b $ED2E
 b $ED4E Chimney smoke for start room
 D $ED4E #UDG$ED4E,7,,5#UDG$ED4F,7,,5#UDG$ED50,7,,5#UDG$ED51,7,,5#UDG$ED52,7,,5 #UDG$EDC6,7,,5#UDG$EDC7,7,,5#UDG$EDC8,7,,5#UDG$EDC9,7,,5#UDG$EDCA,7,,5 #UDG$EE3E,7,,5#UDG$EE3F,7,,5#UDG$EE40,7,,5#UDG$EE41,7,,5#UDG$EE42,7,,5 #UDG$EEB6,7,,5#UDG$EEB7,7,,5#UDG$EEB8,7,,5#UDG$EEB9,7,,5#UDG$EEBA,7,,5
