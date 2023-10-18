@@ -888,7 +888,7 @@ b$4000 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $5AF0 DEFB $5D,$5D,$5D,$5D,$5D,$5F,$5F,$5F
  $5AF8 DEFB $5F,$5F,$5F,$5F,$5F,$5F,$5F,$5F
 
-; Not used
+; Unused
 u$5B00 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $5B08 DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $5B10 DEFB $00,$00,$00,$00,$00,$00,$00,$00
@@ -3594,7 +3594,7 @@ u$8AC4 LD A,($5C7B)   ;
  $8ACE LD A,($5C7B)   ;
  $8AD1 JR $8A71       ;
 
-; Update Monty while jumping.
+; Update Monty while jumping
 ;
 ; Used by the routine at #R$8A63.
 c$8AD3 LD A,($848E)   ; { Move to the next animation frame 0 - 7.
@@ -3621,7 +3621,7 @@ c$8AD3 LD A,($848E)   ; { Move to the next animation frame 0 - 7.
  $8B06 CALL $03B6     ; Call the ROM BEEP routine without disabling interrupts.
  $8B09 JP $8B34       ; Move forward to check for movement restrictions.
 
-; See if Monty has walked off a ladder, and if so, set some flags.
+; See if Monty has walked off a ladder, and if so, set some flags
 ;
 ; Used by the routine at #R$8B90.
 c$8B0C BIT 1,(IX+$00) ; Is Monty jumping?
@@ -12141,7 +12141,7 @@ c$F64D XOR A          ; Start the count of coal items at 0.
 ;
 ; Used by the routine at #R$F7C7.
 c$F6A6 DI             ; Turn off interrupts.
- $F6A7 LD IX,$F7D1    ; Point #REGix at the data for "magic" walls at #R$F7D1.
+ $F6A7 LD IX,$F7D1    ; Point #REGix at the data for disappearing walls at #R$F7D1.
  $F6AB LD A,($9649)   ; Get the current room (#R$9649).
  $F6AE CP $06         ; Is it room #N$06?
  $F6B0 JR Z,$F6D0     ; Yes, so jump forward.
@@ -12211,7 +12211,7 @@ c$F6FD LD A,$BF       ; { Subtract the Y co-ordinate from the screen height.
  $F717 DJNZ $F715     ; { Repeat for the number of rows until done.
  $F719 RET            ; }
 
-; Hide a wall after enough coal has been collected.
+; Hide a wall after enough coal has been collected
 ;
 ; Used by the entry point at #R$F6A6.
 ;
@@ -12337,9 +12337,7 @@ g$F7D2 DEFB $00
 ; X co-ordinate for the disappearing wall
 g$F7D3 DEFB $00
 
-; Timer state for the magic wall
-;
-; .
+; Timer state for the disappearing wall
 ;
 ; Start at 0 and increments as the wall disappears.
 g$F7D4 DEFB $00
@@ -13243,7 +13241,7 @@ c$FEA2 LD A,($C51C)  ; { Put the expected attribute in #REGb.
  $FEBE CP B          ; Does it match?
  $FEBF RET           ; Return with the zero flag set if it does.
 
-; Get the attribute at the specified position.
+; Get the attribute at the specified position
 ;
 ; Used by the routine at #R$FEA2.
 ;
@@ -13286,12 +13284,12 @@ c$FEC0 PUSH BC       ; Remember #REGbc.
 ; Unused
 s$FEE7 DEFS $19
 
-; Default to keyboard and reset IY
+; Set control option and reset IY
 ;
 ; Used by the routine at #R$8000.
-c$FF00 LD ($82A3),A  ;
- $FF03 LD IY,$5C3A   ;
- $FF07 RET           ;
+c$FF00 LD ($82A3),A  ; Set the control option in #R$82A3.
+ $FF03 LD IY,$5C3A   ; { Set #REGiy to the default
+ $FF07 RET           ; and return. }
 
 ; Unused
 u$FF08 DEFB $00,$00,$00,$00,$00,$00,$00,$00
@@ -13309,9 +13307,9 @@ u$FF08 DEFB $00,$00,$00,$00,$00,$00,$00,$00
 ; Halt and run one frame in the first (outdoor) room
 ;
 ; Used by the routine at #R$CD41.
-c$FF5B HALT          ;
- $FF5C CALL $CB93    ;
- $FF5F RET           ;
+c$FF5B HALT          ; Wait for interrupts.
+ $FF5C CALL $CB93    ; { Run a frame and exit.
+ $FF5F RET           ; }
 
 ; Monty's angel
 ;

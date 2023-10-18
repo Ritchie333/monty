@@ -1,6 +1,10 @@
 [Game]
 Game=Wanted : Monty Mole
+Logo=#SCR2,16,0,16,7,$4000,$5800(/images/logo)
 Copyright=Copyright Peter Harrap / Gremlin Graphics 1984. This dissassembly by Ritchie Swann 2018-2023.
+
+[PageHeaders]
+GameIndex=The complete<> Wanted : Monty Mole RAM disassembly
 
 [OtherCode:LoadingSystem]
 Source=monty_loader.skool
