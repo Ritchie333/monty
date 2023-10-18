@@ -1119,7 +1119,7 @@ b$6000 DEFB $00,$00,$00,$00,$00,$00,$00,$00
 
 ; Miner
 ;
-; ##GRAFIXDHSTR($6080)(Miner)
+; #GRAFIXDHSTR($6080)(Miner)
 b$6080 DEFB $07,$C8,$07,$F8,$0F,$E8,$0F,$80
  $6088 DEFB $00,$60,$07,$E0,$07,$B0,$07,$F0
  $6090 DEFB $03,$C0,$1B,$E0,$7C,$60,$47,$80
@@ -3123,11 +3123,11 @@ c$8751 LD HL,$C596     ; Point HL at the start of the nasty buffer. (#R$C596)
  $8758 PUSH HL         ; { Swap HL for IX so the buffer can be indexed.
  $8759 POP IX          ; }
  $875B LD A,(IX+$00)   ; Get the type flag.
- $875E OR A            ; { If the type is not 0, skip forward.}
- $875F JP NZ,$887D     ;
+ $875E OR A            ; { If the type is not 0, skip forward.
+ $875F JP NZ,$887D     ; }
 ; Move a simple nasty. This entry point is used by the routine at #R$8964.
-*$8762 LD L,(IX+$0C)   ; Put the current X co-ordinate in L
- $8765 LD H,(IX+$0D)   ; Put the current Y co-ordinate in H
+*$8762 LD L,(IX+$0C)   ; Put the current X co-ordinate in L.
+ $8765 LD H,(IX+$0D)   ; Put the current Y co-ordinate in H.
  $8768 LD ($8962),HL   ; Store this in #R$8962.
  $876B LD A,(IX+$0B)   ; Get the current direction.
  $876E OR A            ; Is it down?
@@ -3173,7 +3173,7 @@ c$8751 LD HL,$C596     ; Point HL at the start of the nasty buffer. (#R$C596)
  $87CA LD (IX+$0B),A   ; }
  $87CD LD A,(IX+$0E)   ; Set the distance to travel back to the default
  $87D0 JR $8797        ; Jump back to draw the nasty.
-; Moving left
+; Moving left.
 *$87D2 CP $02          ; Is the direction left?
  $87D4 JR NZ,$87FE     ; No, so jump forward.
  $87D6 LD A,(IX+$0C)   ; { Decrement the X co-ordinate by the speed.
@@ -3192,7 +3192,7 @@ c$8751 LD HL,$C596     ; Point HL at the start of the nasty buffer. (#R$C596)
  $87F6 LD (IX+$0B),A   ; }
  $87F9 LD A,(IX+$0E)   ; Set the distance to travel back to default.
  $87FC JR $8797        ; Jump back to draw the nasty.
-; Moving right
+; Moving right.
 *$87FE LD A,(IX+$0C)   ; { Increment the X co-ordinate by the speed.
  $8801 LD B,(IX+$11)   ;
  $8804 ADD A,B         ;
@@ -5473,7 +5473,7 @@ c$96D9 LD A,($5C7C)  ; { Is Monty at the bottom of the screen?
  $977D DJNZ $9746    ; Loop while there is still more to draw.
 ; Monty has fallen off the edge, put him in the next room.
  $977F LD A,$11      ; Set #REGa to #N$11 to set up some flags.
- $9781 LD HL,$A1C0   ; { Set the position to X = $C0, Y = $A1
+ $9781 LD HL,$A1C0   ; { Set the position to X = #N$C0, Y = #N$A1.
  $9784 LD ($5C7B),HL ;
  $9787 LD ($964B),HL ; }
  $978A LD ($9649),A  ; Set the current room to #N$11.
@@ -9556,7 +9556,7 @@ c$CB93 LD A,($CD32)  ; { Has the bucket been collected?
  $CBC6 OR A          ; }
  $CBC7 JR NZ,$CC13   ; Jump forward if not.
 ; As the bucket has been collected, the miner needs to chase Monty.
- $CBC9 LD A,($CD35)  ; { Increment the miner's X co-ordinate.
+ $CBC9 LD A,($CD35)  ; { Increment the miner's X co-ordinate (#R$CD35).
  $CBCC INC A         ;
  $CBCD LD ($CD35),A  ; }
  $CBD0 LD HL,$6080   ; #R$6080 - base address of miner graphic.
@@ -9607,13 +9607,13 @@ c$CB93 LD A,($CD32)  ; { Has the bucket been collected?
  $CC35 INC A         ; but if it reaches 4, reset it to 0.
  $CC36 AND $03       ;
  $CC38 LD ($CD3B),A  ; }
-*$CC3B CALL $CD26    ; Draw the graphic.
+*$CC3B CALL $CD26    ; Convert the graphic ID into a screen offset.
  $CC3E LD HL,$6200   ; Base address of the squirrel - left (#R$6200).
 *$CC41 ADD HL,DE     ; Add the offset.
  $CC42 LD ($ECE0),HL ; Store the graphic to copy.
  $CC45 LD A,($CD39)  ; { Store the X co-ordinate.
  $CC48 LD ($ECDE),A  ; }
- $CC4B LD A,$AF      ; { Y co-ordinate is always 0.
+ $CC4B LD A,$AF      ; { Y co-ordinate is always #N$AF.
  $CC4D LD ($ECDF),A  ; }
  $CC50 CALL $EBE0    ; Draw the graphic.
  $CC53 LD A,($CD39)  ; { Has the squirrel reached the tree trunk?
@@ -9624,7 +9624,7 @@ c$CB93 LD A,($CD32)  ; { Has the bucket been collected?
  $CC5E LD A,($CD3C)  ; { Is there a nut?
  $CC61 OR A          ; }
  $CC62 JR NZ,$CCA9   ; Jump forward if not.
- ; The squirrel has reached the trunk, drop a nut.
+; The squirrel has reached the trunk, drop a nut.
  $CC64 LD A,($CD38)  ; { Invert the direction from right to left.
  $CC67 NEG           ; 
  $CC69 LD ($CD38),A  ; }
@@ -9812,7 +9812,7 @@ c$CD41 LD HL,$964D   ; { Reset the "collected" flag on all coal.
  $CD8C CALL $949E    ; Print number of lives.
  $CD8F CALL $D254    ; Copy the screen back to the buffer.
  $CD92 EI            ; Turn interrupts on, the service routine can now be run.
- $CD93 LD A,$75      ; { Make #N$75 (bright cyan on yellow) a deadly attribute. (#R$C51A)
+ $CD93 LD A,$75      ; { Make #N$75 (bright cyan on yellow) a deadly attribute. (#R$C51B)
  $CD95 LD ($C51B),A  ; so Monty will die if he touches the water under bridge. }
 *$CD98 CALL $FF5B    ; Wait for interrupts and run one frame in the room.
  $CD9B CALL $9298    ; Check for collision.
@@ -9864,16 +9864,16 @@ c$CDEF PUSH AF       ; { Cache all working registers.
  $CDF2 PUSH HL       ;
  $CDF3 PUSH IX       ;
  $CDF5 PUSH IY       ; }
- $CDF7 LD HL,($EADE) ; { Get the location of the water under the bridge.
- $CDFA LD DE,$0012   ;
+ $CDF7 LD HL,($EADE) ; Get the Y co-ordinate screen address of the water under the bridge (#R$EADE = #N$5000).
+ $CDFA LD DE,$0012   ; { Add the X co-ordinate to set the start of the water.
  $CDFD ADD HL,DE     ; }
  $CDFE LD C,$07      ; Width of the water is 7.
  $CE00 CALL $90A8    ; Animate the water.
- $CE03 LD A,($CE19)  ;
+ $CE03 LD A,($CE19)  ; { Cycle the timer in this room from 0 - 3.
  $CE06 INC A         ;
  $CE07 AND $03       ;
- $CE09 LD ($CE19),A  ;
- $CE0C CALL Z,$EF2E  ; Animate the smoke from the chimney.
+ $CE09 LD ($CE19),A  ; }
+ $CE0C CALL Z,$EF2E  ; When the timer is 0, animate the smoke from the chimney.
  $CE0F POP IY        ; { Restore registers.
  $CE11 POP IX        ;
  $CE13 POP HL        ;
@@ -11731,15 +11731,15 @@ c$EFBD PUSH AF       ; { Store all registers being used.
  $EFC0 PUSH DE       ; }
  $EFC1 CP $7F        ; { If the character is #N80 or above, move forward.
  $EFC3 JR NC,$F033   ; }
-; This is an ordinary character in the ROM
+; This is an ordinary character in the ROM.
  $EFC5 LD H,$00      ; { Put the character in #REGhl.
  $EFC7 LD L,A        ; }
  $EFC8 ADD HL,HL     ; { Multiply by 8 to get the correct offset.
  $EFC9 ADD HL,HL     ;
  $EFCA ADD HL,HL     ; }
- $EFCB LD BC,$3C00   ; { Add the base address for the ROM character set.
-; Now print the character
-*$EFCE ADD HL,BC     ; }
+ $EFCB LD BC,$3C00   ; Add the base address for the ROM character set.
+; Now print the character.
+*$EFCE ADD HL,BC     ; Add the offset to the base address.
  $EFCF LD ($F047),HL ; Store the current address being printed.
  $EFD2 LD A,D        ; { Convert the Y position to a screen offset.
  $EFD3 SUB $17       ;
@@ -11810,7 +11810,7 @@ c$EFBD PUSH AF       ; { Store all registers being used.
  $F030 POP BC        ;
  $F031 POP AF        ;
  $F032 RET           ; }
-; This is a custom character
+; This is a custom character.
 *$F033 SUB $80       ; Subtract #N$80 to get the real value.
  $F035 LD H,$00      ; { Put this in #REGhl.
  $F037 LD L,A        ; }
