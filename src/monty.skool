@@ -3961,7 +3961,7 @@ g$8D53 DEFB $00
 ; { 1 | Fire (fatal) }
 ; { 2 | Ladder (can be climbed) }
 ; { 3 | Not used }
-; { 4 | Empty space }
+; { 4 | Empty space (can be walked through) }
 ; TABLE#
 g$8D54 DEFB $03, $09, $52, $45
 
