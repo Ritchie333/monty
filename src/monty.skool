@@ -3951,7 +3951,7 @@ g$8D52 DEFB $00
 ; TABLE# 
 g$8D53 DEFB $00
 
-; Movement flags.
+; Movement flags
 ;
 ; These four bytes describe what movement can be made
 ; up, down, left and right, with the following values:
@@ -3963,6 +3963,10 @@ g$8D53 DEFB $00
 ; { 3 | Not used }
 ; { 4 | Empty space (can be walked through) }
 ; TABLE#
+;
+; .
+;
+; Used by the routines at #R$8B90, #R$8C3D, #R$8D0F and #R$8D2E.
 g$8D54 DEFB $03, $09, $52, $45
 
 ; Distance fallen by
