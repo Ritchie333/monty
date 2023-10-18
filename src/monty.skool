@@ -5925,12 +5925,12 @@ b$9A2A DEFB $92,$48,$49                                                         
                                                                                             ; co-ordinate
  $9B28 DEFB $A9                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $9B29 DEFB $80
+ $9B29 DEFB $80                                                                             ; Crusher bottom column
  $9B2A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $9B2B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $9B2C DEFB $A9
+ $9B2C DEFB $A9                                                                             ; Crusher top column
  $9B2D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $9B35 DEFB $00,$00
  $9B37 DEFB $00,$0C,$1E,$3F,$7F,$BE,$5E,$24                                                 ; Coal UDG
@@ -6070,12 +6070,12 @@ b$9C2A DEFB $49,$24,$92                                                         
                                                                                             ; co-ordinate
  $9D28 DEFB $A9                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $9D29 DEFB $90
+ $9D29 DEFB $90                                                                             ; Crusher bottom column
  $9D2A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $9D2B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $9D2C DEFB $A9
+ $9D2C DEFB $A9                                                                             ; Crusher top column
  $9D2D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $9D35 DEFB $00,$00
  $9D37 DEFB $00,$06,$77,$ED,$DB,$D7,$DA,$6E                                                 ; Coal UDG
@@ -6216,12 +6216,12 @@ b$9E2A DEFB $49,$24,$92                                                         
                                                                                             ; co-ordinate
  $9F28 DEFB $00                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $9F29 DEFB $60
+ $9F29 DEFB $60                                                                             ; Crusher bottom column
  $9F2A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $9F2B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $9F2C DEFB $00
+ $9F2C DEFB $00                                                                             ; Crusher top column
  $9F2D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $9F35 DEFB $00,$00
  $9F37 DEFB $00,$0F,$1F,$39,$72,$64,$78,$00                                                 ; Coal UDG
@@ -6361,12 +6361,12 @@ b$A02A DEFB $49,$24,$92                                                         
                                                                                             ; co-ordinate
  $A128 DEFB $00                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $A129 DEFB $28
+ $A129 DEFB $28                                                                             ; Crusher bottom column
  $A12A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $A12B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $A12C DEFB $00
+ $A12C DEFB $00                                                                             ; Crusher top column
  $A12D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $A135 DEFB $00,$00
  $A137 DEFB $00,$00,$0C,$FA,$A5,$75,$DA,$EC                                                 ; Coal UDG
@@ -6506,12 +6506,12 @@ b$A22A DEFB $49,$24,$92                                                         
                                                                                             ; co-ordinate
  $A328 DEFB $00                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $A329 DEFB $60
+ $A329 DEFB $60                                                                             ; Crusher bottom column
  $A32A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $A32B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $A32C DEFB $00
+ $A32C DEFB $00                                                                             ; Crusher top column
  $A32D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $A335 DEFB $00,$00
  $A337 DEFB $00,$00,$00,$00,$18,$2C,$5E,$BF                                                 ; Coal UDG
@@ -6651,12 +6651,12 @@ b$A42A DEFB $49,$24,$90                                                         
                                                                                             ; co-ordinate
  $A528 DEFB $41                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $A529 DEFB $30
+ $A529 DEFB $30                                                                             ; Crusher bottom column
  $A52A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $A52B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $A52C DEFB $41
+ $A52C DEFB $41                                                                             ; Crusher top column
  $A52D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $A535 DEFB $00,$00
  $A537 DEFB $00,$00,$38,$7C,$BC,$CA,$F6,$6C                                                 ; Coal UDG
@@ -6796,12 +6796,12 @@ b$A62A DEFB $49,$24,$49                                                         
                                                                                             ; co-ordinate
  $A728 DEFB $00                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $A729 DEFB $68
+ $A729 DEFB $68                                                                             ; Crusher bottom column
  $A72A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $A72B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $A72C DEFB $99
+ $A72C DEFB $99                                                                             ; Crusher top column
  $A72D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $A735 DEFB $00,$00
  $A737 DEFB $00,$00,$38,$7C,$BC,$CA,$F6,$6C                                                 ; Coal UDG
@@ -6941,12 +6941,12 @@ b$A82A DEFB $49,$24,$48                                                         
                                                                                             ; co-ordinate
  $A928 DEFB $91                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $A929 DEFB $68
+ $A929 DEFB $68                                                                             ; Crusher bottom column
  $A92A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $A92B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $A92C DEFB $91
+ $A92C DEFB $91                                                                             ; Crusher top column
  $A92D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $A935 DEFB $00,$00
  $A937 DEFB $00,$06,$77,$ED,$DB,$D7,$DA,$6E                                                 ; Coal UDG
@@ -7086,12 +7086,12 @@ b$AA2A DEFB $49,$24,$92                                                         
                                                                                             ; co-ordinate
  $AB28 DEFB $00                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $AB29 DEFB $60
+ $AB29 DEFB $60                                                                             ; Crusher bottom column
  $AB2A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $AB2B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $AB2C DEFB $00
+ $AB2C DEFB $00                                                                             ; Crusher top column
  $AB2D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $AB35 DEFB $00,$00
  $AB37 DEFB $00,$00,$18,$3C,$2C,$18,$00,$7E                                                 ; Coal UDG
@@ -7231,12 +7231,12 @@ b$AC2A DEFB $49,$24,$92                                                         
                                                                                             ; co-ordinate
  $AD28 DEFB $49                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $AD29 DEFB $20
+ $AD29 DEFB $20                                                                             ; Crusher bottom column
  $AD2A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $AD2B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $AD2C DEFB $49
+ $AD2C DEFB $49                                                                             ; Crusher top column
  $AD2D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $AD35 DEFB $00,$00
  $AD37 DEFB $00,$06,$77,$ED,$DB,$D7,$DA,$6E                                                 ; Coal UDG
@@ -7376,12 +7376,12 @@ b$AE2A DEFB $49,$24,$92                                                         
                                                                                             ; co-ordinate
  $AF28 DEFB $59                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $AF29 DEFB $20
+ $AF29 DEFB $20                                                                             ; Crusher bottom column
  $AF2A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $AF2B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $AF2C DEFB $59
+ $AF2C DEFB $59                                                                             ; Crusher top column
  $AF2D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $AF35 DEFB $00,$00
  $AF37 DEFB $00,$00,$18,$3C,$2C,$18,$00,$7E                                                 ; Coal UDG
@@ -7521,12 +7521,12 @@ b$B02A DEFB $48,$60,$92                                                         
                                                                                             ; co-ordinate
  $B128 DEFB $91                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $B129 DEFB $70
+ $B129 DEFB $70                                                                             ; Crusher bottom column
  $B12A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $B12B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $B12C DEFB $91
+ $B12C DEFB $91                                                                             ; Crusher top column
  $B12D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $B135 DEFB $00,$00
  $B137 DEFB $00,$00,$3F,$50,$5F,$A9,$AE,$AF                                                 ; Coal UDG
@@ -7666,12 +7666,12 @@ b$B22A DEFB $51,$49,$22                                                         
                                                                                             ; co-ordinate
  $B328 DEFB $00                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $B329 DEFB $88
+ $B329 DEFB $88                                                                             ; Crusher bottom column
  $B32A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $B32B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $B32C DEFB $00
+ $B32C DEFB $00                                                                             ; Crusher top column
  $B32D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $B335 DEFB $00,$00
  $B337 DEFB $00,$07,$0F,$6F,$76,$F7,$7B,$16                                                 ; Coal UDG
@@ -7811,12 +7811,12 @@ b$B42A DEFB $51,$49,$22                                                         
                                                                                             ; co-ordinate
  $B528 DEFB $00                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $B529 DEFB $78
+ $B529 DEFB $78                                                                             ; Crusher bottom column
  $B52A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $B52B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $B52C DEFB $00
+ $B52C DEFB $00                                                                             ; Crusher top column
  $B52D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $B535 DEFB $00,$00
  $B537 DEFB $10,$20,$10,$30,$30,$30,$38,$1F                                                 ; Coal UDG
@@ -7956,12 +7956,12 @@ b$B62A DEFB $51,$49,$22                                                         
                                                                                             ; co-ordinate
  $B728 DEFB $00                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $B729 DEFB $60
+ $B729 DEFB $60                                                                             ; Crusher bottom column
  $B72A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $B72B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $B72C DEFB $00
+ $B72C DEFB $00                                                                             ; Crusher top column
  $B72D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $B735 DEFB $00,$00
  $B737 DEFB $00,$08,$0C,$3F,$7E,$BE,$FD,$E3                                                 ; Coal UDG
@@ -8101,12 +8101,12 @@ b$B82A DEFB $51,$49,$22                                                         
                                                                                             ; co-ordinate
  $B928 DEFB $00                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $B929 DEFB $60
+ $B929 DEFB $60                                                                             ; Crusher bottom column
  $B92A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $B92B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $B92C DEFB $00
+ $B92C DEFB $00                                                                             ; Crusher top column
  $B92D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $B935 DEFB $00,$00
  $B937 DEFB $10,$20,$10,$30,$30,$30,$38,$1F                                                 ; Coal UDG
@@ -8246,12 +8246,12 @@ b$BA2A DEFB $92,$49,$24                                                         
                                                                                             ; co-ordinate
  $BB28 DEFB $00                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $BB29 DEFB $60
+ $BB29 DEFB $60                                                                             ; Crusher bottom column
  $BB2A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $BB2B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $BB2C DEFB $00
+ $BB2C DEFB $00                                                                             ; Crusher top column
  $BB2D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $BB35 DEFB $00,$00
  $BB37 DEFB $00,$07,$0F,$6F,$76,$F7,$7B,$16                                                 ; Coal UDG
@@ -8391,12 +8391,12 @@ b$BC2A DEFB $49,$24,$92                                                         
                                                                                             ; co-ordinate
  $BD28 DEFB $00                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $BD29 DEFB $00
+ $BD29 DEFB $00                                                                             ; Crusher bottom column
  $BD2A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $BD2B DEFB $00                                                                             ; Crusher
                                                                                             ; flag
- $BD2C DEFB $00
+ $BD2C DEFB $00                                                                             ; Crusher top column
  $BD2D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $BD35 DEFB $00,$00
  $BD37 DEFB $00,$00,$3F,$50,$5F,$A9,$AE,$AF                                                 ; Coal UDG
@@ -8536,12 +8536,12 @@ b$BE2A DEFB $49,$24,$92                                                         
                                                                                             ; co-ordinate
  $BF28 DEFB $A1                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $BF29 DEFB $70
+ $BF29 DEFB $70                                                                             ; Crusher bottom column
  $BF2A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $BF2B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $BF2C DEFB $A1
+ $BF2C DEFB $A1                                                                             ; Crusher top column
  $BF2D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $BF35 DEFB $00,$00
  $BF37 DEFB $00,$00,$18,$3C,$2C,$18,$00,$7E                                                 ; Coal UDG
@@ -8681,12 +8681,12 @@ b$C02A DEFB $49,$24,$92                                                         
                                                                                             ; co-ordinate
  $C128 DEFB $51                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $C129 DEFB $32
+ $C129 DEFB $32                                                                             ; Crusher bottom column
  $C12A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $C12B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $C12C DEFB $51
+ $C12C DEFB $51                                                                             ; Crusher top column
  $C12D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $C135 DEFB $00,$00
  $C137 DEFB $00,$00,$78,$46,$BF,$DF,$9E,$F8                                                 ; Coal UDG
@@ -8826,12 +8826,12 @@ b$C22A DEFB $00,$1E,$00                                                         
                                                                                             ; co-ordinate
  $C328 DEFB $00                                                                             ; Crusher y
                                                                                             ; co-ordinate
- $C329 DEFB $60
+ $C329 DEFB $60                                                                             ; Crusher bottom column
  $C32A DEFB $00                                                                             ; Crusher
                                                                                             ; time
  $C32B DEFB $01                                                                             ; Crusher
                                                                                             ; flag
- $C32C DEFB $00
+ $C32C DEFB $00                                                                             ; Crusher top column
  $C32D DEFB $00,$00,$00,$00,$00,$00,$00,$00
  $C335 DEFB $00,$00
  $C337 DEFB $00,$00,$0C,$FA,$A5,$75,$DA,$EC                                                 ; Coal UDG
