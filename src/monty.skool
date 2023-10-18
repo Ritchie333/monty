@@ -4791,7 +4791,7 @@ c$927E LD HL,($5C7B)  ; Get the current position in #REGhl.
  $9294 CALL $9568     ; { Pick up the item and return.
  $9297 RET            ; }
 
-; Check if Monty has collided with a white nasty.
+; Check if Monty has collided with a nasty that can be removed with an item.
 ;
 ; Used by the routines at #R$940C, #R$CD41 and #R$CE1B.
 c$9298 LD HL,($5C7B) ; Get the current position in #REGhl (#R$5C7B)
@@ -4826,7 +4826,7 @@ c$9298 LD HL,($5C7B) ; Get the current position in #REGhl (#R$5C7B)
  $92DA ADD HL,DE     ; }
  $92DB CALL $9228    ; Was there a collision?
  $92DE RET Z         ; Return if no collision was found.
-; Monty has touched a white nasty, react appropriately
+; Monty has touched a nasty, react appropriately
 *$92DF LD IX,$8D52     ; Point #REGix at the room flags.
  $92E3 BIT 3,(IX+$00)  ; Has Monty picked up the collectable (non-coal) item?
  $92E7 JP Z,$946E      ; No, so kill Monty.
