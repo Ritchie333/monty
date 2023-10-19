@@ -8861,7 +8861,10 @@ b$C22A DEFB $00,$1E,$00                                                         
 ;
 ; Each character is 3 bits ie: 3 bytes for 8 characters
 ; .
-; #N$0C bytes per line, #N$F0 bytes per page
+; #N$0C bytes per line, #N$F0 bytes per page.
+; .
+; The following is set in the buffer when the game is loaded:
+; #UDGXSCR(#PC)(unused_room)
 g$C42A DEFB $92,$48,$49
  $C42D DEFB $24,$92,$49
  $C430 DEFB $24,$92,$49

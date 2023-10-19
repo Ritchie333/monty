@@ -355,8 +355,9 @@ SectionPrefix=Screens
     </table> 
 )
 
-[Screens:Unused screen capture]
-#HTML( #R$DA01<br/><img src="./images/scr/screen_capture.png"/> )
+[Screens:Unused]
+#HTML( #R$C42A<br/><img src="./images/udgs/unused_room.png"/><br/>
+ #R$DA01<br/><img src="./images/scr/screen_capture.png"/> )
 
 [Poke:Infinite lives]
 #N($9474),0
